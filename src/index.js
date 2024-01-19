@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals';
 
 // Navigation
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
 
 // Pages
 import App from './App';

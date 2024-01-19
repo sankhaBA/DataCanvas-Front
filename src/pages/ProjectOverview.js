@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //Pages for navigation
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
@@ -16,14 +16,39 @@ import Spinner from "../components/Spinner";
 import axios from "axios";
 
 function ProjectOverview() {
+    // ---------- Navigation hooks ----------
+    const navigate = useNavigate();
+
+    // ---------- Get states from navigation location for retrieval of project_id ----------
+    const { state } = useLocation();
+
+    // ---------- Loading state for spinner ----------
+    const [loading, setLoading] = useState(false);
+
+    // ---------- Project ID state ----------
+    const [projectID, setProjectID] = useState(-1);
 
     useEffect(() => {
-        console.log("ProjectOverview")
+
+            // ---------- Getting project_id from the location state and uypdating projectID state ----------
+        try {
+            setProjectID(state.project_id);
+        } catch (err) {
+            console.log(err);
+            navigate('/projects');
+        }
     }, []);
 
+    useEffect(() => {
+        if(projectID !== -1){
+                // ---------- Load project details from the backend ----------
+        }
+    }, [projectID]);
+
     return (
+        // Sidebar Layout Component
         <SidebarLayout active={0}>
-            Sankha Bimsara Ambeypitiya Sankha Bimsara Ambeypitiya Sankha Bimsara Ambeypitiya
+
         </SidebarLayout>
     );
 }
