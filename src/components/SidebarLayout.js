@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import PagBody from './PageBody';
 
 function SidebarLayout({ children }) {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1020);
    
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -12,7 +12,7 @@ function SidebarLayout({ children }) {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsSidebarOpen(window.innerWidth > 768);
+            setIsSidebarOpen(window.innerWidth > 1020);
         };
 
         window.addEventListener('resize', handleResize);
@@ -26,7 +26,7 @@ function SidebarLayout({ children }) {
     }, [isSidebarOpen]);
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className={`flex h-screen overflow-hidden`}>
             <Sidebar isSidebarOpen={isSidebarOpen} />
             <PagBody isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
                 {children}
