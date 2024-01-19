@@ -2,9 +2,9 @@ import React from 'react';
 import { FaNewspaper, FaChartBar, FaMicrochip, FaDatabase, FaCogs } from 'react-icons/fa';
 import { MdBarChart, MdDashboard } from 'react-icons/md';
 
-function Sidebar({ isSidebarOpen }) {
+function Sidebar({ isSidebarOpen, active }) {
 
-  const SidebarButton = ({ text, icon:Icon, active, onClick }) => {
+  const SidebarButton = ({ text, icon: Icon, active, onClick }) => {
     return (
       <div className={`flex items-center ${active ? 'bg-gray3' : ''}  px-5 py-2 my-2 rounded-full cursor-pointer
          hover:bg-gray1 transition-all ease-in-out duration-300`}>
@@ -22,15 +22,20 @@ function Sidebar({ isSidebarOpen }) {
       </div>
 
       <div className="mt-8 px-3">
-        <SidebarButton text="Overview" icon={MdDashboard} active={true} />
-        <SidebarButton text="Dashboard" icon={MdBarChart} active={false} />
-        <SidebarButton text="Devices" icon={FaMicrochip} active={false} />
-        <SidebarButton text="Data Tables" icon={FaDatabase} active={false} />
-        <SidebarButton text="Settings" icon={FaCogs} active={false} />
+        <SidebarButton text="Overview" icon={MdDashboard} active={(active == 0) ? true : false} />
+        <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} />
+        <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} />
+        <SidebarButton text="Data Tables" icon={FaDatabase} active={(active == 3) ? true : false} />
+        <SidebarButton text="Settings" icon={FaCogs} active={(active == 4) ? true : false} />
       </div>
     </div>
   );
 }
+
+// Default Props
+Sidebar.defaultProps = {
+  active: 0,
+};
 
 export default Sidebar;
 

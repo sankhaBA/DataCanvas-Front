@@ -22,7 +22,7 @@ function ProjectOverview() {
     }, []);
 
     return (
-        <SidebarLayout>
+        <SidebarLayout active={0}>
             Sankha Bimsara Ambeypitiya Sankha Bimsara Ambeypitiya Sankha Bimsara Ambeypitiya
         </SidebarLayout>
     );
