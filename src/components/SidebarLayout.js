@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import PagBody from './PageBody';
 
-function SidebarLayout({ children }) {
+function SidebarLayout({ children, active }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1020);
    
     const toggleSidebar = () => {
@@ -27,7 +27,7 @@ function SidebarLayout({ children }) {
 
     return (
         <div className={`flex h-screen overflow-hidden`}>
-            <Sidebar isSidebarOpen={isSidebarOpen} />
+            <Sidebar isSidebarOpen={isSidebarOpen} active={active}/>
             <PagBody isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
                 {children}
             </PagBody>
