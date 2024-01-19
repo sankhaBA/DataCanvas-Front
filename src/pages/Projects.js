@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //Navigation
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Components
 import NonSidebarLayout from "../components/NonSidebarLayout";
@@ -18,6 +18,10 @@ import axios from "axios";
 
 
 function Projects() {
+    // ---------- Navigation ----------
+    const navigate = useNavigate();
+
+    // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false);
 
     // ---------- States and toggle functions for 2 modals -> Add Project and Project Adding Done ----------
@@ -105,12 +109,13 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 404:
- 
                     break;
                 default:
                     toast.error("Something Went Wrong!");
@@ -168,9 +173,11 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request, 400 - Project name and description cannot be empty
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 400:
                     toast.error("Project name and description cannot be empty!");
@@ -189,6 +196,12 @@ function Projects() {
     useEffect(() => {
         getAllProjetcs();
     }, []);
+
+    const unauthorizedAccess = () => {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("auth-token");
+        navigate('/login');
+    }
 
     // ---------- Popup content of Add Project ----------
     const AddProjectCard = () => {
