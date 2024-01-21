@@ -19,7 +19,7 @@ const Spinner = ({ isVisible }) => {
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
                 </Transition.Child>
 
-                <HashLoader color={"#3ECF8E"} loading={true} size={50} />
+                <HashLoader data-testid="spinner" color={"#3ECF8E"} loading={true} size={50} />
 
             </Dialog>
         </Transition >

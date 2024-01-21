@@ -6,7 +6,7 @@ const PillButton = ({ text, onClick, icon: Icon, isPopup }) => {
   hover:text-gray2
   hover:border-gray1
   transition duration-300 ease-in-out
-  flex flex-row items-center justify-center"`;
+  flex flex-row items-center justify-center`;
 
   return (
     <button className={buttonClasses} onClick={onClick}>
