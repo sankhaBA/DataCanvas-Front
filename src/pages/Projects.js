@@ -145,7 +145,6 @@ function Projects() {
             return;
         }
 
-        // TODO: Add project to the server
         try {
             // Send an post API request with authorization headers
             const result = await axios.post(
@@ -197,6 +196,7 @@ function Projects() {
         getAllProjetcs();
     }, []);
 
+    // ---------- Function for unauthorized access ----------
     const unauthorizedAccess = () => {
         localStorage.removeItem("uid");
         localStorage.removeItem("auth-token");

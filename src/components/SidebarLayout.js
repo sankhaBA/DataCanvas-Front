@@ -27,7 +27,7 @@ function SidebarLayout({ children, active }) {
 
     return (
         <div className={`flex h-screen overflow-hidden`}>
-            <Sidebar isSidebarOpen={isSidebarOpen} active={active}/>
+            <Sidebar isSidebarOpen={isSidebarOpen} active={active} toggleSidebar={toggleSidebar}/>
             <PagBody isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
                 {children}
             </PagBody>
