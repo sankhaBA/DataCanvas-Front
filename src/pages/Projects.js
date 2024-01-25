@@ -196,7 +196,7 @@ function Projects() {
         return (
             <div
                 className={
-                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 w-
+                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 mx-2
                     border border-green relative overflow-hidden text-green
                     transition duration-300 hover:border-gray1 hover:text-gray2 hover:bg-opacity-50 hover:backdrop-blur-md
                     flex flex-col items-center justify-center space-y-4`}
@@ -213,10 +213,10 @@ function Projects() {
         <NonSidebarLayout>
             <div className={`container pt-10 xl:px-32`}>
                 <h1 className={`text-xl text-gray2 mx-5`}>Your DataCanvas Projects</h1>
-                <div className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 mb-48`}>
+                <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} onClick={() => { }} />
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => { }} />
                     ))}
                 </div>
                 <div className={`fixed w-full bottom-0 lef-0 right-0 pb-5 flex flex-col items-center backdrop-blur-lg bg-black bg-opacity-30`}>

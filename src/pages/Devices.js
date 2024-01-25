@@ -19,11 +19,11 @@ const Device = () => {
         
         <div className="bg-black w-full h-screen">
            <SidebarLayout>
-                <div className="grid gap-5 gap-y-5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center mx-5">
-                    <SquareCard isIconShown title="Device 1" subtitle="Device 1" footer="Device 1" onClick={() => {}}/>
-                    <SquareCard isIconShown title="Device 2" subtitle="Device 2" footer="Device 2" onClick={() => {}}/>
-                    <SquareCard isIconShown title="Device 3" subtitle="Device 3" footer="Device 3" onClick={() => {}}/>
-                    <SquareCard isIconShown title="Device 4" subtitle="Device 4" footer="Device 4" onClick={() => {}}/>
+                <div className="flex-wrap flex justify-center mx-5">
+                    <SquareCard isIconShown title="Device 1" subtitle="Device 1" footer="Last record  : 12.13.2023 21:34PM" onClick={() => {}}/>
+                    <SquareCard isIconShown title="Device 2" subtitle="Device 2" footer="Last record  : 12.13.2023 21:34PM" onClick={() => {}}/>
+                    <SquareCard isIconShown title="Device 3" subtitle="Device 3" footer="Last record  : 12.13.2023 21:34PM" onClick={() => {}}/>
+                    <SquareCard isIconShown title="Device 4" subtitle="Device 4" footer="Last record  : 12.13.2023 21:34PM" onClick={() => {}}/>
                     <SquareCard isIconShown title="Device 5" subtitle="Device 5" footer="Device 5" onClick={() => {}}/>
                     <SquareCard isIconShown title="Device 6" subtitle="Device 6" footer="Device 6" onClick={() => {}}/>
                     <SquareCard isIconShown title="Device 7" subtitle="Device 7" footer="Device 7" onClick={() => {}}/>
