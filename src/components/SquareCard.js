@@ -1,4 +1,5 @@
 import React from "react";
+import { FaTrash, FaPlus } from "react-icons/fa";
 
 const SquareCard = ({ title, subtitle, footer, onClick, isIconShown=false }) => {
   return (
@@ -23,7 +24,14 @@ const SquareCard = ({ title, subtitle, footer, onClick, isIconShown=false }) => 
         <div className="flex justify-between">
           <div className="text-neutral-600 text-xs font-semibold w-full"></div>
         </div>
-        <div >{footer}</div>
+        
+        <div className="flex justify-between ">
+          <div className="text-neutral-600 text-xs font-semibold w-full">{footer}</div>
+          <div className="flex">
+            {isIconShown && <FaPlus className="text-green text-xl" />}
+            {isIconShown && <FaTrash className="text-red text-xl mx-5" />}
+          </div>
+        </div>
       </div>
     </div>
   );
