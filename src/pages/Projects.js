@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import NonSidebarLayout from "../components/NonSidebarLayout";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
-import ProjectCard from "../components/ProjectCard";
+import SquareCard from "../components/SquareCard";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
 import axios from "axios";
@@ -58,6 +58,7 @@ function Projects() {
     //         created_at: "2021-10-10"
     //     },
     // ]); // This fills by the projects from the server
+    
     const [projects, setProjects] = useState([]); // This fills by the projects from the server
     const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
     const [newProjectDescription, setNewProjectDescription] = useState(""); // This is for the textbox of Add Project
@@ -215,7 +216,7 @@ function Projects() {
                 <div className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <ProjectCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} onClick={() => { }} />
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} onClick={() => { }} />
                     ))}
                 </div>
                 <div className={`fixed w-full bottom-0 lef-0 right-0 pb-5 flex flex-col items-center backdrop-blur-lg bg-black bg-opacity-30`}>

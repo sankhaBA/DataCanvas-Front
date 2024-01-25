@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProjectCard = ({ title, subtitle, footer, onClick }) => {
+const SquareCard = ({ title, subtitle, footer, onClick, isIconShown=false }) => {
   return (
     <div
       className={
@@ -20,10 +20,13 @@ const ProjectCard = ({ title, subtitle, footer, onClick }) => {
         </div>
 
         {/* Content for the footer */}
-        <div className="text-neutral-600 text-xs font-semibold absolute bottom-4 left-6 w-full">{footer}</div>
+        <div className="flex justify-between">
+          <div className="text-neutral-600 text-xs font-semibold w-full"></div>
+        </div>
+        <div >{footer}</div>
       </div>
     </div>
   );
 };
 
-export default ProjectCard;
+export default SquareCard;
