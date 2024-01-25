@@ -25,11 +25,11 @@ const SquareCard = ({ title, subtitle, footer, onClick, isIconShown=false }) => 
           <div className="text-neutral-600 text-xs font-semibold w-full"></div>
         </div>
         
-        <div className="flex justify-between ">
-          <div className="text-neutral-600 text-xs font-semibold w-full">{footer}</div>
+        <div className="flex justify-between mt-[30%] bottom-4 left-5">
+          <div className="text-neutral-600 text-xs font-semibold w-full flex">{footer}</div>
           <div className="flex">
-            {isIconShown && <FaPlus className="text-green text-xl" />}
-            {isIconShown && <FaTrash className="text-red text-xl mx-5" />}
+            {isIconShown && <FaPlus onClick={() => {}} className="text-green text-xl " />}
+            {isIconShown && <FaTrash onClick={() => {}} className="text-red text-xl mx-5" />}
           </div>
         </div>
       </div>

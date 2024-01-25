@@ -19,7 +19,7 @@ const Device = () => {
         
         <div className="bg-black w-full h-screen">
            <SidebarLayout>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-5 gap-y-5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center mx-5">
                     <SquareCard isIconShown title="Device 1" subtitle="Device 1" footer="Device 1" onClick={() => {}}/>
                     <SquareCard isIconShown title="Device 2" subtitle="Device 2" footer="Device 2" onClick={() => {}}/>
                     <SquareCard isIconShown title="Device 3" subtitle="Device 3" footer="Device 3" onClick={() => {}}/>
