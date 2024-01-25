@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NonSidebarLayout from "../components/NonSidebarLayout";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
-import ProjectCard from "../components/ProjectCard";
+import SquareCard from "../components/SquareCard";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
 import axios from "axios";
@@ -62,6 +62,7 @@ function Projects() {
     //         created_at: "2021-10-10"
     //     },
     // ]); // This fills by the projects from the server
+    
     const [projects, setProjects] = useState([]); // This fills by the projects from the server
     const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
     const [newProjectDescription, setNewProjectDescription] = useState(""); // This is for the textbox of Add Project
@@ -208,7 +209,7 @@ function Projects() {
         return (
             <div
                 className={
-                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 w-
+                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 mx-2
                     border border-green relative overflow-hidden text-green
                     transition duration-300 hover:border-gray1 hover:text-gray2 hover:bg-opacity-50 hover:backdrop-blur-md
                     flex flex-col items-center justify-center space-y-4`}
@@ -225,10 +226,10 @@ function Projects() {
         <NonSidebarLayout>
             <div className={`container pt-10 xl:px-32`}>
                 <h1 className={`text-xl text-gray2 mx-5`}>Your DataCanvas Projects</h1>
-                <div className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 mb-48`}>
+                <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <ProjectCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} onClick={() => {
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => {
                             navigate('/overview', { state: { project_id: project.project_id } });
                         }} />
                     ))}
