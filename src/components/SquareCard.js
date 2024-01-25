@@ -1,6 +1,7 @@
 import React from "react";
+import { FaTrash, FaPlus } from "react-icons/fa";
 
-const ProjectCard = ({ title, subtitle, footer, onClick }) => {
+const SquareCard = ({ title, subtitle, footer, onClick, isIconShown=false }) => {
   return (
     <div
       className={
@@ -20,10 +21,20 @@ const ProjectCard = ({ title, subtitle, footer, onClick }) => {
         </div>
 
         {/* Content for the footer */}
-        <div className="text-neutral-600 text-xs font-semibold absolute bottom-4 left-6 w-full">{footer}</div>
+        <div className="flex justify-between">
+          <div className="text-neutral-600 text-xs font-semibold w-full"></div>
+        </div>
+        
+        <div className="flex justify-between mt-[30%] bottom-4 left-5">
+          <div className="text-neutral-600 text-xs font-semibold w-full flex">{footer}</div>
+          <div className="flex">
+            {isIconShown && <FaPlus onClick={() => {}} className="text-green text-xl " />}
+            {isIconShown && <FaTrash onClick={() => {}} className="text-red text-xl mx-5" />}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default ProjectCard;
+export default SquareCard;
