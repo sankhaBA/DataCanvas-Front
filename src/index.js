@@ -15,19 +15,24 @@ import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const uid = localStorage.getItem('uid');
+const token = localStorage.getItem('auth-token');
+console.log(uid, token);
+
 root.render(
   // <React.StrictMode>
   //   <SignUp />
   // </React.StrictMode>
+ 
   <Router>
     <Routes>
       <Route exact path="/login" element={<Login />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/overview" element={<ProjectOverview />} />
+      <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
+      <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
-
     </Routes>
   </Router>
 );

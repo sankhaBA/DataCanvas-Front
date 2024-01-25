@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //Navigation
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Components
 import NonSidebarLayout from "../components/NonSidebarLayout";
@@ -18,6 +18,10 @@ import axios from "axios";
 
 
 function Projects() {
+    // ---------- Navigation ----------
+    const navigate = useNavigate();
+
+    // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false);
 
     // ---------- States and toggle functions for 2 modals -> Add Project and Project Adding Done ----------
@@ -106,12 +110,13 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 404:
- 
                     break;
                 default:
                     toast.error("Something Went Wrong!");
@@ -141,7 +146,6 @@ function Projects() {
             return;
         }
 
-        // TODO: Add project to the server
         try {
             // Send an post API request with authorization headers
             const result = await axios.post(
@@ -169,9 +173,11 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request, 400 - Project name and description cannot be empty
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 400:
                     toast.error("Project name and description cannot be empty!");
@@ -190,6 +196,13 @@ function Projects() {
     useEffect(() => {
         getAllProjetcs();
     }, []);
+
+    // ---------- Function for unauthorized access ----------
+    const unauthorizedAccess = () => {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("auth-token");
+        navigate('/login');
+    }
 
     // ---------- Popup content of Add Project ----------
     const AddProjectCard = () => {
@@ -216,7 +229,9 @@ function Projects() {
                 <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => { }} />
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => {
+                            navigate('/overview', { state: { project_id: project.project_id } });
+                        }} />
                     ))}
                 </div>
                 <div className={`fixed w-full bottom-0 lef-0 right-0 pb-5 flex flex-col items-center backdrop-blur-lg bg-black bg-opacity-30`}>
