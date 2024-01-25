@@ -9,11 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
-import ButtonRectangle from "../components/ButtonRectangle";
-import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
-import Spinner from "../components/Spinner";
-import axios from "axios";
+import SquareCard from "../components/SquareCard";
 
 
 const Device = () => {
@@ -22,7 +18,19 @@ const Device = () => {
     return(
         
         <div className="bg-black w-full h-screen">
-           
+           <SidebarLayout>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <SquareCard title="Device 1" subtitle="Device 1" footer="Device 1" onClick={() => {}}/>
+                    <SquareCard title="Device 2" subtitle="Device 2" footer="Device 2" onClick={() => {}}/>
+                    <SquareCard title="Device 3" subtitle="Device 3" footer="Device 3" onClick={() => {}}/>
+                    <SquareCard title="Device 4" subtitle="Device 4" footer="Device 4" onClick={() => {}}/>
+                    <SquareCard title="Device 5" subtitle="Device 5" footer="Device 5" onClick={() => {}}/>
+                    <SquareCard title="Device 6" subtitle="Device 6" footer="Device 6" onClick={() => {}}/>
+                    <SquareCard title="Device 7" subtitle="Device 7" footer="Device 7" onClick={() => {}}/>
+                    <SquareCard title="Device 8" subtitle="Device 8" footer="Device 8" onClick={() => {}}/>
+                    <SquareCard title="Device 9" subtitle="Device 9" footer="Device 9" onClick={() => {}}/>
+                </div>
+           </SidebarLayout>
         </div>
     )
 }
