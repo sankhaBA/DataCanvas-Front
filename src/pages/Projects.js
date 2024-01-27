@@ -5,19 +5,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //Navigation
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Components
 import NonSidebarLayout from "../components/NonSidebarLayout";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
-import ProjectCard from "../components/ProjectCard";
+import SquareCard from "../components/SquareCard";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 
 
 function Projects() {
+    // ---------- Navigation ----------
+    const navigate = useNavigate();
+
+    // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false);
 
     // ---------- States and toggle functions for 2 modals -> Add Project and Project Adding Done ----------
@@ -58,6 +62,7 @@ function Projects() {
     //         created_at: "2021-10-10"
     //     },
     // ]); // This fills by the projects from the server
+    
     const [projects, setProjects] = useState([]); // This fills by the projects from the server
     const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
     const [newProjectDescription, setNewProjectDescription] = useState(""); // This is for the textbox of Add Project
@@ -105,12 +110,13 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 404:
- 
                     break;
                 default:
                     toast.error("Something Went Wrong!");
@@ -140,7 +146,6 @@ function Projects() {
             return;
         }
 
-        // TODO: Add project to the server
         try {
             // Send an post API request with authorization headers
             const result = await axios.post(
@@ -168,9 +173,11 @@ function Projects() {
                 // Status -> 401 - Unauthorized, 403 - Bad Request, 400 - Project name and description cannot be empty
                 case 401:
                     toast.error("Your Session Has Expired! Please Login Again!");
+                    unauthorizedAccess();
                     break;
                 case 403:
                     toast.error("You Are Not Authorized To Add Project!");
+                    unauthorizedAccess();
                     break;
                 case 400:
                     toast.error("Project name and description cannot be empty!");
@@ -190,12 +197,19 @@ function Projects() {
         getAllProjetcs();
     }, []);
 
+    // ---------- Function for unauthorized access ----------
+    const unauthorizedAccess = () => {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("auth-token");
+        navigate('/login');
+    }
+
     // ---------- Popup content of Add Project ----------
     const AddProjectCard = () => {
         return (
             <div
                 className={
-                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 w-
+                    `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 mx-2
                     border border-green relative overflow-hidden text-green
                     transition duration-300 hover:border-gray1 hover:text-gray2 hover:bg-opacity-50 hover:backdrop-blur-md
                     flex flex-col items-center justify-center space-y-4`}
@@ -212,10 +226,12 @@ function Projects() {
         <NonSidebarLayout>
             <div className={`container pt-10 xl:px-32`}>
                 <h1 className={`text-xl text-gray2 mx-5`}>Your DataCanvas Projects</h1>
-                <div className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 mb-48`}>
+                <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <ProjectCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} onClick={() => { }} />
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => {
+                            navigate('/overview', { state: { project_id: project.project_id } });
+                        }} />
                     ))}
                 </div>
                 <div className={`fixed w-full bottom-0 lef-0 right-0 pb-5 flex flex-col items-center backdrop-blur-lg bg-black bg-opacity-30`}>
