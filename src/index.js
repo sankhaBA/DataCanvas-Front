@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Projects from './pages/Projects';
 import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
+import ConfigureTable from './pages/ConfigureTable';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,6 +34,7 @@ root.render(
       <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
+      <Route path="/configtable" element={<ConfigureTable />} />
     </Routes>
   </Router>
 );
