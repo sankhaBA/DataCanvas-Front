@@ -62,7 +62,7 @@ function Projects() {
     //         created_at: "2021-10-10"
     //     },
     // ]); // This fills by the projects from the server
-    
+
     const [projects, setProjects] = useState([]); // This fills by the projects from the server
     const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
     const [newProjectDescription, setNewProjectDescription] = useState(""); // This is for the textbox of Add Project
@@ -229,7 +229,7 @@ function Projects() {
                 <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
                     <AddProjectCard />
                     {projects.map((project) => (
-                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2"  onClick={() => {
+                        <SquareCard key={project.project_id} title={project.project_name} subtitle={project.description} footer={"Created on " + project.createdAt.substring(0, 10)} mx="mx-2" onClick={() => {
                             navigate('/overview', { state: { project_id: project.project_id } });
                         }} />
                     ))}
