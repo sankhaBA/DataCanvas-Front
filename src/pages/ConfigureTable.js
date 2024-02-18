@@ -18,27 +18,176 @@ import ConfigTableCard from "../components/ConfigTableCard";
 import axios from "axios";
 
 function ConfigureTable() {
+    // ---------- Navigation hooks ----------
+    const navigate = useNavigate();
+
+    // ---------- Get states from navigation location for retrieval of tbl_id ----------
+    const { state } = useLocation();
+
+    // ---------- Loading state for spinner ----------
+    const [loading, setLoading] = useState(false);
+
+    // ---------- Table Details ----------
+    const [tblID, setTblID] = useState(-1);
+    const [tblName, setTblName] = useState([]);
+
+    const [dataTypes, setDataTypes] = useState([
+        // {
+        //     type_id: 1,
+        //     type_name: 'Integer'
+        // },
+    ])
+
+    const [constraints, setConstraints] = useState([
+        // {
+        //     constraint_id: 1,
+        //     constraint_name: 'Auto Increment'
+        // },
+    ])
+
+    const [columns, setColumns] = useState([
+        // {
+        //     clm_id: 1,
+        //     clm_name: 'id',
+        //     data_type: 1,
+        //     default_value: 'N/A',
+        //     max_length: 0,
+        //     constraints: [
+        //         {
+        //             constraint_id: 1
+        //         },
+        //         {
+        //             constraint_id: 2
+        //         }
+        //     ]
+        // }
+    ]);
+
+
+    useEffect(() => {
+
+        // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
+        try {
+            setTblID(state.tbl_id);
+            console.log('tbl_id : ' + state.tbl_id);
+            getDataTypes();
+            getConstraints();
+        } catch (err) {
+            console.log(err);
+            navigate('/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        // ---------- Get table details ----------
+        if (tblID != -1) {
+            getTableDetails();
+        }
+    }, [tblID]);
+
+    useEffect(() => {
+        // ---------- Get table details ----------
+        if (tblID != -1 && dataTypes.length > 0 && constraints.length > 0 && columns.length == 0) {
+            getColumnDetails();
+        }
+    }, [dataTypes, constraints]);
+
+    // ---------- Function to get data types ----------
+    const getDataTypes = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:3001/api/data/config/type/`);
+            console.log('Data Types : ', res.data);
+            setDataTypes(res.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+        }
+    }
+
+    // ---------- Function to get constraints ----------
+    const getConstraints = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:3001/api/data/config/constraint/`);
+            console.log('Constraints : ', res.data);
+            setConstraints(res.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+        }
+    }
+
+    // ---------- Function to get table details ----------
+    const getTableDetails = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:3001/api/data/tbl/` + tblID);
+            setTblName(res.data.tbl_name);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+        }
+    }
+
+    // ---------- Function to get column details ----------
+    const getColumnDetails = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:3001/api/data/clm?tbl_id=` + tblID);
+            console.log('Columns : ', res.data);
+            // Sort columns by clm_id
+            res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
+            setColumns(res.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+        }
+    }
+
     return (
         // Sidebar Layout Component
         <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
             {/* Devices Section */}
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
-                <span className={`text-lg`}>Configure Table - {'<table_name>'}</span>
+                <span className={`text-lg`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>
                     <PillButton text="Table Settings" icon={FaPlusCircle} onClick={() => { }} />
                 </div>
             </div>
 
             <div className={`flex flex-col justify-center px-7 sm:px-10 mt-2`}>
-                <ConfigTableCard columnName="id" dataType="Integer" defaultValue="N/A" isAutoIncrement={true} isNullAllowed={false} isUnique={true} onClick={() => { }} />
-                <ConfigTableCard columnName="device" dataType="Integer" defaultValue="N/A" isAutoIncrement={false} isNullAllowed={false} isUnique={false} onClick={() => { }} />
-                <ConfigTableCard columnName="temperature" dataType="Decimal" defaultValue="-100" isAutoIncrement={false} isNullAllowed={false} isUnique={false} onClick={() => { }} />
-                <ConfigTableCard columnName="wind_speed" dataType="Decimal" defaultValue="0" isAutoIncrement={false} isNullAllowed={false} isUnique={true} onClick={() => { }} />
+                {/* <ConfigTableCard columnName="id" dataType="Integer" defaultValue="N/A" isAutoIncrement={true} isNullAllowed={false} isUnique={true} onClick={() => { }} /> */}
+                {columns.map((column) => {
+                    return (
+                        <ConfigTableCard key={column.clm_id} columnName={column.clm_name} dataType={`${(dataTypes.find(x => x.type_id == column.data_type).type_name)}` + `${(column.max_length != null) ? `(${column.max_length})` : ''}`} defaultValue={(column.default_value == null) ? 'N/A' : column.default_value} isAutoIncrement={column.constraints.find(x => x.constraint_id == 1) != undefined} isNullAllowed={column.constraints.find(x => x.constraint_id == 2) != undefined} isUnique={column.constraints.find(x => x.constraint_id == 3) != undefined} onClick={() => { }} />
+                    )
+                })}
             </div>
 
             <div className={`flex flex-row justify-center items-center mt-12`}>
                 <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => { }} />
             </div>
+
+            {/* Spinner */}
+            <Spinner isVisible={loading} />
+
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </SidebarLayout>
     )
 }

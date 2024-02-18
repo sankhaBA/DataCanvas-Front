@@ -5,8 +5,8 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
     return (
         <div className={
             `w-full bg-black3 rounded-lg my-1 sm:my-1 cursor-pointer text-gray2
-        border border-gray1 border-opacity-60 relative overflow-hidden
-        transition duration-300 hover:border-green hover:border-opacity-50 hover:text-green`
+        border border-gray1 border-opacity-60 relative 
+        transition duration-300 hover:border-green hover:border-opacity-50 hover:text-green overflow-hidden`
         }
             onClick={onClick}>
             <div className="w-full h-full py-2 pl-6 pr-4 flex flex-row justify-between items-center">
@@ -26,7 +26,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     </div>
 
                     {/* Data Type Section */}
-                    <div className="text-md text-gray2 max-w-full truncate mr-3 ">
+                    <div className="text-md text-gray2 max-w-full truncate mr-3  hidden sm:block ">
                         <div className="flex flex-col justify-between items-start">
                             <div className="text-gray1 text-xs font-sm overflow-hidden hidden sm:block">
                                 Data Type
@@ -38,7 +38,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     </div>
 
                     {/* Default Value Section */}
-                    <div className="text-md text-gray2 max-w-full truncate mr-3 ">
+                    <div className="text-md text-gray2 max-w-full truncate mr-3 hidden md:block  ">
                         <div className="flex flex-col justify-between items-start">
                             <div className="text-gray1 text-xs font-sm overflow-hidden hidden sm:block">
                                 Default Value
@@ -50,7 +50,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     </div>
 
                     {/* Auto Increment Section - In second row, there should be a checkbox with the caption Auto Increment */}
-                    <div className="text-md text-gray2 max-w-full truncate mr-3 ">
+                    <div className="text-md text-gray2 max-w-full truncate mr-3 hidden xl:block ">
                         <div className={`flex items-center`}>
                             <input
                                 type="checkbox"
@@ -64,7 +64,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
 
 
                     {/* Null Allowed Section - In second row, there should be a checkbox with the caption Null Allowed */}
-                    <div className="text-md text-gray2 max-w-full truncate mr-3 ">
+                    <div className="text-md text-gray2 max-w-full truncate mr-3 hidden xl:block  ">
                         <div className={`flex items-center`}>
                             <input
                                 type="checkbox"
@@ -77,7 +77,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     </div>
 
                     {/* Unique Section - In second row, there should be a checkbox with the caption Unique */}
-                    <div className="text-md text-gray2 max-w-full truncate mr-3 ">
+                    <div className="text-md text-gray2 max-w-full truncate mr-3 hidden xl:block">
                         <div className={`flex items-center`}>
                             <input
                                 type="checkbox"
@@ -100,7 +100,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     {/* Delete Section */}
                     <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}>
                         <FaTrash className="text-sm" />
-                        <span className="text-xs">Delete</span>
+                        <span className="text-xs hidden sm:block ">Delete</span>
                     </div>
                 </div>
             </div>
