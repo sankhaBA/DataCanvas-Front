@@ -16,6 +16,7 @@ import Spinner from "../components/Spinner";
 import InsightCard from "../components/InsightCard";
 import RectangularCard from "../components/RectangularCard";
 import axios from "axios";
+import PopupContainer from "../components/PopupContainer";
    
 
 const DataTableHandler = ()=> {
@@ -28,6 +29,26 @@ const DataTableHandler = ()=> {
 
     // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false); 
+
+    // ---------- Table name for new addings ------
+    const [newTableName, setNewTableName] = useState('');
+    const [newTableNameDescription, setNewTableNameDescription] = useState('');
+
+    //--Add Data table Modal--
+    const [isAddDatatableOpen, setIsAddDatatableOpen] = useState(false);
+
+    const toggleAddDatatableModal = () => {
+        setIsAddDatatableOpen(!isAddDatatableOpen);
+    };
+
+    const [isDatatableAddingDoneOpen, setisDatatableAddingDoneOpen] = useState(false);
+
+    const toggleDatatableAddingDoneModal = () => {
+        if (isDatatableAddingDoneOpen) {
+        loadDataTables();
+        }
+        setisDatatableAddingDoneOpen(!isDatatableAddingDoneOpen);
+    };
 
     // ---------- Data Table states ----------
     const [dataTables, setDataTables] = useState([{
@@ -59,12 +80,55 @@ const DataTableHandler = ()=> {
     useEffect(() => {
         console.log('Data Tables', dataTables);
         loadDataTables();
-        }, [dataTables]);
+        }, [projectID]);
   
 
 
   // ---------- Create new table ----------      
+    const handleTableAdding = async () => {
+    
+    if( newTableName === '' || newTableNameDescription === ''){ 
+        toast.error('Please fill in all fields!');
+        return;
+    }
+    // Post request to localhost:3001/api/data/tbl?project_id=<project_id> to post new data table
+    try {
+        const response = await axios.post('http://localhost:3001/api/data/tbl', {
+            project_id: projectID,
+            tbl_name: newTableName
+        }, 
+        {
+            headers: {
+                'authorization': localStorage.getItem('auth-token')
+            }
+        });
 
+        if (response.status === 201) {
+            console.log(response.data);
+            toggleDatatableAddingDoneModal();
+        }
+
+    } catch (err) {
+        switch (err.status) {
+            case 400:
+                toast.error('Bad request!');
+                break;
+            case 401:
+                toast.error('Unauthorized access!');
+                break;
+            case 403:
+                toast.error('Unauthorized access!');
+                break;
+            case 404:
+                toast.error('Project not found!');
+                break;
+            default:
+                toast.error('Something went wrong!');
+                break;
+        
+        }
+    }
+    }
 
 
 
@@ -145,14 +209,14 @@ const DataTableHandler = ()=> {
                         })
                     ) : (
                         <div className={`flex flex-row justify-center items-center mt-4`}>
-                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => {}} />
+                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => {toggleAddDatatableModal()}} />
                         </div>
                     )}
     </div>
 
     {dataTables.length > 0 ? (
                     <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="View All" icon={FaForward} onClick={() => { }} />
+                        <PillButton text="View All" icon={FaForward} onClick={() => { toggleAddDatatableModal()}} />
                     </div>
                 ) : null}
 
@@ -161,7 +225,7 @@ const DataTableHandler = ()=> {
 
     <ToastContainer
         position="bottom-center"
-        autoClose={5000}
+        closeFunction={toggleDatatableAddingDoneModal}
         hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
@@ -174,9 +238,9 @@ const DataTableHandler = ()=> {
 
 
     <PopupContainer
-            isOpen={isAddDeviceOpen}
+            isOpen={isAddDatatableOpen}
             onClose={() => { }}
-            closeFunction={toggleAddDeviceModal}
+            closeFunction={toggleAddDatatableModal}
             Icon={FaPlusCircle}
             title={"Add New Table"}
             closeIconVisible={true}
@@ -189,10 +253,33 @@ const DataTableHandler = ()=> {
                 placeholder="Enter table name"
                 maxLength={50}
                 textAlign={"left"}
-                onChange={handleDeviceNameChange}
-                value={newDeviceName}
+                onChange={(e)=>{setNewTableName(e.target.value)}}
+                value={""}
               />
             </div>
+
+            <div className="flex flex-col justify-center mt-4">
+              <label className="text-gray1 text-sm">Table Description</label>
+              <TextBox
+                text=""
+                type="text"
+                placeholder="Enter table description"
+                maxLength={50}
+                textAlign={"left"}
+                onChange={(e)=>{setNewTableNameDescription(e.target.value)}}
+                value={""}
+              />
+            </div>
+
+            <div className="flex justify-center mt-8">
+                <PillButton
+                text="Add Table"
+                onClick={handleTableAdding}
+                isPopup={true}
+                icon={FaPlusCircle}
+            />
+            </div>
+            
             
     </PopupContainer>
 
