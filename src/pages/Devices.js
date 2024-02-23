@@ -62,8 +62,10 @@ const Device = () => {
 
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
 
-  const handleDeviceSelection = (deviceId) => {
-    setSelectedDeviceId(deviceId);
+  const handleDeviceSelection = (device) => {
+    setSelectedDeviceId(device.device_id);
+    setNewDeviceName(device.device_name);
+    setNewDeviceDescription(device.description);
   };
 
   const handleDeviceNameChange = (name) => {
@@ -327,16 +329,13 @@ const Device = () => {
       active={2}
       addressText={"John Doe > UOM Weather Station > Devices"}
     >
-      <div
-        className="flex justify-between items-center mb-5"
-        style={{ paddingLeft: "7%", paddingRight: "7%" }}
-      >
+      <div className={`flex flex-row justify-between px-7 sm:px-10 mt-8 sm:mt-3`}>
         <div className="text-xl text-gray2 font-semibold">Your Devices</div>
         <div className="flex">
           <ButtonRectangle text="Add Device" onClick={toggleAddDeviceModal} />
         </div>
       </div>
-      <div className="flex-wrap flex justify-center mb-28">
+      <div className="flex-wrap flex justify-center mb-28 mt-6">
         {devices.map((device) => (
           <SquareCard
             isIconShown
@@ -348,7 +347,7 @@ const Device = () => {
             onDelete={() => handleDeviceDelete(device.device_id)}
             onUpdate={() => {
               toggleDeviceUpdateModal();
-              handleDeviceSelection(device.device_id);
+              handleDeviceSelection(device);
             }}
             onClick={() => {
               navigate("/devices", {
@@ -377,6 +376,7 @@ const Device = () => {
             maxLength={50}
             textAlign={"left"}
             onChange={handleDeviceNameChange}
+            value={newDeviceName}
           />
         </div>
         <div className="flex flex-col justify-center mt-4">
@@ -388,6 +388,7 @@ const Device = () => {
             maxLength={100}
             textAlign={"left"}
             onChange={handleDeviceDescriptionChange}
+            value={newDeviceDescription}
           />
         </div>
         <div className="flex justify-center mt-8">
@@ -454,6 +455,7 @@ const Device = () => {
             maxLength={50}
             textAlign={"left"}
             onChange={handleDeviceNameChange}
+            value={newDeviceName}
           />
         </div>
         <div className="flex flex-col justify-center mt-4">
@@ -465,6 +467,7 @@ const Device = () => {
             maxLength={100}
             textAlign={"left"}
             onChange={handleDeviceDescriptionChange}
+            value={newDeviceDescription}
           />
         </div>
         <div className="flex justify-center mt-8">
