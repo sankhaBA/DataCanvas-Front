@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaSalesforce, FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,9 +9,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
+import PopupContainer from "../components/PopupContainer";
 import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
+import SelectBox from "../components/SelectBox";
 import Spinner from "../components/Spinner";
 import InsightCard from "../components/InsightCard";
 import ConfigTableCard from "../components/ConfigTableCard";
@@ -26,6 +28,33 @@ function ConfigureTable() {
 
     // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false);
+
+    // ---------- Popup states ----------
+    const [isAddColumnPopupVisible, setIsAddColumnPopupVisible] = useState(true);
+    useEffect(() => {
+        setNewColumnName('');
+        setNewColumnDataType(-1);
+        setNewColumnMaxLength(0);
+        setNewColumnDefaultValue('');
+        setNewColumnAutoIncrement(false);
+        setNewColumnNullAllowed(false);
+        setNewColumnUnique(false);
+    }, [isAddColumnPopupVisible]);
+
+    const [newColumnName, setNewColumnName] = useState('');
+    const [newColumnDataType, setNewColumnDataType] = useState(-1);
+    useEffect(() => {
+        if (newColumnDataType == 3) {
+            setNewColumnMaxLength(255);
+        } else {
+            setNewColumnMaxLength(0);
+        }
+    }, [newColumnDataType]);
+    const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
+    const [newColumnDefaultValue, setNewColumnDefaultValue] = useState('');
+    const [newColumnAutoIncrement, setNewColumnAutoIncrement] = useState(false);
+    const [newColumnNullAllowed, setNewColumnNullAllowed] = useState(false);
+    const [newColumnUnique, setNewColumnUnique] = useState(false);
 
     // ---------- Table Details ----------
     const [tblID, setTblID] = useState(-1);
@@ -208,6 +237,95 @@ function ConfigureTable() {
         }
     }
 
+    const AddColumnPopup = () => {
+        return (
+            <PopupContainer isOpen={isAddColumnPopupVisible}
+                onClose={() => { }}
+                closeFunction={() => setIsAddColumnPopupVisible(false)}
+                Icon={FaPlusCircle}
+                title='Add Table Fields'
+                closeIconVisible={true}
+                width={'550px'}>
+                <div className="sm:flex justify-between items-center mt-4 space-y-4 sm:space-y-0 space-x-0 sm:space-x-4">
+                    <div className="flex flex-col justify-center sm:w-1/2">
+                        <label className="text-gray1 text-sm">Field Name</label>
+                        <TextBox text=""
+                            type="text"
+                            placeholder="Field Name"
+                            maxLength={20}
+                            textAlign={'left'}
+                            onChange={((e) => setNewColumnName(e.target.value))}
+                            value={newColumnName} />
+                    </div>
+
+                    <div className="flex flex-col justify-center sm:w-1/2">
+                        <label className="text-gray1 text-sm">Data Type</label>
+                        <SelectBox onChange={(e) => setNewColumnDataType(e.target.value)}
+                            value={newColumnDataType}>
+                            <option value={-1}>Select Data Type</option>
+                            {dataTypes.map((type) => {
+                                return (
+                                    <option key={type.type_id} value={type.type_id}>{type.type_name}</option>
+                                )
+                            })}
+                        </SelectBox>
+                    </div>
+                </div>
+
+                <div className="sm:flex justify-between items-center mt-4 space-y-4 sm:space-y-0 space-x-0 sm:space-x-4">
+                    <div className="flex flex-col justify-center">
+                        <label className="text-gray1 text-sm">Maximum Length</label>
+                        <TextBox text=""
+                            type='number'
+                            placeholder="Maximum Length"
+                            maxLength={20}
+                            textAlign={'left'}
+                            onChange={((e) => setNewColumnMaxLength(e.target.value))}
+                            value={newColumnMaxLength}
+                            disabled={(newColumnDataType == 3) ? false : true} />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                        <label className="text-gray1 text-sm">Default Value</label>
+                        <TextBox text=""
+                            type='mumber'
+                            placeholder="Default Value"
+                            maxLength={255}
+                            textAlign={'left'}
+                            onChange={((e) => setNewColumnDefaultValue(e.target.value))}
+                            value={newColumnDefaultValue} />
+                    </div>
+                </div>
+
+                <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
+                    {/* 3 Check boxes with captions Auto Increment, Null Allowed, Unique. Checkbox and the caption should be horizontally aligned*/}
+                    <div className="flex justify-center items-center space-x-2">
+                        <input type="checkbox" className="w-4 h-4"
+                            value={newColumnAutoIncrement}
+                            onChange={(e) => setNewColumnAutoIncrement(e.target.value)} />
+                        <label className="text-gray2 text-sm">Auto Increment</label>
+                    </div>
+
+                    <div className="flex justify-center items-center space-x-2">
+                        <input type="checkbox" className="w-4 h-4"
+                            value={newColumnNullAllowed}
+                            onChange={(e) => setNewColumnNullAllowed(e.target.value)} />
+                        <label className="text-gray2 text-sm">Null Allowed</label>
+                    </div>
+                    <div className="flex justify-center items-center space-x-2">
+                        <input type="checkbox" className="w-4 h-4"
+                            value={newColumnUnique}
+                            onChange={(e) => setNewColumnUnique(e.target.value)} />
+                        <label className="text-gray2 text-sm">Unique</label>
+                    </div>
+                </div>
+
+                <div className="flex justify-center items-center mt-6">
+                    <PillButton text="Save Field" onClick={() => { }} icon={FaUpload} />
+                </div>
+            </PopupContainer>
+        )
+    }
+
     return (
         // Sidebar Layout Component
         <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
@@ -239,10 +357,11 @@ function ConfigureTable() {
             </div>
 
             <div className={`flex flex-row justify-center items-center mt-12`}>
-                <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => { }} />
+                <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => { setIsAddColumnPopupVisible(true) }} />
             </div>
 
-
+            {/* Popup container for column adding */}
+            {isAddColumnPopupVisible ? AddColumnPopup() : null}
 
             {/* Spinner */}
             <Spinner isVisible={loading} />

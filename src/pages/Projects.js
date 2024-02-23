@@ -246,12 +246,12 @@ function Projects() {
             <PopupContainer isOpen={isAddProjectOpen} onClose={() => { }} closeFunction={toggleAddProjectModal} Icon={FaPlusCircle} title='Add New Project' closeIconVisible={true}>
                 <div className="flex flex-col justify-center mt-4">
                     <label className="text-gray1 text-sm">Project Name</label>
-                    <TextBox text="" type="text" placeholder="Project Name" maxLength={50} textAlign={'left'} onChange={handleProjectNameChange} />
+                    <TextBox text="" type="text" placeholder="Project Name" maxLength={50} textAlign={'left'} onChange={handleProjectNameChange} value={newProjectName} />
                 </div>
 
                 <div className="flex flex-col justify-center mt-4">
                     <label className="text-gray1 text-sm">Project Description</label>
-                    <TextBox text="" type="text" value='' placeholder="Project Description" maxLength={150} textAlign={'left'} onChange={handleProjectDescriptionChange} />
+                    <TextBox text="" type="text" placeholder="Project Description" maxLength={150} textAlign={'left'} onChange={handleProjectDescriptionChange} value={newProjectDescription} />
                 </div>
 
                 <div className="flex flex-col items-center justify-center mt-4">

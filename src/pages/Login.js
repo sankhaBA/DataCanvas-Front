@@ -185,11 +185,11 @@ function Login() {
                         <h1 className="text-2xl text-center text-gray2 font-bold mt-4">Login</h1>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">Username</label>
-                            <TextBox text="" type="email" placeholder="Email" onChange={(e) => { setEmail(e.target.value) }} />
+                            <TextBox text="" type="email" placeholder="Email" onChange={(e) => { setEmail(e.target.value) }} value={email} />
                         </div>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">Password</label>
-                            <TextBox text="" type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} />
+                            <TextBox text="" type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} value={password} />
                         </div>
                         <div className="flex justify-center mt-2">
                             <Link to="/forgotpassword">
