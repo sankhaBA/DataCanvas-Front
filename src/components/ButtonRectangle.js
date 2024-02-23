@@ -18,7 +18,7 @@ ButtonRectangle.defaultProps = {
     onClick: () => { },
     icon: null,
     isPopup: false,
-    color: "text-green"
+    color: "green"
 }
 
 export default ButtonRectangle;
