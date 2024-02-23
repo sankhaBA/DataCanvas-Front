@@ -21,7 +21,7 @@ const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction,
                 </Transition.Child>
 
 
-                <div className={`w-[350px] sm:w-[${width}] fixed inset-0 flex items-center justify-center mx-auto`}>
+                <div className={`w-[350px] sm:w-[550px] fixed inset-0 flex items-center justify-center mx-auto`}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-500"

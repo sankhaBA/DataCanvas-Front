@@ -32,15 +32,20 @@ function ConfigureTable() {
     // ---------- Popup states ----------
     const [isAddColumnPopupVisible, setIsAddColumnPopupVisible] = useState(false);
     useEffect(() => {
-        setNewColumnName('');
-        setNewColumnDataType(-1);
-        setNewColumnMaxLength(0);
-        setNewColumnDefaultValue('');
-        setNewColumnAutoIncrement(false);
-        setNewColumnNullAllowed(false);
-        setNewColumnUnique(false);
+        if (!isAddColumnPopupVisible) {
+            setNewColumnName('');
+            setNewColumnDataType(-1);
+            setNewColumnMaxLength(0);
+            setNewColumnDefaultValue('');
+            setNewColumnAutoIncrement(false);
+            setNewColumnNullAllowed(false);
+            setNewColumnUnique(false);
+            setSelectedColumnID(-1);
+        }
+
     }, [isAddColumnPopupVisible]);
 
+    const [selectedColumnID, setSelectedColumnID] = useState(-1);
     const [newColumnName, setNewColumnName] = useState('');
     const [newColumnDataType, setNewColumnDataType] = useState(-1);
     useEffect(() => {
@@ -50,7 +55,7 @@ function ConfigureTable() {
         } else {
             setNewColumnMaxLength(0);
         }
-        setNewColumnDefaultValue('');
+        //setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
     const [newColumnDefaultValue, setNewColumnDefaultValue] = useState('');
@@ -239,6 +244,22 @@ function ConfigureTable() {
         }
     }
 
+    // ---------- Function to trigger when user clicks on a column in the list ----------
+    const selectColumn = (column) => {
+        if (column) {
+            setIsAddColumnPopupVisible(true);
+            setSelectedColumnID(column.clm_id);
+            setNewColumnName(column.clm_name);
+            setNewColumnDataType(column.data_type);
+            setNewColumnMaxLength(column.max_length);
+            setNewColumnDefaultValue(column.default_value);
+            setNewColumnAutoIncrement(column.constraints.find(x => x.constraint_id == 1) != undefined);
+            setNewColumnNullAllowed(column.constraints.find(x => x.constraint_id == 2) != undefined);
+            setNewColumnUnique(column.constraints.find(x => x.constraint_id == 3) != undefined);
+        }
+    }
+
+
     const AddColumnPopup = () => {
 
         const validateNewColumn = () => {
@@ -269,7 +290,7 @@ function ConfigureTable() {
                 }
 
                 // For data type = 2, default value should be an integer, not a decimal number
-                if (newColumnDataType == 2 && (newColumnDefaultValue % 1 != 0)) {
+                if (newColumnDataType == 1 && (newColumnDefaultValue % 1 != 0)) {
                     toast.warning('Default value should be an integer for Integer data type');
                     return false;
                 }
@@ -296,15 +317,15 @@ function ConfigureTable() {
                     }
                 */
 
-                let constraints = [];
+                let constraintsArray = [];
                 if (newColumnAutoIncrement) {
-                    constraints.push(constraints.find(x => x.constraint_name == 'Auto Increment').constraint_id);
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Auto Increment').constraint_id);
                 }
                 if (newColumnNullAllowed) {
-                    constraints.push(constraints.find(x => x.constraint_name == 'Not Null').constraint_id);
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Not Null').constraint_id);
                 }
                 if (newColumnUnique) {
-                    constraints.push(constraints.find(x => x.constraint_name == 'Unique').constraint_id);
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Unique').constraint_id);
                 }
 
                 const requestBody = {
@@ -313,7 +334,7 @@ function ConfigureTable() {
                     tbl_id: tblID,
                     default_value: newColumnDefaultValue,
                     max_length: newColumnMaxLength,
-                    constraints: constraints
+                    constraints: constraintsArray
                 }
 
                 try {
@@ -356,13 +377,13 @@ function ConfigureTable() {
                 onClose={() => { }}
                 closeFunction={() => setIsAddColumnPopupVisible(false)}
                 Icon={FaPlusCircle}
-                title='Add Table Fields'
+                title={selectedColumnID == -1 ? 'Add Field' : 'Edit Field'}
                 closeIconVisible={true}
                 width={'550px'}>
                 <div className="sm:flex justify-between items-center mt-4 space-y-4 sm:space-y-0 space-x-0 sm:space-x-4">
                     <div className="flex flex-col justify-center sm:w-1/2">
                         <label className="text-gray1 text-sm">Field Name</label>
-                        <TextBox text=""
+                        <TextBox
                             type="text"
                             placeholder="Field Name"
                             maxLength={20}
@@ -388,7 +409,7 @@ function ConfigureTable() {
                 <div className="sm:flex justify-between items-center mt-4 space-y-4 sm:space-y-0 space-x-0 sm:space-x-4">
                     <div className="flex flex-col justify-center">
                         <label className="text-gray1 text-sm">Maximum Length</label>
-                        <TextBox text=""
+                        <TextBox
                             type='number'
                             placeholder="Maximum Length"
                             maxLength={20}
@@ -399,8 +420,8 @@ function ConfigureTable() {
                     </div>
                     <div className="flex flex-col justify-center">
                         <label className="text-gray1 text-sm">Default Value</label>
-                        <TextBox text=""
-                            type='mumber'
+                        <TextBox
+                            type='text'
                             placeholder="Default Value"
                             maxLength={255}
                             textAlign={'left'}
@@ -410,12 +431,12 @@ function ConfigureTable() {
                 </div>
 
                 <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
-                    {/* 3 Check boxes with captions Auto Increment, Null Allowed, Unique. Checkbox and the caption should be horizontally aligned*/}
+                    {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
                     {newColumnDataType != 3 ? (
                         <div className="flex justify-center items-center space-x-2">
                             <input type="checkbox" className="w-4 h-4"
                                 checked={newColumnAutoIncrement}
-                                onChange={(e) => setNewColumnAutoIncrement(e.target.value)} />
+                                onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
                             <label className="text-gray2 text-sm">Auto Increment</label>
                         </div>
                     ) : null}
@@ -423,19 +444,19 @@ function ConfigureTable() {
                     <div className="flex justify-center items-center space-x-2">
                         <input type="checkbox" className="w-4 h-4"
                             checked={newColumnNullAllowed}
-                            onChange={(e) => setNewColumnNullAllowed(e.target.value)} />
-                        <label className="text-gray2 text-sm">Null Allowed</label>
+                            onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
+                        <label className="text-gray2 text-sm">Not Null</label>
                     </div>
                     <div className="flex justify-center items-center space-x-2">
                         <input type="checkbox" className="w-4 h-4"
                             checked={newColumnUnique}
-                            onChange={(e) => setNewColumnUnique(e.target.value)} />
+                            onChange={(e) => setNewColumnUnique(e.target.checked)} />
                         <label className="text-gray2 text-sm">Unique</label>
                     </div>
                 </div>
 
                 <div className="flex justify-center items-center mt-6">
-                    <PillButton text="Save Field" onClick={() => { saveNewColumn() }} icon={FaUpload} />
+                    <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { saveNewColumn() }} icon={FaUpload} />
                 </div>
             </PopupContainer>
         )
@@ -459,11 +480,11 @@ function ConfigureTable() {
                         <ConfigTableCard key={column.clm_id}
                             columnName={column.clm_name}
                             dataType={`${(dataTypes.find(x => x.type_id == column.data_type).type_name)}` + `${(column.max_length != null) ? `(${column.max_length})` : ''}`}
-                            defaultValue={(column.default_value == null) ? 'N/A' : column.default_value}
+                            defaultValue={(column.default_value == null || column.default_value == '') ? 'N/A' : column.default_value}
                             isAutoIncrement={column.constraints.find(x => x.constraint_id == 1) != undefined}
                             isNullAllowed={column.constraints.find(x => x.constraint_id == 2) != undefined}
                             isUnique={column.constraints.find(x => x.constraint_id == 3) != undefined}
-                            onClick={() => { }}
+                            onClick={() => { selectColumn(column) }}
                             onEdit={() => { }}
                             onDelete={() => { }}
                             disabled={((column.clm_name == 'id' || (column.clm_name) == 'device')) ? true : false} />
