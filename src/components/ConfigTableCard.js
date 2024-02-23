@@ -1,14 +1,14 @@
 import React from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
-const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, isNullAllowed, isUnique, onClick }) => {
+const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, isNullAllowed, isUnique, onClick, onEdit, onDelete, disabled }) => {
     return (
         <div className={
             `w-full bg-black3 rounded-lg my-1 sm:my-1 cursor-pointer text-gray2
         border border-gray1 border-opacity-60 relative 
         transition duration-300 hover:border-green hover:border-opacity-50 hover:text-green overflow-hidden`
         }
-            onClick={onClick}>
+            onClick={(disabled) ? () => { } : onClick}>
             <div className="w-full h-full py-2 pl-6 pr-4 flex flex-row justify-between items-center">
 
                 <div className={`flex flex-row justify-start items-center space-x-20`}>
@@ -90,22 +90,34 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                     </div>
                 </div>
 
-                <div className={`flex flex-row justify-start items-center space-x-12`}>
-                    {/* Edit Section */}
-                    <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-green  transition-all duration-300 hover:text-gray2`}>
-                        <FaPencilAlt className="text-sm" />
-                        <span className="text-xs">Edit</span>
-                    </div>
+                {/* Edit and Delete Section */}
+                {!disabled ? (
+                    <div className={`flex flex-row justify-start items-center space-x-12`}>
+                        {/* Edit Section */}
+                        {/* <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-green  transition-all duration-300 hover:text-gray2`}>
+                            <FaPencilAlt className="text-sm" />
+                            <span className="text-xs">Edit</span>
+                        </div> */}
 
-                    {/* Delete Section */}
-                    <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}>
-                        <FaTrash className="text-sm" />
-                        <span className="text-xs hidden sm:block ">Delete</span>
+                        {/* Delete Section */}
+                        <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}>
+                            <FaTrash className="text-sm" />
+                            <span className="text-xs hidden sm:block ">Delete</span>
+                        </div>
                     </div>
-                </div>
+                ) : null}
+
             </div>
         </div>
     );
+}
+
+// Default Props
+ConfigTableCard.defaultProps = {
+    onClick: () => { },
+    onEdit: () => { },
+    onDelete: () => { },
+    disabled: false
 }
 
 export default ConfigTableCard;

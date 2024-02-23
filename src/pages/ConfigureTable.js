@@ -70,8 +70,11 @@ function ConfigureTable() {
         try {
             setTblID(state.tbl_id);
             console.log('tbl_id : ' + state.tbl_id);
-            getDataTypes();
-            getConstraints();
+
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+            getDataTypes(token);
+            getConstraints(token);
         } catch (err) {
             console.log(err);
             navigate('/login');
@@ -93,30 +96,56 @@ function ConfigureTable() {
     }, [dataTypes, constraints]);
 
     // ---------- Function to get data types ----------
-    const getDataTypes = async () => {
+    const getDataTypes = async (token) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/config/type/`);
+            const res = await axios.get(`http://localhost:3001/api/data/config/type/`, {
+                headers: {
+                    'authorization': token
+                }
+            });
             console.log('Data Types : ', res.data);
             setDataTypes(res.data);
             setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Error in getting data types');
+                    navigate('/overview');
+                    break;
+            }
         }
     }
 
     // ---------- Function to get constraints ----------
-    const getConstraints = async () => {
+    const getConstraints = async (token) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/config/constraint/`);
+            const res = await axios.get(`http://localhost:3001/api/data/config/constraint/`, {
+                headers: {
+                    'authorization': token
+                }
+            });
             console.log('Constraints : ', res.data);
             setConstraints(res.data);
             setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Error in getting data types');
+                    navigate('/overview');
+                    break;
+            }
         }
     }
 
@@ -124,12 +153,27 @@ function ConfigureTable() {
     const getTableDetails = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/tbl/` + tblID);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+            const res = await axios.get(`http://localhost:3001/api/data/tbl/` + tblID, {
+                headers: {
+                    'authorization': token
+                }
+            });
             setTblName(res.data.tbl_name);
             setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Error in getting table details');
+                    navigate('/overview');
+                    break;
+            }
         }
     }
 
@@ -137,7 +181,13 @@ function ConfigureTable() {
     const getColumnDetails = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/clm?tbl_id=` + tblID);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+            const res = await axios.get(`http://localhost:3001/api/data/clm?tbl_id=` + tblID, {
+                headers: {
+                    'authorization': token
+                }
+            });
             console.log('Columns : ', res.data);
             // Sort columns by clm_id
             res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
@@ -146,6 +196,15 @@ function ConfigureTable() {
         } catch (err) {
             setLoading(false);
             console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Error in getting table column details');
+                    navigate('/overview');
+                    break;
+            }
         }
     }
 
@@ -164,7 +223,17 @@ function ConfigureTable() {
                 {/* <ConfigTableCard columnName="id" dataType="Integer" defaultValue="N/A" isAutoIncrement={true} isNullAllowed={false} isUnique={true} onClick={() => { }} /> */}
                 {columns.map((column) => {
                     return (
-                        <ConfigTableCard key={column.clm_id} columnName={column.clm_name} dataType={`${(dataTypes.find(x => x.type_id == column.data_type).type_name)}` + `${(column.max_length != null) ? `(${column.max_length})` : ''}`} defaultValue={(column.default_value == null) ? 'N/A' : column.default_value} isAutoIncrement={column.constraints.find(x => x.constraint_id == 1) != undefined} isNullAllowed={column.constraints.find(x => x.constraint_id == 2) != undefined} isUnique={column.constraints.find(x => x.constraint_id == 3) != undefined} onClick={() => { }} />
+                        <ConfigTableCard key={column.clm_id}
+                            columnName={column.clm_name}
+                            dataType={`${(dataTypes.find(x => x.type_id == column.data_type).type_name)}` + `${(column.max_length != null) ? `(${column.max_length})` : ''}`}
+                            defaultValue={(column.default_value == null) ? 'N/A' : column.default_value}
+                            isAutoIncrement={column.constraints.find(x => x.constraint_id == 1) != undefined}
+                            isNullAllowed={column.constraints.find(x => x.constraint_id == 2) != undefined}
+                            isUnique={column.constraints.find(x => x.constraint_id == 3) != undefined}
+                            onClick={() => { }}
+                            onEdit={() => { }}
+                            onDelete={() => { }}
+                            disabled={((column.clm_name == 'id' || (column.clm_name) == 'device')) ? true : false} />
                     )
                 })}
             </div>
@@ -172,6 +241,8 @@ function ConfigureTable() {
             <div className={`flex flex-row justify-center items-center mt-12`}>
                 <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => { }} />
             </div>
+
+
 
             {/* Spinner */}
             <Spinner isVisible={loading} />
