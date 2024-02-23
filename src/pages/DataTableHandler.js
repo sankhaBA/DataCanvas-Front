@@ -60,10 +60,16 @@ const DataTableHandler = ()=> {
         console.log('Data Tables', dataTables);
         loadDataTables();
         }, [dataTables]);
+  
+
+
+  // ---------- Create new table ----------      
+
+
 
 
   // ---------- Load data tables from the backend ----------
-const loadDataTables = async () => {
+  const loadDataTables = async () => {
     setLoading(true);
     // Get request to localhost:3001/api/data/tbl?project_id=<project_id> to get data tables
     try {
@@ -139,7 +145,7 @@ const loadDataTables = async () => {
                         })
                     ) : (
                         <div className={`flex flex-row justify-center items-center mt-4`}>
-                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => { }} />
+                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => {}} />
                         </div>
                     )}
     </div>
@@ -165,6 +171,32 @@ const loadDataTables = async () => {
         pauseOnHover
         theme="dark"
     />
+
+
+    <PopupContainer
+            isOpen={isAddDeviceOpen}
+            onClose={() => { }}
+            closeFunction={toggleAddDeviceModal}
+            Icon={FaPlusCircle}
+            title={"Add New Table"}
+            closeIconVisible={true}
+        >
+            <div className="flex flex-col justify-center mt-4">
+              <label className="text-gray1 text-sm">Table Name</label>
+              <TextBox
+                text=""
+                type="text"
+                placeholder="Enter table name"
+                maxLength={50}
+                textAlign={"left"}
+                onChange={handleDeviceNameChange}
+                value={newDeviceName}
+              />
+            </div>
+            
+    </PopupContainer>
+
+
 </SidebarLayout>
   )
 }
