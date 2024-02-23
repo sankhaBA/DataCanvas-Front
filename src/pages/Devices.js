@@ -134,6 +134,103 @@ const Device = () => {
     }
   };
 
+  //--API call for deleting device
+  const handleDeviceDelete = async (device_id) => {
+    setLoading(true);
+    // delete request to localhost:3001/api/device?device_id=<deviceID>
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/api/device`,
+        {
+          device_id: device_id,
+        },
+        
+        {
+          headers: {
+            authorization: localStorage.getItem("auth-token"),
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        // Remove the deleted device from the devices array
+        let newDevices = devices.filter(
+          (device) => device.device_id !== device_id
+        );
+        setDevices(newDevices);
+      }
+    } catch (err) {
+      switch (err.status) {
+        case 400:
+          toast.error("Bad request!");
+          break;
+        case 401:
+          toast.error("Unauthorized access!");
+          break;
+        case 403:
+          toast.error("Unauthorized access!");
+          break;
+        case 404:
+          toast.error("Project not found!");
+          break;
+        default:
+          toast.error("Something went wrong!");
+          break;
+      }
+      setLoading(false);
+    }
+  };
+
+  //----API call for updating device
+  const handleDeviceUpdate = async (device_id) => {
+    setLoading(true);
+    // put request to localhost:3001/api/device
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/device`,
+        {
+          device_id: device_id,
+          device_name: newDeviceName,
+          description: newDeviceDescription,
+        },
+        {
+          headers: {
+            authorization: localStorage.getItem("auth-token"),
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        // Remove the deleted device from the devices array
+        let newDevices = devices.filter(
+          (device) => device.device_id !== device_id
+        );
+        setDevices(newDevices);
+      }
+    } catch (err) {
+      switch (err.status) {
+        case 400:
+          toast.error("Bad request!");
+          break;
+        case 401:
+          toast.error("Unauthorized access!");
+          break;
+        case 403:
+          toast.error("Unauthorized access!");
+          break;
+        case 404:
+          toast.error("Project not found!");
+          break;
+        default:
+          toast.error("Something went wrong!");
+          break;
+      }
+      setLoading(false);
+    }
+  };
+
   // API call for getting all devices for project
   const getAllDevices = async () => {
     setLoading(true);
@@ -204,24 +301,6 @@ const Device = () => {
     }
   };
 
-  //----
-
-  //-----Popup content for Add Device-----
-  //   const AddDeviceCard = () => {
-  //     return (
-  //         <div
-  //           className={`w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl my-1 sm:my-5 mx-2
-  //                       border border-green relative overflow-hidden text-green
-  //                       transition duration-300 hover:border-gray1 hover:text-gray2 hover:bg-opacity-50 hover:backdrop-blur-md
-  //                       flex flex-col items-center justify-center space-y-4`}
-  //           onClick={toggleAddDeviceModal}
-  //         >
-
-  //           <h1 className={`text-xl font-bold`}>Start New Project</h1>
-  //         </div>
-  //       );
-  //     };
-
   return (
     <SidebarLayout
       active={2}
@@ -239,11 +318,14 @@ const Device = () => {
       <div className="flex-wrap flex justify-center mb-28">
         {devices.map((device) => (
           <SquareCard
+            isIconShown
             key={device.device_id}
             title={device.device_name}
             subtitle={device.description}
             footer={"Last Update:" + device.footer}
             mx="mx-2"
+            onDelete={() => handleDeviceDelete(device.device_id)}
+            onUpdate={() => handleDeviceUpdate(device.device_id)}
             onClick={() => {
               navigate("/devices", {
                 state: { device_id: device.device_id },
@@ -251,132 +333,6 @@ const Device = () => {
             }}
           />
         ))}
-        {/* <SquareCard
-          isIconShown
-          title="Device 1"
-          subtitle="Device 1"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        /> */}
-        {/* <SquareCard
-          isIconShown
-          title="Device 2"
-          subtitle="Device 2"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 3"
-          subtitle="Device 3"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 4"
-          subtitle="Device 4"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 5"
-          subtitle="Device 5"
-          footer="Device 5"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 6"
-          subtitle="Device 6"
-          footer="Device 6"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 7"
-          subtitle="Device 7"
-          footer="Device 7"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 8"
-          subtitle="Device 8"
-          footer="Device 8"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 9"
-          subtitle="Device 9"
-          footer="Device 9"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 1"
-          subtitle="Device 1"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 2"
-          subtitle="Device 2"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 3"
-          subtitle="Device 3"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 4"
-          subtitle="Device 4"
-          footer="Last record  : 12.13.2023 21:34PM"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 5"
-          subtitle="Device 5"
-          footer="Device 5"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 6"
-          subtitle="Device 6"
-          footer="Device 6"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 7"
-          subtitle="Device 7"
-          footer="Device 7"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 8"
-          subtitle="Device 8"
-          footer="Device 8"
-          onClick={() => {}}
-        />
-        <SquareCard
-          isIconShown
-          title="Device 9"
-          subtitle="Device 9"
-          footer="Device 9"
-          onClick={() => {}}
-        /> */}
       </div>
 
       {/* Add Device Modal */}
