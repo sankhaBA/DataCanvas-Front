@@ -1,7 +1,7 @@
 import React from "react";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 
-const SquareCard = ({ title, subtitle, footer, onClick, isIconShown = false, mx='mx-5' }) => {
+const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete, isIconShown = false, mx = 'mx-5' }) => {
   return (
     <div
       className={
@@ -29,13 +29,21 @@ const SquareCard = ({ title, subtitle, footer, onClick, isIconShown = false, mx=
         <div className="flex justify-between w-full pr-6">
           <div className="text-neutral-600 text-xs font-semibold flex">{footer}</div>
           <div className="flex">
-            {isIconShown && <FaPencilAlt onClick={() => { }} className="text-green text-xl hover:text-gray2 transition duration-300" />}
-            {isIconShown && <FaTrash onClick={() => { }} className="text-red text-xl ms-5 hover:text-gray2 transition duration-300" />}
+            {isIconShown && <FaPencilAlt onClick={onUpdate} className="text-green text-xl hover:text-gray2 transition duration-300" />}
+            {isIconShown && <FaTrash onClick={onDelete} className="text-red text-xl ms-5 hover:text-gray2 transition duration-300" />}
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+// Default props
+SquareCard.defaultProps = {
+  onClick: () => { },
+  onUpdate: () => { },
+  onDelete: () => { },
+  isIconShown: false,
 };
 
 export default SquareCard;

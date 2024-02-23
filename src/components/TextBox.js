@@ -1,11 +1,15 @@
 import React from 'react';
 
-const TextBox = ({ text, onChange, icon, type, placeholder, maxLength, textAlign, width, mt }) => {
+const TextBox = ({ text, onChange, icon, type, placeholder, maxLength, textAlign, width, mt, disabled, value }) => {
 
     return (
-        <input type={type} placeholder={placeholder}  className={`${width} bg-black3 border border-gray2 border-opacity-30 rounded-full ${textAlign==='center' ? 'text-center' : ''} px-4 py-1 ${mt} text-gray2`} 
+        <input type={type}
+            placeholder={placeholder}
+            className={`${width} bg-black3 border border-gray2 border-opacity-30 rounded-full ${textAlign === 'center' ? 'text-center' : ''} px-4 py-1 ${mt} text-gray2`}
             onChange={onChange}
-            maxLength={maxLength}/>
+            maxLength={maxLength}
+            value={value}
+            disabled={disabled} />
     );
 };
 
@@ -17,6 +21,7 @@ TextBox.defaultProps = {
     textAlign: "center",
     width: "w-full",
     mt: "mt-2",
+    disabled: false,
 };
 
 export default TextBox;
