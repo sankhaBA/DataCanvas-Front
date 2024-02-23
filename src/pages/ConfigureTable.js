@@ -30,7 +30,7 @@ function ConfigureTable() {
     const [loading, setLoading] = useState(false);
 
     // ---------- Popup states ----------
-    const [isAddColumnPopupVisible, setIsAddColumnPopupVisible] = useState(true);
+    const [isAddColumnPopupVisible, setIsAddColumnPopupVisible] = useState(false);
     useEffect(() => {
         setNewColumnName('');
         setNewColumnDataType(-1);
@@ -46,9 +46,11 @@ function ConfigureTable() {
     useEffect(() => {
         if (newColumnDataType == 3) {
             setNewColumnMaxLength(255);
+            setNewColumnAutoIncrement(false);
         } else {
             setNewColumnMaxLength(0);
         }
+        setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
     const [newColumnDefaultValue, setNewColumnDefaultValue] = useState('');
@@ -238,6 +240,117 @@ function ConfigureTable() {
     }
 
     const AddColumnPopup = () => {
+
+        const validateNewColumn = () => {
+            if (newColumnName.trim() == '' || newColumnName.trim() == null) {
+                toast.warning('Field Name cannot be empty');
+                return false;
+            }
+
+            if (newColumnDataType == -1) {
+                toast.warning('Please select a data type');
+                return false;
+            }
+
+            if (newColumnDataType == 3) {
+                if ((newColumnMaxLength == 0 || newColumnMaxLength == '' || newColumnMaxLength == null)) {
+                    toast.warning('Maximum length should be more than 0 for Text data type');
+                    return false;
+                }
+            } else {
+                if (isNaN(newColumnDefaultValue)) {
+                    toast.warning('Default value should be a number for numerical data types');
+                    return false;
+                }
+
+                if (newColumnAutoIncrement && newColumnDataType != 1) {
+                    toast.warning('Auto Increment is only allowed for Integer data type');
+                    return false;
+                }
+
+                // For data type = 2, default value should be an integer, not a decimal number
+                if (newColumnDataType == 2 && (newColumnDefaultValue % 1 != 0)) {
+                    toast.warning('Default value should be an integer for Integer data type');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        const saveNewColumn = async () => {
+            if (validateNewColumn()) {
+                setLoading(true);
+                // ---------- Get auth-token from local storage ----------
+                const token = localStorage.getItem('auth-token');
+
+                /*
+                    REQUEST BODY STRUCTURE
+                    {
+                        "clm_name": "humidity",
+                        "data_type": 2,
+                        "tbl_id": 1,
+                        "default_value": null,
+                        "max_length": null,
+                        "constraints": [1,2]
+                    }
+                */
+
+                let constraints = [];
+                if (newColumnAutoIncrement) {
+                    constraints.push(constraints.find(x => x.constraint_name == 'Auto Increment').constraint_id);
+                }
+                if (newColumnNullAllowed) {
+                    constraints.push(constraints.find(x => x.constraint_name == 'Not Null').constraint_id);
+                }
+                if (newColumnUnique) {
+                    constraints.push(constraints.find(x => x.constraint_name == 'Unique').constraint_id);
+                }
+
+                const requestBody = {
+                    clm_name: newColumnName,
+                    data_type: newColumnDataType,
+                    tbl_id: tblID,
+                    default_value: newColumnDefaultValue,
+                    max_length: newColumnMaxLength,
+                    constraints: constraints
+                }
+
+                try {
+                    const res = await axios.post(`http://localhost:3001/api/data/clm/`, requestBody, {
+                        headers: {
+                            'authorization': token
+                        }
+                    });
+
+                    if (res.status == 201) {
+                        toast.success('Field added successfully');
+                        setIsAddColumnPopupVisible(false);
+                        getColumnDetails();
+                    }
+                } catch (err) {
+                    console.log(err);
+                    switch (err.response.status) {
+                        case 401 || 403:
+                            toast.error('Session expired. Please login again');
+                            navigate('/login');
+                            break;
+                        case 400 || 404:
+                            toast.error('Error in adding field');
+                            navigate('/projects')
+                            break;
+                        default:
+                            toast.error('Something went wrong');
+                            break;
+                    }
+                } finally {
+                    setLoading(false);
+                    setIsAddColumnPopupVisible(false);
+                }
+
+            }
+        }
+
         return (
             <PopupContainer isOpen={isAddColumnPopupVisible}
                 onClose={() => { }}
@@ -298,29 +411,31 @@ function ConfigureTable() {
 
                 <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
                     {/* 3 Check boxes with captions Auto Increment, Null Allowed, Unique. Checkbox and the caption should be horizontally aligned*/}
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            value={newColumnAutoIncrement}
-                            onChange={(e) => setNewColumnAutoIncrement(e.target.value)} />
-                        <label className="text-gray2 text-sm">Auto Increment</label>
-                    </div>
+                    {newColumnDataType != 3 ? (
+                        <div className="flex justify-center items-center space-x-2">
+                            <input type="checkbox" className="w-4 h-4"
+                                checked={newColumnAutoIncrement}
+                                onChange={(e) => setNewColumnAutoIncrement(e.target.value)} />
+                            <label className="text-gray2 text-sm">Auto Increment</label>
+                        </div>
+                    ) : null}
 
                     <div className="flex justify-center items-center space-x-2">
                         <input type="checkbox" className="w-4 h-4"
-                            value={newColumnNullAllowed}
+                            checked={newColumnNullAllowed}
                             onChange={(e) => setNewColumnNullAllowed(e.target.value)} />
                         <label className="text-gray2 text-sm">Null Allowed</label>
                     </div>
                     <div className="flex justify-center items-center space-x-2">
                         <input type="checkbox" className="w-4 h-4"
-                            value={newColumnUnique}
+                            checked={newColumnUnique}
                             onChange={(e) => setNewColumnUnique(e.target.value)} />
                         <label className="text-gray2 text-sm">Unique</label>
                     </div>
                 </div>
 
                 <div className="flex justify-center items-center mt-6">
-                    <PillButton text="Save Field" onClick={() => { }} icon={FaUpload} />
+                    <PillButton text="Save Field" onClick={() => { saveNewColumn() }} icon={FaUpload} />
                 </div>
             </PopupContainer>
         )
@@ -328,7 +443,7 @@ function ConfigureTable() {
 
     return (
         // Sidebar Layout Component
-        <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
+        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
             {/* Devices Section */}
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Configure Table - {tblName}</span>
