@@ -252,7 +252,7 @@ function ConfigureTable() {
             setNewColumnName(column.clm_name);
             setNewColumnDataType(column.data_type);
             setNewColumnMaxLength(column.max_length);
-            setNewColumnDefaultValue(column.default_value);
+            setNewColumnDefaultValue((column.default_value == null) ? '' : column.default_value);
             setNewColumnAutoIncrement(column.constraints.find(x => x.constraint_id == 1) != undefined);
             setNewColumnNullAllowed(column.constraints.find(x => x.constraint_id == 2) != undefined);
             setNewColumnUnique(column.constraints.find(x => x.constraint_id == 3) != undefined);
