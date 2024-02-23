@@ -25,6 +25,9 @@ const Device = () => {
   //-------- States ---------
   const [loading, setLoading] = useState(false);
 
+  //--Get states from navigation location for retrieval of project_id--
+  const { state } = useLocation();
+
   //--Add Device Modal--
   const [isAddDeviceOpen, setIsAddDeviceOpen] = useState(false);
 
@@ -52,11 +55,24 @@ const Device = () => {
   const [devices, setDevices] = useState([]);
   const [newDeviceName, setNewDeviceName] = useState(""); // For text box of Add Device
   const [newDeviceDescription, setNewDeviceDescription] = useState(""); // For text box of Add Device
-
-  //--Get states from navigation location for retrieval of project_id--
-  const { state } = useLocation();
+  //--Get device Fingerprint
+  const [fingerprint, setFingerprint] = useState("");
 
   const [projectID, setProjectID] = useState(-1);
+
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+
+  const handleDeviceSelection = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+  };
+
+  const handleDeviceNameChange = (name) => {
+    setNewDeviceName(name.target.value);
+  };
+
+  const handleDeviceDescriptionChange = (discription) => {
+    setNewDeviceDescription(discription.target.value);
+  };
 
   useEffect(() => {
     try {
@@ -73,23 +89,6 @@ const Device = () => {
       getAllDevices();
     }
   }, [projectID]);
-
-  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
-
-  const handleDeviceSelection = (deviceId) => {
-    setSelectedDeviceId(deviceId);
-  };
-
-  //--Get device Fingerprint
-  const [fingerprint, setFingerprint] = useState("");
-
-  const handleDeviceNameChange = (name) => {
-    setNewDeviceName(name.target.value);
-  };
-
-  const handleDeviceDescriptionChange = (discription) => {
-    setNewDeviceDescription(discription.target.value);
-  };
 
   //--Api call for adding device--
   const handleDeviceAdding = async () => {
@@ -130,9 +129,11 @@ const Device = () => {
           break;
         case 401:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 403:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 404:
           toast.error("Project not found!");
@@ -176,9 +177,11 @@ const Device = () => {
           break;
         case 401:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 403:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 404:
           toast.error("Project not found!");
@@ -217,23 +220,6 @@ const Device = () => {
 
       if (response.status === 200) {
         console.log(response.data);
-        toggleDeviceUpdateModal();
-        console.log("Device ID being updated:", device_id);
-        const updatedDevices = devices.map((device) => {
-          console.log("Current device ID:", device.device_id);
-          if (device.device_id === device_id) {
-            console.log("Match found, updating device");
-            return {
-              ...device,
-              device_name: newDeviceName,
-              description: newDeviceDescription,
-            };
-          } else {
-            return device;
-          }
-        });
-        console.log("Updated devices:", updatedDevices);
-        setDevices(updatedDevices);
         getAllDevices();
       }
     } catch (err) {
@@ -243,9 +229,11 @@ const Device = () => {
           break;
         case 401:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 403:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 404:
           toast.error("Project not found!");
@@ -255,6 +243,7 @@ const Device = () => {
           break;
       }
     } finally {
+      toggleDeviceUpdateModal();
       setNewDeviceDescription("");
       setNewDeviceName("");
       setLoading(false);
@@ -315,9 +304,11 @@ const Device = () => {
           break;
         case 401:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 403:
           toast.error("Unauthorized access!");
+          navigate("/login");
           break;
         case 404:
           toast.error("Project not found!");
@@ -371,7 +362,7 @@ const Device = () => {
       {/* Add Device Modal */}
       <PopupContainer
         isOpen={isAddDeviceOpen}
-        onClose={() => {}}
+        onClose={() => { }}
         closeFunction={toggleAddDeviceModal}
         Icon={FaPlusCircle}
         title={"Add New Device"}
@@ -412,7 +403,7 @@ const Device = () => {
       {/* Device Adding Done Modal - Show Device Fingerprint*/}
       <PopupContainer
         isOpen={isDeviceAddingDoneOpen}
-        onClose={() => {}}
+        onClose={() => { }}
         closeFunction={toggleDeviceAddingDoneModal}
         Icon={MdRouter}
         title={"Device Added Successfully"}
@@ -448,7 +439,7 @@ const Device = () => {
       {/* Update Device Modal */}
       <PopupContainer
         isOpen={isDeviceUpdateOpen}
-        onClose={() => {}}
+        onClose={() => { }}
         closeFunction={toggleDeviceUpdateModal}
         Icon={MdRouter}
         title={"Update Device"}

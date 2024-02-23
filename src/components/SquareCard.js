@@ -1,7 +1,7 @@
 import React from "react";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 
-const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete,  isIconShown = false, mx='mx-5' }) => {
+const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete, isIconShown = false, mx = 'mx-5' }) => {
   return (
     <div
       className={
@@ -36,6 +36,14 @@ const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete,  isI
       </div>
     </div>
   );
+};
+
+// Default props
+SquareCard.defaultProps = {
+  onClick: () => { },
+  onUpdate: () => { },
+  onDelete: () => { },
+  isIconShown: false,
 };
 
 export default SquareCard;
