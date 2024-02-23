@@ -1,12 +1,12 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaCheck, FaTag, FaKey } from "react-icons/fa";
+import { FaPlusCircle, FaCheck, FaKey } from "react-icons/fa";
 import { MdRouter } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 //Pages for navigation
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
@@ -25,6 +25,7 @@ const Device = () => {
   //-------- States ---------
   const [loading, setLoading] = useState(false);
 
+  //--Add Device Modal--
   const [isAddDeviceOpen, setIsAddDeviceOpen] = useState(false);
 
   const toggleAddDeviceModal = () => {
@@ -38,6 +39,13 @@ const Device = () => {
       getAllDevices();
     }
     setIsDeviceAddingDoneOpen(!isDeviceAddingDoneOpen);
+  };
+
+  //--Device Update Modal--
+  const [isDeviceUpdateOpen, setIsDeviceUpdateOpen] = useState(false);
+
+  const toggleDeviceUpdateModal = () => {
+    setIsDeviceUpdateOpen(!isDeviceUpdateOpen);
   };
 
   //----Device States----
@@ -66,15 +74,21 @@ const Device = () => {
     }
   }, [projectID]);
 
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+
+  const handleDeviceSelection = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+  };
+
   //--Get device Fingerprint
   const [fingerprint, setFingerprint] = useState("");
 
-  const handleDeviceNameChange = (n) => {
-    setNewDeviceName(n.target.value);
+  const handleDeviceNameChange = (name) => {
+    setNewDeviceName(name.target.value);
   };
 
-  const handleDeviceDescriptionChange = (d) => {
-    setNewDeviceDescription(d.target.value);
+  const handleDeviceDescriptionChange = (discription) => {
+    setNewDeviceDescription(discription.target.value);
   };
 
   //--Api call for adding device--
@@ -137,20 +151,15 @@ const Device = () => {
   //--API call for deleting device
   const handleDeviceDelete = async (device_id) => {
     setLoading(true);
-    // delete request to localhost:3001/api/device?device_id=<deviceID>
+    // delete request to localhost:3001/api/device
+    console.log(localStorage.getItem("auth-token"));
     try {
-      const response = await axios.delete(
-        `http://localhost:3001/api/device`,
-        {
-          device_id: device_id,
+      const response = await axios.delete(`http://localhost:3001/api/device`, {
+        headers: {
+          authorization: localStorage.getItem("auth-token"),
         },
-        
-        {
-          headers: {
-            authorization: localStorage.getItem("auth-token"),
-          },
-        }
-      );
+        data: { device_id: device_id },
+      });
 
       if (response.status === 200) {
         console.log(response.data);
@@ -178,12 +187,16 @@ const Device = () => {
           toast.error("Something went wrong!");
           break;
       }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   //----API call for updating device
   const handleDeviceUpdate = async (device_id) => {
+    if (newDeviceName === "" || newDeviceDescription === "") {
+      toast.error("Device name and description cannot be empty!");
+      return;
+    }
     setLoading(true);
     // put request to localhost:3001/api/device
     try {
@@ -194,6 +207,7 @@ const Device = () => {
           device_name: newDeviceName,
           description: newDeviceDescription,
         },
+
         {
           headers: {
             authorization: localStorage.getItem("auth-token"),
@@ -203,11 +217,24 @@ const Device = () => {
 
       if (response.status === 200) {
         console.log(response.data);
-        // Remove the deleted device from the devices array
-        let newDevices = devices.filter(
-          (device) => device.device_id !== device_id
-        );
-        setDevices(newDevices);
+        toggleDeviceUpdateModal();
+        console.log("Device ID being updated:", device_id);
+        const updatedDevices = devices.map((device) => {
+          console.log("Current device ID:", device.device_id);
+          if (device.device_id === device_id) {
+            console.log("Match found, updating device");
+            return {
+              ...device,
+              device_name: newDeviceName,
+              description: newDeviceDescription,
+            };
+          } else {
+            return device;
+          }
+        });
+        console.log("Updated devices:", updatedDevices);
+        setDevices(updatedDevices);
+        getAllDevices();
       }
     } catch (err) {
       switch (err.status) {
@@ -227,6 +254,9 @@ const Device = () => {
           toast.error("Something went wrong!");
           break;
       }
+    } finally {
+      setNewDeviceDescription("");
+      setNewDeviceName("");
       setLoading(false);
     }
   };
@@ -325,7 +355,10 @@ const Device = () => {
             footer={"Last Update:" + device.footer}
             mx="mx-2"
             onDelete={() => handleDeviceDelete(device.device_id)}
-            onUpdate={() => handleDeviceUpdate(device.device_id)}
+            onUpdate={() => {
+              toggleDeviceUpdateModal();
+              handleDeviceSelection(device.device_id);
+            }}
             onClick={() => {
               navigate("/devices", {
                 state: { device_id: device.device_id },
@@ -408,6 +441,47 @@ const Device = () => {
             onClick={toggleDeviceAddingDoneModal}
             isPopup={true}
             icon={FaCheck}
+          />
+        </div>
+      </PopupContainer>
+
+      {/* Update Device Modal */}
+      <PopupContainer
+        isOpen={isDeviceUpdateOpen}
+        onClose={() => {}}
+        closeFunction={toggleDeviceUpdateModal}
+        Icon={MdRouter}
+        title={"Update Device"}
+        closeIconVisible={true}
+      >
+        <div className="flex flex-col justify-center mt-4">
+          <label className="text-gray1 text-sm">Device Name</label>
+          <TextBox
+            text=""
+            type="text"
+            placeholder="Device Name"
+            maxLength={50}
+            textAlign={"left"}
+            onChange={handleDeviceNameChange}
+          />
+        </div>
+        <div className="flex flex-col justify-center mt-4">
+          <label className="text-gray1 text-sm">Device Description</label>
+          <TextBox
+            text=""
+            type="text"
+            placeholder="Device Description"
+            maxLength={100}
+            textAlign={"left"}
+            onChange={handleDeviceDescriptionChange}
+          />
+        </div>
+        <div className="flex justify-center mt-8">
+          <PillButton
+            text="Update Device"
+            onClick={() => handleDeviceUpdate(selectedDeviceId)}
+            isPopup={true}
+            icon={MdRouter}
           />
         </div>
       </PopupContainer>
