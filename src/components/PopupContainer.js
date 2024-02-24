@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { FaWindowClose } from "react-icons/fa";
 
 
-const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction, closeIconVisible }) => {
+const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction, closeIconVisible, width }) => {
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -21,7 +21,7 @@ const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction,
                 </Transition.Child>
 
 
-                <div className=" w-80 sm:w-[450px] fixed inset-0 flex items-center justify-center mx-auto">
+                <div className={`w-[350px] sm:w-[550px] fixed inset-0 flex items-center justify-center mx-auto`}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-500"
@@ -31,7 +31,7 @@ const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction,
                         leaveFrom="opacity-50"
                         leaveTo="opacity-0"
                     >
-                        <Dialog.Panel as="div" className="w-full relative z-50 bg-black3 bg-opacity-20 backdrop-blur-sm border border-gray1 border-opacity-60 rounded-xl pt-5 px-7 pb-5 text-gray2">
+                        <Dialog.Panel as="div" className="w-full relative z-50 bg-black3 bg-opacity-60 backdrop-blur-sm border border-gray1 border-opacity-60 rounded-xl pt-5 px-7 pb-5 text-gray2">
 
                             {/* Popup title and icon */}
                             <div className="font-bold mb-3 flex items-center justify-between">
@@ -43,7 +43,7 @@ const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction,
                                     <button className="text-gray2 hover:text-green transition duration-300 ease-in-out" onClick={closeFunction}>
                                         <FaWindowClose className="text-xl" />
                                     </button>
-                                ) :  null}
+                                ) : null}
 
 
                             </div>
@@ -61,6 +61,7 @@ const PopupContainer = ({ children, isOpen, onClose, Icon, title, closeFunction,
 // Specifies the default values for props:
 PopupContainer.defaultProps = {
     closeIconVisible: false,
+    width: "450px"
 };
 
 export default PopupContainer;
