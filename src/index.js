@@ -14,6 +14,8 @@ import Projects from './pages/Projects';
 import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
 import ConfigureTable from './pages/ConfigureTable';
+import DataTableHandler from './pages/DataTableHandler';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -35,11 +37,9 @@ root.render(
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
       <Route path="/configtable" element={<ConfigureTable />} />
+      <Route path="/datahandler" element={<DataTableHandler />} />
     </Routes>
   </Router>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

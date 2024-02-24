@@ -53,12 +53,14 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
         <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} onClick={() => {
           navigate('/devices', { state: { project_id: projectID } });
         }} />
+        {/* navigate('/configtable', { state: { tbl_id: 1, project_id: projectID } }); */}
         <SidebarButton text="Data Tables" icon={FaDatabase} active={(active == 3) ? true : false} onClick={() => {
-          navigate('/configtable', { state: { tbl_id: 1, project_id: projectID } });
+          navigate('/datahandler', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Settings" icon={FaCogs} active={(active == 4) ? true : false} onClick={() => {
           navigate('/overview', { state: { project_id: projectID } });
         }} />
+        
       </div>
     </div>
   );
