@@ -129,6 +129,7 @@ function ForgotPassword() {
                 type="email"
                 placeholder="Enter Email"
                 onChange={(event) => setEmail(event.target.value)}
+                value={email}
               />
             </div>
 
@@ -147,8 +148,8 @@ function ForgotPassword() {
 
       {/* Spinner */}
       <Spinner isVisible={loading} />
-  
-        {/* Toast Container */}
+
+      {/* Toast Container */}
       <ToastContainer
         position="bottom-center"
         autoClose={5000}

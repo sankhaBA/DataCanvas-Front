@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { HashLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 
 const Spinner = ({ isVisible }) => {
 
@@ -19,7 +19,7 @@ const Spinner = ({ isVisible }) => {
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
                 </Transition.Child>
 
-                <HashLoader color={"#3ECF8E"} loading={true} size={50} />
+                <ScaleLoader color={"#3ECF8E"} loading={true} size={50} />
 
             </Dialog>
         </Transition >
