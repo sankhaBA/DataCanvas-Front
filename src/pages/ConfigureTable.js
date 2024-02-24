@@ -268,6 +268,18 @@ function ConfigureTable() {
                 return false;
             }
 
+            // Check column name is duplocated
+            if (columns.find(x => x.clm_name == newColumnName) && selectedColumnID == -1) {
+                toast.warning('Field Name already exists');
+                return false;
+            }
+
+            // When updating column name, check for column name duplication. But if the already existing column name's column ID equals to selectedColumnID, then it's the same column name
+            if (columns.find(x => x.clm_name == newColumnName && x.clm_id != selectedColumnID) && selectedColumnID != -1) {
+                toast.warning('Field Name already exists');
+                return false;
+            }
+
             if (newColumnDataType == -1) {
                 toast.warning('Please select a data type');
                 return false;
@@ -372,6 +384,81 @@ function ConfigureTable() {
             }
         }
 
+        const updateColumn = async () => {
+            console.log('Updating column : ', selectedColumnID);
+            if (validateNewColumn()) {
+                setLoading(true);
+                // ---------- Get auth-token from local storage ----------
+                const token = localStorage.getItem('auth-token');
+
+                /*
+                    REQUEST BODY STRUCTURE
+                    {
+                        "clm_id":5,
+                        "clm_name": "temperature",
+                        "data_type": 1,
+                        "default_value": null,
+                        "max_length": null,
+                        "constraints": []
+                    }
+                */
+
+                let constraintsArray = [];
+                if (newColumnAutoIncrement) {
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Auto Increment').constraint_id);
+                }
+                if (newColumnNullAllowed) {
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Not Null').constraint_id);
+                }
+                if (newColumnUnique) {
+                    constraintsArray.push(constraints.find(x => x.constraint_name == 'Unique').constraint_id);
+                }
+
+                const requestBody = {
+                    clm_id: selectedColumnID,
+                    clm_name: newColumnName,
+                    data_type: newColumnDataType,
+                    default_value: newColumnDefaultValue,
+                    max_length: newColumnMaxLength,
+                    constraints: constraintsArray
+                }
+
+                try {
+                    const res = await axios.put(`http://localhost:3001/api/data/clm/`, requestBody, {
+                        headers: {
+                            'authorization': token
+                        }
+                    });
+
+                    if (res.status == 200) {
+                        toast.success('Field updated successfully');
+                        setIsAddColumnPopupVisible(false);
+                        getColumnDetails();
+                    }
+
+                } catch (err) {
+                    console.log(err);
+                    switch (err.response.status) {
+                        case 401 || 403:
+                            toast.error('Session expired. Please login again');
+                            navigate('/login');
+                            break;
+                        case 400 || 404:
+                            toast.error('Error in updating field');
+                            navigate('/overview')
+                            break;
+                        default:
+                            toast.error('Something went wrong');
+                            break;
+                    }
+                } finally {
+                    setLoading(false);
+                    setIsAddColumnPopupVisible(false);
+                }
+
+            }
+        }
+
         return (
             <PopupContainer isOpen={isAddColumnPopupVisible}
                 onClose={() => { }}
@@ -456,7 +543,7 @@ function ConfigureTable() {
                 </div>
 
                 <div className="flex justify-center items-center mt-6">
-                    <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { saveNewColumn() }} icon={FaUpload} />
+                    <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} />
                 </div>
             </PopupContainer>
         )
