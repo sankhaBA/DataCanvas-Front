@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaSalesforce, FaTrash, FaUpload, FaWindowClose } from "react-icons/fa";
+import { FaPlusCircle, FaSalesforce, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +15,7 @@ import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/InsightCard";
+import CriticalAction from "../components/CriticalAction";
 import ConfigTableCard from "../components/ConfigTableCard";
 import axios from "axios";
 
@@ -51,6 +51,8 @@ function ConfigureTable() {
             setDeletingColumnID(-1);
         }
     }, [isDeleteColumnPopupVisible]);
+
+    const [isTableSettingsPopupVisible, setIsTableSettingsPopupVisible] = useState(false);
 
     const [selectedColumnID, setSelectedColumnID] = useState(-1);
     const [deletingColumnID, setDeletingColumnID] = useState(-1);
@@ -637,6 +639,20 @@ function ConfigureTable() {
         );
     }
 
+    const TableSettingsPopup = () => {
+        return (
+            <PopupContainer isOpen={isTableSettingsPopupVisible}
+                onClose={() => { }}
+                closeFunction={() => setIsTableSettingsPopupVisible(false)}
+                Icon={FaCog}
+                title={'Table Settings'}
+                closeIconVisible={true}
+                width={'550px'}>
+
+            </PopupContainer>
+        );
+    }
+
     return (
         // Sidebar Layout Component
         <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
@@ -644,7 +660,7 @@ function ConfigureTable() {
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>
-                    <PillButton text="Table Settings" icon={FaPlusCircle} onClick={() => { }} />
+                    <PillButton text="Table Settings" icon={FaPlusCircle} onClick={() => { setIsTableSettingsPopupVisible(true) }} />
                 </div>
             </div>
 
@@ -679,6 +695,9 @@ function ConfigureTable() {
 
             {/* Popup container for column deleting */}
             {isDeleteColumnPopupVisible ? deleteColumnPopup() : null}
+
+            {/* Popup container for table settings */}
+            {isTableSettingsPopupVisible ? TableSettingsPopup() : null}
 
             {/* Spinner */}
             <Spinner isVisible={loading} />
