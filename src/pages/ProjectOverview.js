@@ -9,9 +9,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
-import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
 import Spinner from "../components/Spinner";
 import InsightCard from "../components/InsightCard";
 import RectangularCard from "../components/RectangularCard";

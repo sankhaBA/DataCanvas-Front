@@ -132,15 +132,15 @@ function SignUp() {
     }
 
     const createNewUser = async (email, username, type) => { // type -> determine the authentication type, 0 - for Email/Password, 1 - for Google, 2 - for Github 
-        if(type != 0){ // When the authentication type is not Email/Password, check if the user already exists because google and github authentication methods do not check if the user already exists
-            try{
+        if (type != 0) { // When the authentication type is not Email/Password, check if the user already exists because google and github authentication methods do not check if the user already exists
+            try {
                 const result = await axios.get(API_URL + "?email=" + email);
-                if(result.status === 200){
+                if (result.status === 200) {
                     // User already exits
                     // navigate to the project handling page
                     toast.success("User signed in successfully");
                     return;
-                }else{
+                } else {
                     toast.error("Error occured when adding the user");
                     return;
                 }
@@ -210,19 +210,19 @@ function SignUp() {
                         <h1 className="text-2xl text-center text-gray2 font-bold mt-4">Signup</h1>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">Email</label>
-                            <TextBox text="" type="email" value="email" placeholder="Email" maxLength={50} onChange={(e) => setEmail(e.target.value)} />
+                            <TextBox text="" type="email" placeholder="Email" maxLength={50} onChange={(e) => setEmail(e.target.value)} value={email} />
                         </div>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">Password</label>
-                            <TextBox text="" type="password" value="password1" placeholder="Password" onChange={(e) => setPassword1(e.target.value)} />
+                            <TextBox text="" type="password" value={password1} placeholder="Password" onChange={(e) => setPassword1(e.target.value)} />
                         </div>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">Confirm Password</label>
-                            <TextBox text="" type="password" value="password2" placeholder="Re-enter Password" onChange={(e) => setPassword2(e.target.value)} />
+                            <TextBox text="" type="password" value={password2} placeholder="Re-enter Password" onChange={(e) => setPassword2(e.target.value)} />
                         </div>
                         <div className="flex flex-col items-center justify-center mt-4">
                             <label className="text-gray1 text-sm">How Shall We Call You?</label>
-                            <TextBox text="" type="username" value="username" placeholder="Your Name" maxLength={50} onChange={(e) => setUserName(e.target.value)} />
+                            <TextBox text="" type="username" value={username} placeholder="Your Name" maxLength={50} onChange={(e) => setUserName(e.target.value)} />
                         </div>
 
                         <div className="flex flex-col items-center justify-center mt-8">
