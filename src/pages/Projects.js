@@ -269,6 +269,7 @@ function Projects() {
             maxLength={50}
             textAlign={"left"}
             onChange={handleProjectNameChange}
+            value={newProjectName}
           />
         </div>
 
@@ -282,6 +283,7 @@ function Projects() {
             maxLength={150}
             textAlign={"left"}
             onChange={handleProjectDescriptionChange}
+            value={newProjectDescription}
           />
         </div>
 
