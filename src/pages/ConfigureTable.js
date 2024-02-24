@@ -15,7 +15,7 @@ import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
 import Spinner from "../components/Spinner";
-import CriticalAction from "../components/CriticalAction";
+
 import ConfigTableCard from "../components/ConfigTableCard";
 import axios from "axios";
 
