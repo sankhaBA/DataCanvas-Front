@@ -102,7 +102,11 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                         </div> */}
 
                         {/* Delete Section */}
-                        <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}>
+                        <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete()
+                            }}>
                             <FaTrash className="text-sm" />
                             <span className="text-xs hidden sm:block ">Delete</span>
                         </div>

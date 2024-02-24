@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaSalesforce, FaUpload } from "react-icons/fa";
+import { FaPlusCircle, FaSalesforce, FaTrash, FaUpload, FaWindowClose } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,7 +45,15 @@ function ConfigureTable() {
 
     }, [isAddColumnPopupVisible]);
 
+    const [isDeleteColumnPopupVisible, setIsDeleteColumnPopupVisible] = useState(false);
+    useEffect(() => {
+        if (!isDeleteColumnPopupVisible) {
+            setDeletingColumnID(-1);
+        }
+    }, [isDeleteColumnPopupVisible]);
+
     const [selectedColumnID, setSelectedColumnID] = useState(-1);
+    const [deletingColumnID, setDeletingColumnID] = useState(-1);
     const [newColumnName, setNewColumnName] = useState('');
     const [newColumnDataType, setNewColumnDataType] = useState(-1);
     useEffect(() => {
@@ -256,6 +264,13 @@ function ConfigureTable() {
             setNewColumnAutoIncrement(column.constraints.find(x => x.constraint_id == 1) != undefined);
             setNewColumnNullAllowed(column.constraints.find(x => x.constraint_id == 2) != undefined);
             setNewColumnUnique(column.constraints.find(x => x.constraint_id == 3) != undefined);
+        }
+    }
+
+    const selectDeletingColumn = (columnID) => {
+        if (columnID && columnID != -1) {
+            setIsDeleteColumnPopupVisible(true);
+            setDeletingColumnID(columnID);
         }
     }
 
@@ -543,10 +558,83 @@ function ConfigureTable() {
                 </div>
 
                 <div className="flex justify-center items-center mt-6">
-                    <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} />
+                    <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} isPopup={true} />
                 </div>
             </PopupContainer>
         )
+    }
+
+    const deleteColumnPopup = () => {
+        const deleteColumn = async () => {
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+
+            /*
+                    REQUEST BODY STRUCTURE
+                    {
+                        "clm_id": 5
+                    }
+            */
+
+            const requestBody = {
+                clm_id: deletingColumnID
+            }
+
+            try {
+                const res = await axios.delete(`http://localhost:3001/api/data/clm/`, {
+                    headers: {
+                        'authorization': token
+                    },
+                    data: requestBody
+                });
+
+                if (res.status == 200) {
+                    toast.success('Field deleted successfully');
+                    setIsDeleteColumnPopupVisible(false);
+                    getColumnDetails();
+                }
+            } catch (err) {
+                console.log(err);
+                switch (err.response.status) {
+                    case 401 || 403:
+                        toast.error('Session expired. Please login again');
+                        navigate('/login');
+                        break;
+                    case 400 || 404:
+                        toast.error('Error in deleting field');
+                        break;
+                    default:
+                        toast.error('Something went wrong');
+                        break;
+                }
+            } finally {
+                setLoading(false);
+                setIsDeleteColumnPopupVisible(false);
+            }
+        }
+
+        return (
+            <PopupContainer isOpen={isDeleteColumnPopupVisible}
+                onClose={() => { }}
+                closeFunction={() => setIsDeleteColumnPopupVisible(false)}
+                Icon={FaTrash}
+                title={'Delete Field'}
+                closeIconVisible={true}
+                width={'550px'}>
+                <div className="text-center mt-4 px-4 text-gray2 text-md">
+                    Are you sure want to delete column {columns.find(x => x.clm_id == deletingColumnID).clm_name}?
+                </div>
+                <div className="text-center mt-4 px-4 text-red text-sm">
+                    This action cannot be undone and this will affect existing dashboard configurations
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-center items-center mt-6 space-x-0 sm:space-x-4 space-y-4 sm:space-y-0">
+                    <PillButton text={'No, Cancel'} onClick={() => { setIsDeleteColumnPopupVisible(false) }} icon={FaWindowClose} isPopup={true} />
+                    <PillButton text={'Yes, Delete'} onClick={() => { deleteColumn() }} icon={FaTrash} isPopup={true} color={'red'} />
+                </div>
+            </PopupContainer>
+        );
     }
 
     return (
@@ -572,8 +660,11 @@ function ConfigureTable() {
                             isNullAllowed={column.constraints.find(x => x.constraint_id == 2) != undefined}
                             isUnique={column.constraints.find(x => x.constraint_id == 3) != undefined}
                             onClick={() => { selectColumn(column) }}
-                            onEdit={() => { }}
-                            onDelete={() => { }}
+                            onDelete={() => {
+                                {
+                                    selectDeletingColumn(column.clm_id)
+                                }
+                            }}
                             disabled={((column.clm_name == 'id' || (column.clm_name) == 'device')) ? true : false} />
                     )
                 })}
@@ -585,6 +676,9 @@ function ConfigureTable() {
 
             {/* Popup container for column adding */}
             {isAddColumnPopupVisible ? AddColumnPopup() : null}
+
+            {/* Popup container for column deleting */}
+            {isDeleteColumnPopupVisible ? deleteColumnPopup() : null}
 
             {/* Spinner */}
             <Spinner isVisible={loading} />
