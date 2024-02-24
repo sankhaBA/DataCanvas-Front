@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose } from 'react-icons/fa';
 import { MdBarChart, MdDashboard } from 'react-icons/md';
 
+//Pages for navigation
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
+  // ---------- Navigation ----------
+  const navigate = useNavigate();
+
+  const { state } = useLocation();
+
+  const [projectID, setProjectID] = useState(-1);
+
+  useEffect(() => {
+    try {
+      setProjectID(state.project_id);
+    } catch (err) {
+      console.log("Sidebar-state error", err);
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log("Sidebar-projectID", projectID);
+  }, [projectID])
 
   const SidebarButton = ({ text, icon: Icon, active, onClick }) => {
     return (
       <div className={`flex items-center ${active ? 'bg-gray3' : ''}  px-5 py-2 my-2 rounded-full cursor-pointer
-         hover:bg-gray1 transition-all ease-in-out duration-300`}>
+         hover:bg-gray1 transition-all ease-in-out duration-300`} onClick={onClick}>
         <Icon className="text-xl text-green" />
         <span className="text-sm text-gray2 ml-4">{text}</span>
       </div>
@@ -23,11 +44,22 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
       </div>
 
       <div className="mt-8 px-3">
-        <SidebarButton text="Overview" icon={MdDashboard} active={(active == 0) ? true : false} />
-        <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} />
-        <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} />
-        <SidebarButton text="Data Tables" icon={FaDatabase} active={(active == 3) ? true : false} />
-        <SidebarButton text="Settings" icon={FaCogs} active={(active == 4) ? true : false} />
+        <SidebarButton text="Overview" icon={MdDashboard} active={(active == 0) ? true : false} onClick={() => {
+          navigate('/overview', { state: { project_id: projectID } });
+        }} />
+        <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} onClick={() => {
+          navigate('/overview', { state: { project_id: projectID } });
+        }} />
+        <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} onClick={() => {
+          navigate('/devices', { state: { project_id: projectID } });
+        }} />
+        <SidebarButton text="Data Tables" icon={FaDatabase} active={(active == 3) ? true : false} onClick={() => {
+          navigate('/datahandler', { state: { project_id: projectID } });
+        }} />
+        <SidebarButton text="Settings" icon={FaCogs} active={(active == 4) ? true : false} onClick={() => {
+          navigate('/overview', { state: { project_id: projectID } });
+        }} />
+        
       </div>
     </div>
   );
