@@ -15,7 +15,7 @@ import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
 import ConfigureTable from './pages/ConfigureTable';
 import DataTableHandler from './pages/DataTableHandler';
-
+import ProjectSettings from './pages/ProjectSettings';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -38,6 +38,7 @@ root.render(
       <Route path="/devices" element={<Devices />} />
       <Route path="/configtable" element={<ConfigureTable />} />
       <Route path="/datahandler" element={<DataTableHandler />} />
+      <Route path="/projectsettings" element={<ProjectSettings/>}/>
     </Routes>
   </Router>
 );
