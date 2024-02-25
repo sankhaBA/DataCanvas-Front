@@ -15,7 +15,7 @@ import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
 import Spinner from "../components/Spinner";
-
+import CriticalAction from "../components/CriticalAction";
 import ConfigTableCard from "../components/ConfigTableCard";
 import axios from "axios";
 
@@ -54,6 +54,8 @@ function ConfigureTable() {
 
     const [isTableSettingsPopupVisible, setIsTableSettingsPopupVisible] = useState(false);
 
+    const [isUpdateTablePopupVisible, setIsUpdateTablePopupVisible] = useState(false);
+
     const [selectedColumnID, setSelectedColumnID] = useState(-1);
     const [deletingColumnID, setDeletingColumnID] = useState(-1);
     const [newColumnName, setNewColumnName] = useState('');
@@ -74,6 +76,7 @@ function ConfigureTable() {
     const [newColumnUnique, setNewColumnUnique] = useState(false);
 
     // ---------- Table Details ----------
+    const [projectID, setProjectID] = useState(-1);
     const [tblID, setTblID] = useState(-1);
     const [tblName, setTblName] = useState([]);
 
@@ -115,8 +118,8 @@ function ConfigureTable() {
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
         try {
             setTblID(state.tbl_id);
+            setProjectID(state.project_id);
             console.log('tbl_id : ' + state.tbl_id);
-
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -161,6 +164,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting data types');
                     toast.error('Error in getting data types');
                     navigate('/overview');
                     break;
@@ -188,7 +192,8 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
-                    toast.error('Error in getting data types');
+                    console.log('Error in getting constraints');
+                    toast.error('Error in getting constraints');
                     navigate('/overview');
                     break;
             }
@@ -216,6 +221,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting table details');
                     toast.error('Error in getting table details');
                     navigate('/overview');
                     break;
@@ -247,6 +253,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting table column details');
                     toast.error('Error in getting table column details');
                     navigate('/overview');
                     break;
@@ -640,6 +647,83 @@ function ConfigureTable() {
     }
 
     const TableSettingsPopup = () => {
+        const truncateTable = async () => {
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+
+            try {
+                const res = await axios.post(`http://localhost:3001/api/data/tbl/truncate/${tblID}`, {
+                    tbl_id: tblID
+                },
+                    {
+                        headers: {
+                            'authorization': token
+                        },
+                    });
+
+                if (res.status == 200) {
+                    toast.success('Table truncated successfully');
+                }
+            } catch (err) {
+                console.log(err);
+                switch (err.response.status) {
+                    case 401 || 403:
+                        toast.error('Session expired. Please login again');
+                        navigate('/login');
+                        break;
+                    case 400 || 404:
+                        toast.error('Error in truncating table');
+                        break;
+                    default:
+                        toast.error('Something went wrong');
+                        break;
+                }
+            } finally {
+                setLoading(false);
+                setIsTableSettingsPopupVisible(false);
+            }
+        }
+
+        const deleteTable = async () => {
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+
+            try {
+                const res = await axios.delete(`http://localhost:3001/api/data/tbl/`, {
+                    headers: {
+                        'authorization': token
+                    },
+                    data: {
+                        tbl_id: tblID
+                    }
+                });
+
+                if (res.status == 200) {
+                    toast.success('Table deleted successfully');
+                    navigate('/datahandler', { state: { project_id: projectID } });
+                }
+            } catch (err) {
+                console.log(err);
+                switch (err.response.status) {
+                    case 401 || 403:
+                        toast.error('Session expired. Please login again');
+                        navigate('/login');
+                        break;
+                    case 400 || 404:
+                        toast.error('Error in deleting table');
+                        break;
+                    default:
+                        toast.error('Something went wrong');
+                        break;
+                }
+            } finally {
+                setLoading(false);
+                setIsTableSettingsPopupVisible(false);
+            }
+        }
+
         return (
             <PopupContainer isOpen={isTableSettingsPopupVisible}
                 onClose={() => { }}
@@ -648,6 +732,106 @@ function ConfigureTable() {
                 title={'Table Settings'}
                 closeIconVisible={true}
                 width={'550px'}>
+                <div className="flex flex-col justify-between items-center mt-4">
+                    <CriticalAction title="Change Table Name" subtitle='Update the name of the table' buttonText='Change' onClick={() => {
+                        setIsUpdateTablePopupVisible(true);
+                        setIsTableSettingsPopupVisible(false);
+                    }} buttonColor={'green'} />
+                    <CriticalAction title="Truncate Table" subtitle='Delete all gathered data in this table' buttonText='Truncate' onClick={() => { truncateTable() }} />
+                    <CriticalAction title="Delete Table" subtitle='Delete the whole table including its data' buttonText='Delete' onClick={() => { deleteTable() }} />
+                </div>
+            </PopupContainer>
+        );
+    }
+
+    const UpdateTablePopup = () => {
+
+        const updateTable = async () => {
+            if (tblName.trim() == '' || tblName.trim() == null) {
+                toast.warning('Table Name cannot be empty');
+                return;
+            }
+
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+
+            /*
+                    REQUEST BODY STRUCTURE
+                    {
+                        "tbl_id": 5,
+                        "tbl_name": "tbl_sensordata"
+                    }
+            */
+
+            const requestBody = {
+                tbl_id: tblID,
+                tbl_name: tblName
+            }
+
+            try {
+                const res = await axios.put(`http://localhost:3001/api/data/tbl/`, requestBody, {
+                    headers: {
+                        'authorization': token
+                    }
+                });
+
+                if (res.status == 200) {
+                    toast.success('Table name updated successfully');
+                }
+
+            } catch (err) {
+                console.log(err);
+                getTableDetails();
+                switch (err.response.status) {
+                    case 401 || 403:
+                        toast.error('Session expired. Please login again');
+                        navigate('/login');
+                        break;
+                    case 400 || 404:
+                        toast.error('Error in updating table name');
+                        break;
+                    default:
+                        toast.error('Something went wrong');
+                        break;
+                }
+            } finally {
+                setLoading(false);
+                setIsUpdateTablePopupVisible(false);
+            }
+        }
+
+        return (
+            <PopupContainer
+                isOpen={isUpdateTablePopupVisible}
+                onClose={() => { }}
+                closeFunction={() => setIsUpdateTablePopupVisible(false)}
+                Icon={FaUpload}
+                title={"Update Table"}
+                closeIconVisible={true}
+            >
+                <div className="flex flex-col justify-center mt-4">
+                    <label className="text-gray1 text-sm">Table Name</label>
+                    <TextBox
+                        text=""
+                        type="text"
+                        placeholder="Enter table name"
+                        maxLength={25}
+                        textAlign={"left"}
+                        onChange={(e) => { setTblName(e.target.value) }}
+                        value={tblName}
+                    />
+                </div>
+
+                <div className="flex justify-center mt-8">
+                    <PillButton
+                        text="Update Table"
+                        onClick={updateTable}
+                        isPopup={true}
+                        icon={FaPlusCircle}
+                    />
+                </div>
+
 
             </PopupContainer>
         );
@@ -698,6 +882,9 @@ function ConfigureTable() {
 
             {/* Popup container for table settings */}
             {isTableSettingsPopupVisible ? TableSettingsPopup() : null}
+
+            {/* Popup container for updating table name */}
+            {isUpdateTablePopupVisible ? UpdateTablePopup() : null}
 
             {/* Spinner */}
             <Spinner isVisible={loading} />

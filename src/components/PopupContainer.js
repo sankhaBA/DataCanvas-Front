@@ -44,7 +44,7 @@ const PopupContainer = ({
           >
             <Dialog.Panel
               as="div"
-              className="w-full relative z-50 bg-black3 bg-opacity-60 backdrop-blur-sm border border-gray1 border-opacity-60 rounded-xl pt-5 px-7 pb-5 text-gray2"
+              className="w-full relative z-50 bg-black bg-opacity-60 backdrop-blur-sm border border-gray1 border-opacity-60 rounded-xl pt-5 px-7 pb-5 text-gray2"
             >
               {/* Popup title and icon */}
               <div className="font-bold mb-3 flex items-center justify-between">
@@ -73,8 +73,8 @@ const PopupContainer = ({
 
 // Specifies the default values for props:
 PopupContainer.defaultProps = {
-    closeIconVisible: false,
-    width: "450px"
+  closeIconVisible: false,
+  width: "450px"
 };
 
 export default PopupContainer;

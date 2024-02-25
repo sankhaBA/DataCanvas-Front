@@ -167,8 +167,8 @@ const DataTableHandler = () => {
                     const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
 
                     let tableDetails = {
-                        data_table_id: dataTable.tbl_id,
-                        name: dataTable.tbl_name,
+                        tbl_id: dataTable.tbl_id,
+                        tbl_name: dataTable.tbl_name,
                         updatedAt: formattedDate,
                     }
                     dataTablesArray.push(tableDetails);
@@ -215,7 +215,12 @@ const DataTableHandler = () => {
                 {dataTables.length > 0 ? (
                     dataTables.map((table) => {
                         return (
-                            <RectangularCard key={table.data_table_id} title={table.name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
+                            <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight}
+                                onClick={() => {
+                                    navigate("/configtable", {
+                                        state: { project_id: projectID, tbl_id: table.tbl_id },
+                                    });
+                                }} />
                         );
                     })
                 ) : (
@@ -255,7 +260,7 @@ const DataTableHandler = () => {
                         text=""
                         type="text"
                         placeholder="Enter table name"
-                        maxLength={50}
+                        maxLength={25}
                         textAlign={"left"}
                         onChange={(e) => { setNewTableName(e.target.value) }}
                         value={newTableName}

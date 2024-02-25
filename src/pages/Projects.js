@@ -254,7 +254,7 @@ function Projects() {
       {/* popup Container for project adding */}
       <PopupContainer
         isOpen={isAddProjectOpen}
-        onClose={() => {}}
+        onClose={() => { }}
         closeFunction={toggleAddProjectModal}
         Icon={FaPlusCircle}
         title="Add New Project"
@@ -278,7 +278,6 @@ function Projects() {
           <TextBox
             text=""
             type="text"
-            value=""
             placeholder="Project Description"
             maxLength={150}
             textAlign={"left"}
@@ -300,7 +299,7 @@ function Projects() {
       {/* popup Container for project adding done - project ID showing */}
       <PopupContainer
         isOpen={isProjectAddingDoneOpen}
-        onClose={() => {}}
+        onClose={() => { }}
         closeFunction={toggleProjectAddingDoneModal}
         Icon={FaCheckCircle}
         title="Project Addedd Successfully"
