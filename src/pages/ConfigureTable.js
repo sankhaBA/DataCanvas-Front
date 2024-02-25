@@ -74,6 +74,7 @@ function ConfigureTable() {
     const [newColumnUnique, setNewColumnUnique] = useState(false);
 
     // ---------- Table Details ----------
+    const [projectID, setProjectID] = useState(-1);
     const [tblID, setTblID] = useState(-1);
     const [tblName, setTblName] = useState([]);
 
@@ -115,8 +116,8 @@ function ConfigureTable() {
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
         try {
             setTblID(state.tbl_id);
+            setProjectID(state.project_id);
             console.log('tbl_id : ' + state.tbl_id);
-
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -161,6 +162,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting data types');
                     toast.error('Error in getting data types');
                     navigate('/overview');
                     break;
@@ -188,7 +190,8 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
-                    toast.error('Error in getting data types');
+                    console.log('Error in getting constraints');
+                    toast.error('Error in getting constraints');
                     navigate('/overview');
                     break;
             }
@@ -216,6 +219,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting table details');
                     toast.error('Error in getting table details');
                     navigate('/overview');
                     break;
@@ -247,6 +251,7 @@ function ConfigureTable() {
                     navigate('/login');
                     break;
                 default:
+                    console.log('Error in getting table column details');
                     toast.error('Error in getting table column details');
                     navigate('/overview');
                     break;
