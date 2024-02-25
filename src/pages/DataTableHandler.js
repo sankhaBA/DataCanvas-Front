@@ -260,7 +260,7 @@ const DataTableHandler = () => {
                         text=""
                         type="text"
                         placeholder="Enter table name"
-                        maxLength={50}
+                        maxLength={25}
                         textAlign={"left"}
                         onChange={(e) => { setNewTableName(e.target.value) }}
                         value={newTableName}
