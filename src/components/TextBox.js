@@ -5,7 +5,7 @@ const TextBox = ({ text, onChange, icon, type, placeholder, maxLength, textAlign
     return (
         <input type={type}
             placeholder={placeholder}
-            className={`${width} bg-black3 border border-gray2 border-opacity-30 rounded-full ${textAlign === 'center' ? 'text-center' : ''} px-4 py-1 ${mt} text-gray2`}
+            className={`${width} text-sm bg-black3 border border-gray2 border-opacity-30 rounded-full ${textAlign === 'center' ? 'text-center' : ''} px-4 py-1 ${mt} text-gray2`}
             onChange={onChange}
             maxLength={maxLength}
             value={value}
