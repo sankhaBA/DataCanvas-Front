@@ -335,7 +335,7 @@ const Device = () => {
           <ButtonRectangle text="Add Device" onClick={toggleAddDeviceModal} />
         </div>
       </div>
-      <div className="flex-wrap flex justify-center mb-28 mt-6">
+      <div className={`flex-wrap flex ${(devices.length >= 2)  ? 'justify-center' : 'justify-start'} sm:px-6 mb-28 mt-6`}>
         {devices.map((device) => (
           <SquareCard
             isIconShown
