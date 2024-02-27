@@ -58,9 +58,9 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
           navigate('/datahandler', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Settings" icon={FaCogs} active={(active == 4) ? true : false} onClick={() => {
-          navigate('/overview', { state: { project_id: projectID } });
+          navigate('/projectsettings', { state: { project_id: projectID } });
         }} />
-        
+
       </div>
     </div>
   );

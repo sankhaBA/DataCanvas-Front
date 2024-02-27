@@ -15,6 +15,7 @@ import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
 import ConfigureTable from './pages/ConfigureTable';
 import DataTableHandler from './pages/DataTableHandler';
+import ProjectSettings from './pages/ProjectSettings';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -27,17 +28,18 @@ root.render(
   // <React.StrictMode>
   //   <SignUp />
   // </React.StrictMode>
- 
+
   <Router>
     <Routes>
       <Route exact path="/login" element={<Login />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
-      <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
+      <Route path="/projects" element={(uid && token) ? <Projects /> : <Login />} />
+      <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login />} />
       <Route path="/devices" element={<Devices />} />
       <Route path="/configtable" element={<ConfigureTable />} />
       <Route path="/datahandler" element={<DataTableHandler />} />
+      <Route path="/projectsettings" element={<ProjectSettings />} />
     </Routes>
   </Router>
 );
