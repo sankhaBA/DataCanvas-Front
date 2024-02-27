@@ -150,6 +150,7 @@ function Login() {
             if (result.status === 200) {
                 localStorage.setItem('auth-token', result.data.token);
                 localStorage.setItem('uid', result.data.user.id);
+                localStorage.setItem('email', email);
                 toast.success("Login Successful");
 
                 setTimeout(() => {

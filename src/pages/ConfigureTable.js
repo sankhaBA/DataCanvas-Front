@@ -17,6 +17,7 @@ import SelectBox from "../components/SelectBox";
 import Spinner from "../components/Spinner";
 import CriticalAction from "../components/CriticalAction";
 import ConfigTableCard from "../components/ConfigTableCard";
+import LoginPopup from "../components/LoginPopup";
 import axios from "axios";
 
 function ConfigureTable() {
@@ -55,6 +56,24 @@ function ConfigureTable() {
     const [isTableSettingsPopupVisible, setIsTableSettingsPopupVisible] = useState(false);
 
     const [isUpdateTablePopupVisible, setIsUpdateTablePopupVisible] = useState(false);
+
+    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+    const [actionType, setActionType] = useState(''); // 1 - Truncate, 2 - Delete Table
+
+    const [authenticationResult, setAuthenticationResult] = useState(false);
+    useEffect(() => {
+        if (authenticationResult) {
+            setIsLoginPopupVisible(false);
+            if (actionType == 1) {
+                toast.success('Login successful, Truncating table');
+                truncateTable();
+            } else {
+                toast.success('Login successful, Deleting table');
+                deleteTable();
+            }
+
+        }
+    }, [authenticationResult]);
 
     const [selectedColumnID, setSelectedColumnID] = useState(-1);
     const [deletingColumnID, setDeletingColumnID] = useState(-1);
@@ -646,84 +665,84 @@ function ConfigureTable() {
         );
     }
 
-    const TableSettingsPopup = () => {
-        const truncateTable = async () => {
-            setLoading(true);
-            // ---------- Get auth-token from local storage ----------
-            const token = localStorage.getItem('auth-token');
+    const truncateTable = async () => {
+        setLoading(true);
+        // ---------- Get auth-token from local storage ----------
+        const token = localStorage.getItem('auth-token');
 
-            try {
-                const res = await axios.post(`http://localhost:3001/api/data/tbl/truncate/${tblID}`, {
-                    tbl_id: tblID
-                },
-                    {
-                        headers: {
-                            'authorization': token
-                        },
-                    });
-
-                if (res.status == 200) {
-                    toast.success('Table truncated successfully');
-                }
-            } catch (err) {
-                console.log(err);
-                switch (err.response.status) {
-                    case 401 || 403:
-                        toast.error('Session expired. Please login again');
-                        navigate('/login');
-                        break;
-                    case 400 || 404:
-                        toast.error('Error in truncating table');
-                        break;
-                    default:
-                        toast.error('Something went wrong');
-                        break;
-                }
-            } finally {
-                setLoading(false);
-                setIsTableSettingsPopupVisible(false);
-            }
-        }
-
-        const deleteTable = async () => {
-            setLoading(true);
-            // ---------- Get auth-token from local storage ----------
-            const token = localStorage.getItem('auth-token');
-
-            try {
-                const res = await axios.delete(`http://localhost:3001/api/data/tbl/`, {
+        try {
+            const res = await axios.post(`http://localhost:3001/api/data/tbl/truncate/${tblID}`, {
+                tbl_id: tblID
+            },
+                {
                     headers: {
                         'authorization': token
                     },
-                    data: {
-                        tbl_id: tblID
-                    }
                 });
 
-                if (res.status == 200) {
-                    toast.success('Table deleted successfully');
-                    navigate('/datahandler', { state: { project_id: projectID } });
-                }
-            } catch (err) {
-                console.log(err);
-                switch (err.response.status) {
-                    case 401 || 403:
-                        toast.error('Session expired. Please login again');
-                        navigate('/login');
-                        break;
-                    case 400 || 404:
-                        toast.error('Error in deleting table');
-                        break;
-                    default:
-                        toast.error('Something went wrong');
-                        break;
-                }
-            } finally {
-                setLoading(false);
-                setIsTableSettingsPopupVisible(false);
+            if (res.status == 200) {
+                toast.success('Table truncated successfully');
             }
+        } catch (err) {
+            console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    toast.error('Session expired. Please login again');
+                    navigate('/login');
+                    break;
+                case 400 || 404:
+                    toast.error('Error in truncating table');
+                    break;
+                default:
+                    toast.error('Something went wrong');
+                    break;
+            }
+        } finally {
+            setLoading(false);
+            setIsTableSettingsPopupVisible(false);
         }
+    }
 
+    const deleteTable = async () => {
+        setLoading(true);
+        // ---------- Get auth-token from local storage ----------
+        const token = localStorage.getItem('auth-token');
+
+        try {
+            const res = await axios.delete(`http://localhost:3001/api/data/tbl/`, {
+                headers: {
+                    'authorization': token
+                },
+                data: {
+                    tbl_id: tblID
+                }
+            });
+
+            if (res.status == 200) {
+                toast.success('Table deleted successfully');
+                navigate('/datahandler', { state: { project_id: projectID } });
+            }
+        } catch (err) {
+            console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    toast.error('Session expired. Please login again');
+                    navigate('/login');
+                    break;
+                case 400 || 404:
+                    toast.error('Error in deleting table');
+                    break;
+                default:
+                    toast.error('Something went wrong');
+                    break;
+            }
+        } finally {
+            setLoading(false);
+            setIsTableSettingsPopupVisible(false);
+        }
+    }
+
+    const TableSettingsPopup = () => {
         return (
             <PopupContainer isOpen={isTableSettingsPopupVisible}
                 onClose={() => { }}
@@ -737,8 +756,28 @@ function ConfigureTable() {
                         setIsUpdateTablePopupVisible(true);
                         setIsTableSettingsPopupVisible(false);
                     }} buttonColor={'green'} />
-                    <CriticalAction title="Truncate Table" subtitle='Delete all gathered data in this table' buttonText='Truncate' onClick={() => { truncateTable() }} />
-                    <CriticalAction title="Delete Table" subtitle='Delete the whole table including its data' buttonText='Delete' onClick={() => { deleteTable() }} />
+                    <CriticalAction
+                        title="Truncate Table"
+                        subtitle='Delete all gathered data in this table'
+                        buttonText='Truncate'
+                        onClick={() => {
+                            {
+                                setActionType(1);
+                                setIsLoginPopupVisible(true)
+                                setIsTableSettingsPopupVisible(false);
+                            }
+                        }} />
+                    <CriticalAction
+                        title="Delete Table"
+                        subtitle='Delete the whole table including its data'
+                        buttonText='Delete'
+                        onClick={() => {
+                            {
+                                setActionType(2);
+                                setIsLoginPopupVisible(true)
+                                setIsTableSettingsPopupVisible(false);
+                            }
+                        }} />
                 </div>
             </PopupContainer>
         );
@@ -871,7 +910,9 @@ function ConfigureTable() {
             </div>
 
             <div className={`flex flex-row justify-center items-center mt-12`}>
-                <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => { setIsAddColumnPopupVisible(true) }} />
+                <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => {
+                    setIsAddColumnPopupVisible(true)
+                }} />
             </div>
 
             {/* Popup container for column adding */}
@@ -885,6 +926,14 @@ function ConfigureTable() {
 
             {/* Popup container for updating table name */}
             {isUpdateTablePopupVisible ? UpdateTablePopup() : null}
+
+            {/* Popup container for login authentication popup */}
+            {/* {isLoginPopupVisible ? LoginPopup(isLoginPopupVisible, () => { setIsLoginPopupVisible(false) }) : null} */}
+            <LoginPopup
+                isOpen={isLoginPopupVisible}
+                closeFunction={() => setIsLoginPopupVisible(false)}
+                setAuthenticationResult={(e) => setAuthenticationResult(e)}
+                email={localStorage.getItem('email')} />
 
             {/* Spinner */}
             <Spinner isVisible={loading} />
