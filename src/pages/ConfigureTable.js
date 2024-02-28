@@ -651,7 +651,7 @@ function ConfigureTable() {
                 closeIconVisible={true}
                 width={'550px'}>
                 <div className="text-center mt-4 px-4 text-gray2 text-md">
-                    Are you sure want to delete column {columns.find(x => x.clm_id == deletingColumnID).clm_name}?
+                    Are you sure want to delete field {columns.find(x => x.clm_id == deletingColumnID).clm_name}?
                 </div>
                 <div className="text-center mt-4 px-4 text-red text-sm">
                     This action cannot be undone and this will affect existing dashboard configurations

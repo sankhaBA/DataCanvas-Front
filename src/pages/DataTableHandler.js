@@ -201,7 +201,7 @@ const DataTableHandler = () => {
     }
 
     return (
-        <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
+        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
                 <span className={`text-lg`}>Data Tables</span>
                 {dataTables.length > 0 ? (

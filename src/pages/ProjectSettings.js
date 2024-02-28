@@ -233,7 +233,7 @@ function ProjectSettings() {
 
     return (
         //Sidebar Component
-        <SidebarLayout active={4} addressText={'John Doe > UOM Weather Station > Project Settings'}>
+        <SidebarLayout active={4} addressText={`John Doe > ${projectName} >Project Settings`}>
 
             <div className="text-xl text-gray2 font-semibold mx-8 mt-2">Project Settings</div>
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">General Settings</div>
@@ -258,7 +258,7 @@ function ProjectSettings() {
                 </div>
                 <TextBox value={projectID} onChange={(e) => { }} type="text" placeholder="256" maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" disabled={true} />
             </div>
-            <div className='flex w-3/5 items-center justify-center mt-4 '>
+            <div className='flex w-full sm:w-3/5 items-center justify-center mt-4 '>
                 <PillButton
                     text="Update Project"
                     onClick={() => { handleProjectUpdate(projectID) }}

@@ -39,17 +39,7 @@ function ProjectOverview() {
     const [devices, setDevices] = useState([]);
 
     // ---------- Data Table states ----------
-    const [dataTables, setDataTables] = useState([{
-        data_table_id: 1,
-        name: 'sensor-readings-table',
-        createdAt: '2021-08-01, 00:00:00',
-        updatedAt: '2021-08-01, 00:00:00',
-    }, {
-        data_table_id: 2,
-        name: 'error-log',
-        createdAt: '2021-08-01, 00:00:00',
-        updatedAt: '2021-08-01, 00:00:00',
-    }]);
+    const [dataTables, setDataTables] = useState([]);
 
     // ---------- Miscallenous states ----------
     const [dataRecordsCount, setDataRecordsCount] = useState(548);
@@ -191,12 +181,62 @@ function ProjectOverview() {
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {
+        setLoading(true);
+        // Get request to localhost:3001/api/data/tbl?project_id=<project_id> to get data tables
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/tbl?project_id=${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
 
+            if (response.status === 200) {
+                console.log(response.data);
+
+                let dataTablesArray = [];
+                response.data.forEach((dataTable) => {
+
+                    const date = new Date(dataTable.updatedAt);
+                    const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZone: 'GMT' };
+                    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+
+                    let tableDetails = {
+                        tbl_id: dataTable.tbl_id,
+                        tbl_name: dataTable.tbl_name,
+                        updatedAt: formattedDate,
+                    }
+                    dataTablesArray.push(tableDetails);
+                });
+                setDataTables(dataTablesArray);
+                setLoading(false);
+            }
+
+        } catch (err) {
+            switch (err.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    break;
+                case 404:
+                    toast.error('Project not found!');
+                    break;
+                default:
+                    toast.error('Something went wrong!');
+                    break;
+            }
+            setDataTables([]);
+            setLoading(false);
+        }
     }
 
     return (
         // Sidebar Layout Component
-        <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > Overview'}>
+        <SidebarLayout active={0} addressText={`John Doe > ${projectDetails.name} > Overview`}>
 
             {/* Page Title - Project Name */}
             <div className="container  mb-32">
@@ -212,58 +252,62 @@ function ProjectOverview() {
                 {/* Devices Section */}
                 <div className={`flex flex-row justify-between px-7 sm:px-10 mt-8 sm:mt-3`}>
                     <span className={`text-lg`}>Devices</span>
-                    {devices.length > 0 ? (
-                        <div className={``}>
-                            <PillButton text="Add Device" icon={FaPlusCircle} onClick={() => { }} />
-                        </div>
-                    ) : null}
+                    <div className={`bg-green px-4 py-1 text-sm text-black3 border border-black2 rounded-full`}>
+                        {devices.length} Devices Found
+                    </div>
                 </div>
                 <div className={`flex flex-col justify-center px-7 sm:px-10 mt-2`}>
                     {devices.length > 0 ? (
-                        devices.map((device) => {
+                        devices.slice(0, 5).map((device) => {
                             return (
                                 <RectangularCard key={device.device_id} title={device.device_name} subtitle={`Last Update: ${device.updatedAt}`} icon={FaAngleRight} />
                             );
                         })
                     ) : (
                         <div className={`flex flex-row justify-center items-center mt-4`}>
-                            <PillButton text="Add Your First Device" icon={FaPlusCircle} onClick={() => { }} />
+                            <PillButton text="Add Your First Device" icon={FaPlusCircle} onClick={() => {
+                                navigate('/devices', { state: { project_id: projectID } });
+                            }} />
                         </div>
                     )}
                 </div>
 
                 {devices.length > 0 ? (
                     <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="View All" icon={FaForward} onClick={() => { }} />
+                        <PillButton text="View All" icon={FaForward} onClick={() => {
+                            navigate('/devices', { state: { project_id: projectID } });
+                        }} />
                     </div>
                 ) : null}
 
                 {/* Data Tables Section */}
                 <div className={`flex flex-row justify-between px-7 sm:px-10 mt-12 sm:mt-10`}>
                     <span className={`text-lg`}>Data Tables</span>
-                    {dataTables.length > 0 ? (
-                        <div className={``}>
-                            <PillButton text="Add Data Table" icon={FaPlusCircle} onClick={() => { }} />
-                        </div>
-                    ) : null}
+                    <div className={`bg-green px-4 py-1 text-sm text-black3 border border-black2 rounded-full`}>
+                        {dataTables.length} Table Found
+                    </div>
                 </div>
                 <div className={`flex flex-col justify-center px-7 sm:px-10 mt-2`}>
                     {dataTables.length > 0 ? (
-                        dataTables.map((table) => {
+                        dataTables.slice(0, 5).map((table) => {
                             return (
-                                <RectangularCard key={table.data_table_id} title={table.name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
+                                <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
                             );
                         })
                     ) : (
                         <div className={`flex flex-row justify-center items-center mt-4`}>
-                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => { }} />
+                            <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => {
+                                navigate('/datahandler', { state: { project_id: projectID } });
+                            }} />
                         </div>
                     )}
                 </div>
 
                 {dataTables.length > 0 ? (
                     <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="View All" icon={FaForward} onClick={() => { }} />
+                        <PillButton text="View All" icon={FaForward} onClick={() => {
+                            navigate('/datahandler', { state: { project_id: projectID } });
+                        }} />
                     </div>
                 ) : null}
             </div>
