@@ -79,12 +79,30 @@ const DataTableHandler = () => {
     }, [projectID]);
 
 
-
     // ---------- Create new table ----------      
     const handleTableAdding = async () => {
+        const checkSpaces = (str) => {
+            return /\s/.test(str);
+        }
+
+        // Function to check a string has special characters or numbers other than letters and underscores
+        const checkSpecialCharacters = (str) => {
+            var regex = /[^a-zA-Z_]/;
+            return regex.test(input);
+        }
 
         if (newTableName === '') {
             toast.error('Please fill in all fields!');
+            return;
+        }
+
+        if (checkSpaces(newTableName)) {
+            toast.error('Table name cannot contain spaces!');
+            return;
+        }
+
+        if (checkSpecialCharacters(newTableName)) {
+            toast.error('Table name cannot contain special characters or numbers! Only letters and underscores are allowed');
             return;
         }
 

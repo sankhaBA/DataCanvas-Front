@@ -305,9 +305,29 @@ function ConfigureTable() {
 
     const AddColumnPopup = () => {
 
+        const checkSpaces = (str) => {
+            return /\s/.test(str);
+        }
+
+        // Function to check a string has special characters or numbers other than letters and underscores
+        const checkSpecialCharacters = (str) => {
+            var regex = /[^a-zA-Z_]/;
+            return regex.test(input);
+        }
+
         const validateNewColumn = () => {
             if (newColumnName.trim() == '' || newColumnName.trim() == null) {
                 toast.warning('Field Name cannot be empty');
+                return false;
+            }
+
+            if (checkSpaces(newColumnName)) {
+                toast.warning('Field Name cannot contain spaces');
+                return false;
+            }
+
+            if (checkSpecialCharacters(newColumnName)) {
+                toast.error('Table name cannot contain special characters or numbers! Only letters and underscores are allowed');
                 return false;
             }
 
