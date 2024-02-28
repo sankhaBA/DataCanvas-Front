@@ -312,7 +312,7 @@ function ConfigureTable() {
         // Function to check a string has special characters or numbers other than letters and underscores
         const checkSpecialCharacters = (str) => {
             var regex = /[^a-zA-Z_]/;
-            return regex.test(input);
+            return regex.test(str);
         }
 
         const validateNewColumn = () => {
