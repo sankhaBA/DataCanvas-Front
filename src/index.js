@@ -40,12 +40,7 @@ root.render(
       <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
-<<<<<<< Updated upstream
-      <Route path="/configtable" element={<ConfigureTable />} />
-      <Route path="/datahandler" element={<DataTableHandler />} />
-=======
       <Route path="/settings" element={<Settings />} />
->>>>>>> Stashed changes
     </Routes>
   </Router>
 );

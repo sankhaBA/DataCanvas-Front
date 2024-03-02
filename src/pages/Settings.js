@@ -17,55 +17,12 @@ import Spinner from "../components/Spinner";
 import InsightCard from "../components/InsightCard";
 import RectangularCard from "../components/RectangularCard";
 import axios from "axios";
+import NonSidebarLayout from "../components/NonSidebarLayout";
 
 function Settings(){
     return (
-        <SidebarLayout>
-          {/* <div className="flex flex-col w-full h-full">
-                <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-row items-center">
-                        <FaDatabase className="text-2xl text-green mr-4" />
-                        <span className="text-xl text-gray2 font-bold font-poppins">Settings</span>
-                    </div>
-                    <div className="flex flex-row items-center">
-                        <ButtonRectangle text="Add New" icon={FaPlusCircle} />
-                    </div>
-                </div>
-                <div className="flex flex-row w-full mt-8">
-                    <div className="flex flex-col w-1/2">
-                        <div className="flex flex-col w-full">
-                            <div className="flex flex-row items-center">
-                                <span className="text-lg text-gray2 font-bold font-poppins">Device Settings</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-                            </div>
-                            <div className="flex flex-row items-center mt-4">
-                                <span className="text-lg text-gray2 font-bold font-poppins">Data Tables</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-                            </div>
-                            <div className="flex flex-row items-center mt-4">
-                                <span className="text-lg text-gray2 font-bold font-poppins">User Settings</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col w-1/2">
-                        <div className="flex flex-col w-full">
-                            <div className="flex flex-row items-center">
-                                <span className="text-lg text-gray2 font-bold font-poppins">Device Settings</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-                            </div>
-                            <div className="flex flex-row items-center mt-4">
-                                <span className="text-lg text-gray2 font-bold font-poppins">Data Tables</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-                            </div>
-                            <div className="flex flex-row items-center mt-4">
-                                <span className="text-lg text-gray2 font-bold font-poppins">User Settings</span>
-                                <FaAngleRight className="text-xl text-green ml-4" />
-        </div>
-        </div>
-            </div>
-            </div>
-          </div> */}
+        <NonSidebarLayout>
+         
           <div className=" text-white">
           <div className="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm "
           style={{ backgroundImage: `url(${process.env.PUBLIC_URL + '/img/projects_back_gray.png'})` }}></div>
@@ -84,8 +41,10 @@ function Settings(){
     <div className="grid grid-cols-4 md:grid-cols-8 gap-3 whitespace-nowrap text-gray1">
         <div className="font-bold text-white">General Settings</div><div></div><div></div><div></div>
         
-            <div className="flex items-center">
-                <label className="mr-2 whitespace-nowrap" for>Your Name</label>
+            <div className="flex flex-row ml-8 mt-1">
+                 <div className='flex flex-col w-1/4 md:w-1/6'>
+                    <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Project Name</div>
+                </div>
                 <TextBox text="" type="text" />
             </div>
             <div className="flex items-center">
@@ -144,7 +103,7 @@ function Settings(){
 </div>
 
          
-        </SidebarLayout>
+        </NonSidebarLayout>
 
     );
 }
