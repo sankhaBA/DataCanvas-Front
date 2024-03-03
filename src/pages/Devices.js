@@ -17,6 +17,7 @@ import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
+import LoginPopup from "../components/LoginPopup";
 
 const Device = () => {
   //------ Navigations -------
@@ -91,6 +92,20 @@ const Device = () => {
       getAllDevices();
     }
   }, [projectID]);
+
+  //------------ critical section proceeding with authentication
+
+    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+    const [authenticationResult, setAuthenticationResult] = useState(false);
+    useEffect(() => {
+        if (authenticationResult) {
+            setIsLoginPopupVisible(false);
+            toast.success('Login successful, Deleting Device...');
+            handleDeviceDelete(selectedDeviceId);
+
+        }
+    }, [authenticationResult]);
+
 
   //--Api call for adding device--
   const handleDeviceAdding = async () => {
@@ -344,7 +359,13 @@ const Device = () => {
             subtitle={device.description}
             footer={"Last Update:" + device.footer}
             mx="mx-2"
-            onDelete={() => handleDeviceDelete(device.device_id)}
+            onDelete={
+              () => {
+                setSelectedDeviceId(device.device_id);
+                setIsLoginPopupVisible(true)
+                
+              }
+            }
             onUpdate={() => {
               toggleDeviceUpdateModal();
               handleDeviceSelection(device);
@@ -479,6 +500,13 @@ const Device = () => {
           />
         </div>
       </PopupContainer>
+
+      {/* Popup container for login authentication popup */}
+      <LoginPopup
+          isOpen={isLoginPopupVisible}
+          closeFunction={() => setIsLoginPopupVisible(false)}
+          setAuthenticationResult={(e) => setAuthenticationResult(e)}
+          email={localStorage.getItem('email')} />
 
       {/* Spinner */}
       <Spinner isVisible={loading} />
