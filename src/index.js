@@ -13,13 +13,10 @@ import ForgotPassword from './pages/ForgotPassword';
 import Projects from './pages/Projects';
 import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
-<<<<<<< Updated upstream
-import ConfigureTable from './pages/ConfigureTable';
-import DataTableHandler from './pages/DataTableHandler';
 
-=======
+
 import Settings from './pages/Settings';
->>>>>>> Stashed changes
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -41,6 +38,7 @@ root.render(
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
       <Route path="/settings" element={<Settings />} />
+
     </Routes>
   </Router>
 );
