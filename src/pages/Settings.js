@@ -61,18 +61,10 @@ function Settings(){
                 <CriticalAction title="Privacy Policy" subtitle="All your data are protected and verified through a strong privacy policy" buttonText={"Set Policy"} buttonColor={"green"} onClick={() => { }} />
             </div>
             <div className="mt-8"></div>
-
-
-
-        
-
-  
-  
          </div>
          </div>
          
         </NonSidebarLayout>
-        
         
 
     );
