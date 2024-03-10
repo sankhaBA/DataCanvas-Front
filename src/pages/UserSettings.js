@@ -93,36 +93,39 @@ function UserSettings(){
             user_name: name,
         }
 
-        axios.put('/api/user', requestBody) 
+        axios.put('http://localhost:3001/api/user', requestBody) 
             .then(response => {
                 setUser(response.data);
-                navigate('/profile'); // navigate to profile page after successful update
+                
+                toast.success('User details updated successfully');
+
             })
             .catch(error => {
                 console.error('Error updating user data:', error);
+                toast.error('Error updating user data');
+                setLoading(false);
             })
             .finally(() => {
                 setLoading(false);
             });
+           
     };
 
-    if (loading) {
-        return <Spinner isVisible={true} />;
-    }
+    
     
     return ( 
        
          
         <NonSidebarLayout>
         <div className=" text-white">
-        <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}></div>
+        {/* <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}> </div> */}
 
             <div className="flex flex-col justify-center mx-40 my-4 bg-black3 p-10 rounded-lg">
             <div className="flex justify-center items-center"><div className="w-20 h-20 bg-cover rounded-full cursor-pointer flex justify-center items-center" 
-            style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
+            style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div> 
             <h1 className="text-center my-2">{name}</h1>
             <div className="text-green text-center my-2">{email}</div>
-
+            
             
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">General Settings</div>
             <div className="flex flex-row ml-8 mt-1">
@@ -131,13 +134,14 @@ function UserSettings(){
                     </div>
                     <TextBox  type="text"  value={name}
                     placeholder="John Doe" maxLength={50} textAlign="left" 
-                    width="w-2/3 md:w-1/4" onChange={handleNameChange} disabled={true}   />
+                    width="w-2/3 md:w-1/4" onChange={handleNameChange}    />
             </div>
             <div className="flex flex-row ml-8 mt-1">
                     <div className="flex flex-col w-1/4 md:w-1/6">
                         <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Email</div>
                     </div>
-                    <TextBox type="text" placeholder="johndoe123@gmail.com" maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" onChange={handleEmailChange} />
+                    <TextBox type="text" placeholder="johndoe123@gmail.com" value={email} 
+                    maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" onChange={handleEmailChange} />
                    
                      
             </div>
@@ -147,10 +151,10 @@ function UserSettings(){
                     </div>
                     <CriticalAction buttonText={"Change Password"} buttonColor={"red"}  onClick={() => { }} />
             </div>
-            <div className="flex flex-col w-2/3 md:w-1/4">
-                <div className="w-full">
+            <div className="flex justify-center mt-4">
+               
             <PillButton text="Save Changes"onClick={handleSubmit} isPopup={true}    icon={FaUpload}/>
-            </div>
+            
             </div>
 
 
@@ -163,9 +167,23 @@ function UserSettings(){
                 <CriticalAction title="Privacy Policy" subtitle="All your data are protected and verified through a strong privacy policy" buttonText={"Set Policy"} buttonColor={"green"} onClick={() => { }} />
             </div>
             <div className="mt-8"></div>
-            <input type="text" placeholder="/>" className="w-1/2 bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2" />
          </div>
          </div>
+         <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
+              {/* Spinner */}
+              <Spinner isVisible={loading} />
+         
         
         </NonSidebarLayout>
         
