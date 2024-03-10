@@ -15,7 +15,7 @@ import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
 
 
-import Settings from './pages/Settings';
+import UserSettings from './pages/UserSettings';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -37,7 +37,7 @@ root.render(
       <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
-      <Route path="/settings" element={<Settings />} />
+      <Route path="/usersettings" element={<UserSettings />} />
 
     </Routes>
   </Router>
