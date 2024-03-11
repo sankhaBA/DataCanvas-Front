@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Projects from './pages/Projects';
 import ProjectOverview from './pages/ProjectOverview';
 import Devices from './pages/Devices';
+import UserSettings from './pages/UserSettings';
 import ConfigureTable from './pages/ConfigureTable';
 import DataTableHandler from './pages/DataTableHandler';
 import ProjectSettings from './pages/ProjectSettings';
@@ -39,6 +40,7 @@ root.render(
       <Route path="/devices" element={<Devices />} />
       <Route path="/configtable" element={<ConfigureTable />} />
       <Route path="/datahandler" element={<DataTableHandler />} />
+      <Route path="/usersettings" element={<UserSettings />} />
       <Route path="/projectsettings" element={<ProjectSettings />} />
     </Routes>
   </Router>
