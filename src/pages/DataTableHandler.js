@@ -79,12 +79,30 @@ const DataTableHandler = () => {
     }, [projectID]);
 
 
-
     // ---------- Create new table ----------      
     const handleTableAdding = async () => {
+        const checkSpaces = (str) => {
+            return /\s/.test(str);
+        }
+
+        // Function to check a string has special characters or numbers other than letters and underscores
+        const checkSpecialCharacters = (str) => {
+            var regex = /[^a-zA-Z_]/;
+            return regex.test(str);
+        }
 
         if (newTableName === '') {
             toast.error('Please fill in all fields!');
+            return;
+        }
+
+        if (checkSpaces(newTableName)) {
+            toast.error('Table name cannot contain spaces!');
+            return;
+        }
+
+        if (checkSpecialCharacters(newTableName)) {
+            toast.error('Table name cannot contain special characters or numbers! Only letters and underscores are allowed');
             return;
         }
 
@@ -167,8 +185,8 @@ const DataTableHandler = () => {
                     const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
 
                     let tableDetails = {
-                        data_table_id: dataTable.tbl_id,
-                        name: dataTable.tbl_name,
+                        tbl_id: dataTable.tbl_id,
+                        tbl_name: dataTable.tbl_name,
                         updatedAt: formattedDate,
                     }
                     dataTablesArray.push(tableDetails);
@@ -201,7 +219,7 @@ const DataTableHandler = () => {
     }
 
     return (
-        <SidebarLayout active={0} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
+        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
                 <span className={`text-lg`}>Data Tables</span>
                 {dataTables.length > 0 ? (
@@ -215,7 +233,12 @@ const DataTableHandler = () => {
                 {dataTables.length > 0 ? (
                     dataTables.map((table) => {
                         return (
-                            <RectangularCard key={table.data_table_id} title={table.name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
+                            <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight}
+                                onClick={() => {
+                                    navigate("/configtable", {
+                                        state: { project_id: projectID, tbl_id: table.tbl_id },
+                                    });
+                                }} />
                         );
                     })
                 ) : (
@@ -255,7 +278,7 @@ const DataTableHandler = () => {
                         text=""
                         type="text"
                         placeholder="Enter table name"
-                        maxLength={50}
+                        maxLength={25}
                         textAlign={"left"}
                         onChange={(e) => { setNewTableName(e.target.value) }}
                         value={newTableName}
