@@ -1,6 +1,6 @@
 //dependencies
 import React, { useState, useEffect } from "react";
-import { FaMicrochip, FaDatabase, FaClock, FaPlusCircle, FaAngleRight, FaForward } from "react-icons/fa";
+import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,62 +11,28 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 //components
 import TextBox from "../components/TextBox";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/InsightCard";
-import RectangularCard from "../components/RectangularCard";
 import axios from "axios";
-import ScrollableContainer from "../components/ScrollableContainer";
 import NonSidebarLayout from "../components/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
-import { MdTrackChanges } from "react-icons/md";
 import PillButton from "../components/PillButton";
-import { FaUpload } from 'react-icons/fa';
-function UserSettings(){
+
+function UserSettings() {
 
     // navigation hooks
     const navigate = useNavigate();
-    
+
 
     // loading state variables
-    
+
     const [loading, setLoading] = useState(false);
 
     //user state details
     const [user, setUser] = useState({});
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
     useEffect(() => {
-    // Set loading to true before the data is fetched
-        setLoading(true);
-    
-    // Construct the URL with the email parameter
-    const email = localStorage.getItem('email');
-    const url = `http://localhost:3001/api/user/?email=${email}`;
-    
-    // Make the GET request to retrieve the user details
-    axios.get(url)
-        .then((response) => {
-            // Check if the user is found
-            if (response.status === 200) {
-                setUser(response.data);
-                setName(response.data.user_name); // Assuming user_name is the correct field name
-                setEmail(response.data.email);
-            } else {
-                // Handle other status codes
-                console.error('Error fetching user data:', response.status);
-                toast.error('Error fetching user data');
-            }
-        })
-        .catch(error => {
-            // Handle the error
-            console.error('Error fetching user data:', error);
-            toast.error('Error fetching user data');
-        })  
-        .finally(() => {
-            setLoading(false);
-        });
-
+        loadUserDetails();
     }, []);
 
     //handle changes
@@ -79,11 +45,52 @@ function UserSettings(){
         setEmail(e.target.value);
     }
 
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
+    // Load user details
+    const loadUserDetails = () => {
+        // Set loading to true before the data is fetched
+        setLoading(true);
+
+        // Construct the URL with the email parameter
+        const email = localStorage.getItem('email');
+        const url = `http://localhost:3001/api/user/?email=${email}`;
+
+        // Make the GET request to retrieve the user details
+        axios.get(url)
+            .then((response) => {
+                // Check if the user is found
+                if (response.status === 200) {
+                    setUser(response.data);
+                    setName(response.data.user_name); // Assuming user_name is the correct field name
+                    setEmail(response.data.email);
+                }
+            })
+            .catch(error => {
+                // Handle the error
+                switch (error.response.status) {
+                    case 400:
+                        toast.error('Bad request');
+                        break;
+                    case 401 || 403:
+                        toast.error('Unauthorized');
+                        navigate('/login');
+                        break;
+                    case 404:
+                        toast.error('User not found');
+                        navigate('/login');
+                        break;
+                    default:
+                        console.error('Error fetching user data:', error);
+                        toast.error('Error fetching user data');
+                        break;
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
-     // Handle form submission
-     const handleSubmit = event => {
+
+    // Handle form submission
+    const handleSubmit = event => {
         event.preventDefault();
         setLoading(true);
 
@@ -93,83 +100,90 @@ function UserSettings(){
             user_name: name,
         }
 
-        axios.put('http://localhost:3001/api/user', requestBody) 
+        axios.put('http://localhost:3001/api/user', requestBody)
             .then(response => {
-                setUser(response.data);
-                
                 toast.success('User details updated successfully');
-
             })
             .catch(error => {
-                console.error('Error updating user data:', error);
-                toast.error('Error updating user data');
-                setLoading(false);
+                // Handle the error
+                switch (error.response.status) {
+                    case 400:
+                        toast.error('Bad request');
+                        break;
+                    case 401 || 403:
+                        toast.error('Unauthorized');
+                        navigate('/login');
+                        break;
+                    case 404:
+                        toast.error('User not found');
+                        navigate('/login');
+                        break;
+                    default:
+                        console.error('Error updating user data:', error);
+                        toast.error('Error updating user data');
+                        break;
+                }
             })
             .finally(() => {
                 setLoading(false);
             });
-           
+
     };
 
-    
-    
-    return ( 
-       
-         
+
+
+    return (
+
+
         <NonSidebarLayout>
-        <div className=" text-white">
-        {/* <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}> </div> */}
+            <div className=" text-white mb-20">
+                {/* <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}> </div> */}
 
-            <div className="flex flex-col justify-center mx-40 my-4 bg-black3 p-10 rounded-lg">
-            <div className="flex justify-center items-center"><div className="w-20 h-20 bg-cover rounded-full cursor-pointer flex justify-center items-center" 
-            style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div> 
-            <h1 className="text-center my-2">{name}</h1>
-            <div className="text-green text-center my-2">{email}</div>
-            
-            
-            <div className="text-m text-gray2 font-semibold mx-8 mt-8">General Settings</div>
-            <div className="flex flex-row ml-8 mt-1">
-                    <div className="flex flex-col w-1/4 md:w-1/6">
-                        <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Your name</div>
+                <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-2 md:px-20 rounded-xl">
+                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center"
+                        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
+                    <h1 className="text-center my-2 text-xl">{name}</h1>
+                    <div className="text-green text-center my-1">{email}</div>
+
+
+                    <div className="text-m text-gray2 font-semibold mt-8">General Settings</div>
+                    <div className="flex flex-row mt-1">
+                        <div className="flex flex-col w-1/4 md:w-1/6">
+                            <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Your name</div>
+                        </div>
+                        <TextBox type="text" value={name}
+                            placeholder="John Doe" maxLength={50} textAlign="left"
+                            width="w-full" onChange={handleNameChange} />
                     </div>
-                    <TextBox  type="text"  value={name}
-                    placeholder="John Doe" maxLength={50} textAlign="left" 
-                    width="w-2/3 md:w-1/4" onChange={handleNameChange}    />
-            </div>
-            <div className="flex flex-row ml-8 mt-1">
-                    <div className="flex flex-col w-1/4 md:w-1/6">
-                        <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Email</div>
+                    <div className="flex flex-row mt-1">
+                        <div className="flex flex-col w-1/4 md:w-1/6">
+                            <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Email</div>
+                        </div>
+                        <TextBox type="text" placeholder="johndoe123@gmail.com" value={email}
+                            maxLength={50} textAlign="left" width="w-full" onChange={handleEmailChange} />
                     </div>
-                    <TextBox type="text" placeholder="johndoe123@gmail.com" value={email} 
-                    maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" onChange={handleEmailChange} />
-                   
-                     
-            </div>
-            <div className="flex flex-row ml-8 mt-1">
-                    <div className="flex flex-col w-1/4 md:w-1/6">
-                        <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Change Password</div>
+                    <div className="flex flex-row mt-4 sm:mt-2">
+                        <CriticalAction buttonText={"Change Password"} title={"Change Password"} subtitle={"Change the password of your user account"} buttonColor={"red"} onClick={() => { }} />
                     </div>
-                    <CriticalAction buttonText={"Change Password"} buttonColor={"red"}  onClick={() => { }} />
+                    <div className="flex justify-center mt-8">
+
+                        <PillButton text="Save Changes" onClick={handleSubmit} isPopup={true} icon={FaUpload} />
+
+                    </div>
+
+
+
+                    <div className="border-t border-gray1 border-opacity-80 my-8"></div>
+                    <div className="text-m text-gray2 font-semibold mt-4">Critical Settings</div>
+
+                    <div className="flex flex-col mt-4">
+                        <CriticalAction title="Delete your account" subtitle="Delete everything from DataCanvas including your account" buttonText={"Delete Account"} buttonColor={"red"} onClick={() => { }} />
+                        <CriticalAction title="Privacy Policy" subtitle="All your data are protected and verified through a strong privacy policy" buttonText={"View Policy"} buttonColor={"green"} onClick={() => { }} />
+                    </div>
+                    <div className="mt-8"></div>
+                </div>
             </div>
-            <div className="flex justify-center mt-4">
-               
-            <PillButton text="Save Changes"onClick={handleSubmit} isPopup={true}    icon={FaUpload}/>
-            
-            </div>
-
-
-
-            <div className="border-t border-gray1 border-opacity-80 mx-8 my-8 mr-8"></div>
-            <div className="text-m text-gray2 font-semibold mx-8 mt-8">Critical Settings</div>
-
-            <div className="flex flex-col mx-6 mt-4">
-                <CriticalAction title="Delete your account" subtitle="This will delete all your data and your login credentials. You need to sign up and configure from scratch to use the platform again" buttonText={"Delete Account"} buttonColor={"red"} onClick={() => { }} />
-                <CriticalAction title="Privacy Policy" subtitle="All your data are protected and verified through a strong privacy policy" buttonText={"Set Policy"} buttonColor={"green"} onClick={() => { }} />
-            </div>
-            <div className="mt-8"></div>
-         </div>
-         </div>
-         <ToastContainer
+            <ToastContainer
                 position="bottom-center"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -181,13 +195,13 @@ function UserSettings(){
                 pauseOnHover
                 theme="dark"
             />
-              {/* Spinner */}
-              <Spinner isVisible={loading} />
-         
-        
+            {/* Spinner */}
+            <Spinner isVisible={loading} />
+
+
         </NonSidebarLayout>
-        
-        
+
+
 
     );
 }
