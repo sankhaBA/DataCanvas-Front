@@ -37,6 +37,8 @@ root.render(
       <Route path="/projects" element={(uid && token) ? <Projects /> : <Login/>} />
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login/>}  />
       <Route path="/devices" element={<Devices />} />
+      <Route path="/configtable" element={<ConfigureTable />} />
+      <Route path="/datahandler" element={<DataTableHandler />} />
       <Route path="/usersettings" element={<UserSettings />} />
 
     </Routes>
