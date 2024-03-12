@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaWindowClose, FaBars, FaTimes } from 'react-icons/fa';
 
+//Pages for navigation
+import { useNavigate } from 'react-router-dom';
+
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, addressText }) => {
+    // ---------- Navigation ----------
+    const navigate = useNavigate();
+
     const [searchBarShown, setSearchBarShown] = useState(false);
 
     return (
@@ -39,7 +45,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                         {!isSidebarOpen && sideBarButtonDisplayed ? (
                             <FaBars className="text-2xl text-green mr-4 cursor-pointer visible lg:hidden" onClick={toggleSidebar} />
                         ) : null}
-                        <img src={process.env.PUBLIC_URL + '/img/sample_user.jpg'} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" />
+                        <img src={process.env.PUBLIC_URL + '/img/sample_user.jpg'} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" onClick={() => navigate('/usersettings')} />
                     </div>
                 </div>
             )}
