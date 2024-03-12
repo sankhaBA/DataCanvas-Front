@@ -140,7 +140,7 @@ function UserSettings() {
                 {/* <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}> </div> */}
 
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-2 md:px-20 rounded-xl">
-                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center"
+                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
                         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
                     <h1 className="text-center my-2 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
