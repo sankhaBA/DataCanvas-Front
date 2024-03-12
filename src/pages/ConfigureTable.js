@@ -10,7 +10,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 // Components
 import SidebarLayout from "../components/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
-import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
@@ -934,7 +933,7 @@ function ConfigureTable() {
                     setIsAddColumnPopupVisible(true)
                 }} />
                 <PillButton text="View Data" icon={FaDatabase} onClick={() => {
-
+                    navigate('/dataset', { state: { project_id: projectID, tbl_id: tblID } });
                 }} />
             </div>
 
