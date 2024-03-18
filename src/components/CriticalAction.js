@@ -22,7 +22,7 @@ const CriticalAction = ({ title, subtitle, buttonText, buttonColor, onClick }) =
                             {subtitle}
                         </div>
                     </div>
-                    <div className={`w-32`}>
+                    <div className={`w-auto`}>
                         <ButtonRectangle text={buttonText} onClick={() => { }} isPopup={false} color={buttonColor} width={'full'} />
                     </div>
                 </div>
