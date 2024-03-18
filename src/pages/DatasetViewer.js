@@ -235,10 +235,6 @@ function DatasetViewer() {
                                     <th key={column.clm_id} className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">{column.clm_name}</th>
                                 )
                             })}
-                            <th className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">COLUMN</th>
-                            <th className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">COLUMN</th>
-                            <th className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">COLUMN</th>
-                            <th className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">COLUMN</th>
                         </tr>
                     </thead>
                     <tbody>
