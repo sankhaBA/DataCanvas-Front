@@ -68,6 +68,12 @@ function DatasetViewer() {
         // }
     ]);
 
+    // ---------- Data Retrieval ----------
+    const [retrievedData, setRetrievedData] = useState([]);
+    const [tableRecordCount, setTableRecordCount] = useState(0);
+    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(5);
+    const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
+
     useEffect(() => {
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
         try {
@@ -97,6 +103,14 @@ function DatasetViewer() {
             getColumnDetails();
         }
     }, [dataTypes, constraints]);
+
+    useEffect(() => {
+        // ---------- Get table data ----------
+        if (tblID != -1 && columns.length > 0) {
+            loadTableRecordCount();
+            loadDataOfATable();
+        }
+    }, [columns]);
 
     // ---------- Function to get data types ----------
     const getDataTypes = async (token) => {
@@ -215,6 +229,66 @@ function DatasetViewer() {
         }
     }
 
+    const loadTableRecordCount = async () => {
+        try {
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+            const res = await axios.get(`http://localhost:3001/api/data/get/count/?tbl_id=${tblID}`, {
+                headers: {
+                    'authorization': token
+                }
+            });
+            console.log('Record Count : ', res.data);
+            setTableRecordCount(res.data);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    console.log('Error in getting table record count');
+                    toast.error('Error in getting table record count');
+                    navigate('/overview');
+                    break;
+            }
+        }
+    }
+
+    const loadDataOfATable = async () => {
+        try {
+            setLoading(true);
+            // ---------- Get auth-token from local storage ----------
+            const token = localStorage.getItem('auth-token');
+            const res = await axios.get(`http://localhost:3001/api/data/get/all/?tbl_id=${tblID}&limit=${dataRetrievalLimit}&offset=${dataRetrievalOffset}`, {
+                headers: {
+                    'authorization': token
+                }
+            });
+            console.log('Data : ', res.data);
+            setRetrievedData(res.data);
+            setDataRetrievalOffset(dataRetrievalOffset + dataRetrievalLimit);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    navigate('/login');
+                    break;
+                default:
+                    console.log('Error in getting table data');
+                    toast.error('Error in retrieving data');
+                    navigate('/overview');
+                    break;
+            }
+        }
+    }
+
+
     return (
         <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
             {/* Devices Section */}
@@ -232,7 +306,7 @@ function DatasetViewer() {
                         <tr className={`bg-black3 `}>
                             {columns.map((column, index) => {
                                 return (
-                                    <th key={column.clm_id} className="w-[300px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">{column.clm_name}</th>
+                                    <th key={column.clm_id} className="w-[200px] border border-gray1 border-opacity-40 text-gray2 text-sm py-2 font-normal">{column.clm_name}</th>
                                 )
                             })}
                         </tr>
@@ -240,20 +314,17 @@ function DatasetViewer() {
                     <tbody>
 
                         {/* Example rows */}
-                        <tr>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                        </tr>
-                        <tr>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                            <td className="border border-gray1 border-opacity-40 text-white text-xs text-center px-4 py-2">1</td>
-                        </tr>
+                        {retrievedData.map((row, index) => {
+                            return (
+                                <tr key={index}>
+                                    {columns.map((column, index) => {
+                                        return (
+                                            <td key={column.clm_id} className="border border-gray1 border-opacity-40 text-white text-xs text-center px-2 py-2">{row[column.clm_name]}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
 
                         {/* Add more rows as needed */}
                     </tbody>
