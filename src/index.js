@@ -18,6 +18,7 @@ import ConfigureTable from './pages/ConfigureTable';
 import DataTableHandler from './pages/DataTableHandler';
 import ProjectSettings from './pages/ProjectSettings';
 import DatasetViewer from './pages/DatasetViewer';
+import SamplePage from './pages/SamplePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -44,6 +45,7 @@ root.render(
       <Route path="/usersettings" element={<UserSettings />} />
       <Route path="/projectsettings" element={<ProjectSettings />} />
       <Route path="/dataset" element={<DatasetViewer />} />
+      <Route path="/sample" element={<SamplePage />} />
     </Routes>
   </Router>
 );

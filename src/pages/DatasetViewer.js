@@ -9,15 +9,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
 import SidebarLayout from "../components/SidebarLayout";
-import PopupContainer from "../components/PopupContainer";
-import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
-import SelectBox from "../components/SelectBox";
+import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
-import CriticalAction from "../components/CriticalAction";
-import ConfigTableCard from "../components/ConfigTableCard";
-import LoginPopup from "../components/LoginPopup";
+
 import axios from "axios";
 import './../styles/scrollbar.css';
 
@@ -240,7 +235,7 @@ function DatasetViewer() {
                 }
             });
             console.log('Record Count : ', res.data);
-            setTableRecordCount(res.data);
+            setTableRecordCount(res.data[0].count);
             setLoading(false);
         } catch (err) {
             setLoading(false);
@@ -270,7 +265,6 @@ function DatasetViewer() {
             });
             console.log('Data : ', res.data);
             setRetrievedData(res.data);
-            setDataRetrievalOffset(dataRetrievalOffset + dataRetrievalLimit);
             setLoading(false);
         } catch (err) {
             setLoading(false);
@@ -330,6 +324,24 @@ function DatasetViewer() {
                     </tbody>
                 </table>
             </div>
+
+            <Pagination recordCount={tableRecordCount} limit={dataRetrievalLimit} offset={dataRetrievalOffset} setOffset={setDataRetrievalOffset} onClick={loadDataOfATable} />
+
+            {/* Spinner */}
+            <Spinner isVisible={loading} />
+
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </SidebarLayout>
     );
 
