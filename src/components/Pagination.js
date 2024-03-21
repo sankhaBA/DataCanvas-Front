@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import ButtonRectangle from './ButtonRectangle';
 import PillButton from './PillButton';
 
-const Pagination = ({ recordCount, limit, setOffset, offset, onClick }) => {
+const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
     const [upperBound, setUpperBound] = useState(offset + limit);
     const [lowerBound, setLowerBound] = useState(offset);
+
+    useEffect(() => {
+        console.log('Pagination.js: offset changed', offset);
+        loadAllData();
+    }, [offset]);
 
     const handleNext = () => {
         setOffset(upperBound);
@@ -15,12 +20,16 @@ const Pagination = ({ recordCount, limit, setOffset, offset, onClick }) => {
         } else {
             setUpperBound(upperBound + limit);
         }
+        console.log(upperBound, lowerBound, offset);
+        //loadAllData();
     }
 
     const handlePrevious = () => {
         setOffset(lowerBound - limit);
         setUpperBound(lowerBound);
         setLowerBound(lowerBound - limit);
+        console.log(upperBound, lowerBound, offset);
+        //loadAllData();
     }
 
     return (
@@ -43,7 +52,7 @@ const Pagination = ({ recordCount, limit, setOffset, offset, onClick }) => {
                 </div>
                 <div>
                     <nav className="isolate inline-flex space-x-2 rounded-md shadow-sm" aria-label="Pagination">
-                        {(upperBound != 0) ? (
+                        {(lowerBound != 0) ? (
                             <div
                                 className="relative w-24 cursor-pointer inline-flex justify-center items-center rounded-md px-2 py-1 text-green ring-1 ring-inset ring-green hover:text-gray2 hover:ring-gray2 transition-all duration-300 ease-in-out focus:z-20 focus:outline-offset-0"
                                 onClick={handlePrevious}
