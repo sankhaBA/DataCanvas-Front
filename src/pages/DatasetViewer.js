@@ -67,7 +67,7 @@ function DatasetViewer() {
     // ---------- Data Retrieval ----------
     const [retrievedData, setRetrievedData] = useState([]);
     const [tableRecordCount, setTableRecordCount] = useState(0);
-    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(20);
+    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(4);
     const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
 
     // ---------- Add Data Popup ----------
@@ -267,6 +267,7 @@ function DatasetViewer() {
 
     // ---------- Function to load data of a table - with limit and offset ----------
     const loadDataOfATable = async () => {
+        if (tblID == -1) return;
         try {
             setLoading(true);
             // ---------- Get auth-token from local storage ----------
@@ -338,7 +339,11 @@ function DatasetViewer() {
                 </table>
             </div>
 
-            <Pagination recordCount={tableRecordCount} limit={dataRetrievalLimit} offset={dataRetrievalOffset} setOffset={setDataRetrievalOffset} onClick={loadDataOfATable} />
+            <Pagination recordCount={tableRecordCount}
+                limit={dataRetrievalLimit}
+                offset={dataRetrievalOffset}
+                setOffset={setDataRetrievalOffset}
+                loadAllData={loadDataOfATable} />
 
             {/* Add Data Popup */}
             {addDataPopupVisible ? (
