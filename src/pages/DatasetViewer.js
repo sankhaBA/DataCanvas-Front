@@ -111,6 +111,13 @@ function DatasetViewer() {
         }
     }, [columns]);
 
+    useEffect(() => {
+        // ---------- Get table data ----------
+        if (!addDataPopupVisible && tblID != -1 && columns.length > 0) {
+            loadDataOfATable();
+        }
+    }, [addDataPopupVisible]);
+
     // ---------- Function to get data types ----------
     const getDataTypes = async (token) => {
         try {
