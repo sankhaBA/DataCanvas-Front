@@ -12,6 +12,7 @@ import SidebarLayout from "../components/SidebarLayout";
 import PillButton from "../components/PillButton";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
+import AddDataPopup from "../components/AddDataPopup";
 
 import axios from "axios";
 import './../styles/scrollbar.css';
@@ -68,6 +69,9 @@ function DatasetViewer() {
     const [tableRecordCount, setTableRecordCount] = useState(0);
     const [dataRetrievalLimit, setDataRetrievalLimit] = useState(5);
     const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
+
+    // ---------- Add Data Popup ----------
+    const [addDataPopupVisible, setAddDataPopupVisible] = useState(false);
 
     useEffect(() => {
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
@@ -224,6 +228,7 @@ function DatasetViewer() {
         }
     }
 
+    // ---------- Function to load table record count ----------
     const loadTableRecordCount = async () => {
         try {
             setLoading(true);
@@ -253,6 +258,7 @@ function DatasetViewer() {
         }
     }
 
+    // ---------- Function to load data of a table - with limit and offset ----------
     const loadDataOfATable = async () => {
         try {
             setLoading(true);
@@ -290,7 +296,7 @@ function DatasetViewer() {
                 <span className={`text-lg`}>Gathered Data - {tblName}</span>
                 <div className={`flex mt-2 sm:mt-0 space-x-4`}>
                     <PillButton text="View API" icon={FaUpload} onClick={() => { }} />
-                    <PillButton text="Add Data" icon={FaPlusCircle} onClick={() => { }} />
+                    <PillButton text="Add Data" icon={FaPlusCircle} onClick={() => { setAddDataPopupVisible(true) }} />
                 </div>
             </div>
 
@@ -326,6 +332,16 @@ function DatasetViewer() {
             </div>
 
             <Pagination recordCount={tableRecordCount} limit={dataRetrievalLimit} offset={dataRetrievalOffset} setOffset={setDataRetrievalOffset} onClick={loadDataOfATable} />
+
+            {/* Add Data Popup */}
+            {addDataPopupVisible ? (
+                <AddDataPopup isOpen={addDataPopupVisible}
+                    closeFunction={() => setAddDataPopupVisible(false)}
+                    columns={columns}
+                    projectID={projectID}
+                    tblName={tblName}
+                    setLoading={setLoading} />
+            ) : null}
 
             {/* Spinner */}
             <Spinner isVisible={loading} />

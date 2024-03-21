@@ -43,7 +43,7 @@ const Pagination = ({ recordCount, limit, setOffset, offset, onClick }) => {
                 </div>
                 <div>
                     <nav className="isolate inline-flex space-x-2 rounded-md shadow-sm" aria-label="Pagination">
-                        {(upperBound != 0) ? (
+                        {(lowerBound != 0) ? (
                             <div
                                 className="relative w-24 cursor-pointer inline-flex justify-center items-center rounded-md px-2 py-1 text-green ring-1 ring-inset ring-green hover:text-gray2 hover:ring-gray2 transition-all duration-300 ease-in-out focus:z-20 focus:outline-offset-0"
                                 onClick={handlePrevious}
