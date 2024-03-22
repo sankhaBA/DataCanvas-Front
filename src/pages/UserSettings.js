@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAuth, sendPasswordResetEmail} from "firebase/auth";
 
 
 //pages for navigation
@@ -57,6 +58,8 @@ function UserSettings() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
 
+
+
     useEffect(() => {
         loadUserDetails();
     }, []);
@@ -71,8 +74,35 @@ function UserSettings() {
         setEmail(e.target.value);
     }
 
+    const handlePasswordReset = () => {
+        const auth = getAuth();
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            toast.success('Password reset email sent successfully. Check your Mailbox.');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            toast.error('Error sending password reset email:', errorCode, errorMessage);
+        });
+    }
+
     // Load user details
     const loadUserDetails = () => {
+
+        const handlePasswordReset = () => {
+            const auth = getAuth();
+            sendPasswordResetEmail(auth, email)
+            .then(() => {
+                toast.success('Password reset email sent successfully. Check your Mailbox.');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error('Error sending password reset email:', errorCode, errorMessage);
+            });
+        }
+
         // Set loading to true before the data is fetched
         setLoading(true);
 
@@ -189,7 +219,7 @@ function UserSettings() {
                             maxLength={50} textAlign="left" width="w-full" onChange={handleEmailChange} />
                     </div>
                     <div className="flex flex-row mt-4 sm:mt-2">
-                        <CriticalAction buttonText={"Change Password"} title={"Change Password"} subtitle={"Change the password of your user account"} buttonColor={"red"} onClick={() => { }} />
+                        <CriticalAction buttonText={"Change Password"} title={"Change Password"} subtitle={"Change the password of your user account"} buttonColor={"red"} onClick={() => {handlePasswordReset()}} />
                     </div>
                     <div className="flex justify-center mt-8">
 
