@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAuth, sendPasswordResetEmail} from "firebase/auth";
+
 
 //pages for navigation
 
@@ -15,6 +17,10 @@ import axios from "axios";
 import NonSidebarLayout from "../components/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/PillButton";
+import LoginPopup from "../components/LoginPopup";
+
+
+
 
 function UserSettings() {
 
@@ -26,10 +32,33 @@ function UserSettings() {
 
     const [loading, setLoading] = useState(false);
 
+    // ---------- Login for proceed with critical actions
+    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+    const [actionType, setActionType] = useState('');
+    const [authenticationResult, setAuthenticationResult] = useState(false);
+
+    useEffect(() => {
+        if (authenticationResult) {
+            setIsLoginPopupVisible(false);
+            if (actionType == 1) {
+                toast.success('Action Confirmed, Deleting Account! We are sorry to see you go!');
+                // handleDeleteAccount();
+            }
+            else if (actionType == 2) {
+                toast.success('login Sucessful! You will be redirected to change email!');
+                // handleChangeEmail();
+            }
+
+        }
+    }, [authenticationResult]);
+
+
     //user state details
     const [user, setUser] = useState({});
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+
+
 
     useEffect(() => {
         loadUserDetails();
@@ -45,8 +74,35 @@ function UserSettings() {
         setEmail(e.target.value);
     }
 
+    const handlePasswordReset = () => {
+        const auth = getAuth();
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            toast.success('Password reset email sent successfully. Check your Mailbox.');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            toast.error('Error sending password reset email:', errorCode, errorMessage);
+        });
+    }
+
     // Load user details
     const loadUserDetails = () => {
+
+        const handlePasswordReset = () => {
+            const auth = getAuth();
+            sendPasswordResetEmail(auth, email)
+            .then(() => {
+                toast.success('Password reset email sent successfully. Check your Mailbox.');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error('Error sending password reset email:', errorCode, errorMessage);
+            });
+        }
+
         // Set loading to true before the data is fetched
         setLoading(true);
 
@@ -163,7 +219,7 @@ function UserSettings() {
                             maxLength={50} textAlign="left" width="w-full" onChange={handleEmailChange} />
                     </div>
                     <div className="flex flex-row mt-4 sm:mt-2">
-                        <CriticalAction buttonText={"Change Password"} title={"Change Password"} subtitle={"Change the password of your user account"} buttonColor={"red"} onClick={() => { }} />
+                        <CriticalAction buttonText={"Change Password"} title={"Change Password"} subtitle={"Change the password of your user account"} buttonColor={"red"} onClick={() => {handlePasswordReset()}} />
                     </div>
                     <div className="flex justify-center mt-8">
 
@@ -177,12 +233,25 @@ function UserSettings() {
                     <div className="text-m text-gray2 font-semibold mt-4">Critical Settings</div>
 
                     <div className="flex flex-col mt-4">
-                        <CriticalAction title="Delete your account" subtitle="Delete everything from DataCanvas including your account" buttonText={"Delete Account"} buttonColor={"red"} onClick={() => { }} />
+                        <CriticalAction title="Delete your account" subtitle="Delete everything from DataCanvas including your account" buttonText={"Delete Account"} buttonColor={"red"} onClick={() => { 
+                            setActionType(1);
+                            setIsLoginPopupVisible(true)
+                        }} />
                         <CriticalAction title="Privacy Policy" subtitle="All your data are protected and verified through a strong privacy policy" buttonText={"View Policy"} buttonColor={"green"} onClick={() => { }} />
                     </div>
                     <div className="mt-8"></div>
                 </div>
             </div>
+
+            {/* Popup container for login authentication popup */}
+            <LoginPopup
+            
+                isOpen={isLoginPopupVisible}
+                closeFunction={() => setIsLoginPopupVisible(false)}
+                setAuthenticationResult={(e) => setAuthenticationResult(e)}
+                email={localStorage.getItem('email')} 
+            />
+
             <ToastContainer
                 position="bottom-center"
                 autoClose={5000}

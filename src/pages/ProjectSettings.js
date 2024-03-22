@@ -35,8 +35,8 @@ function ProjectSettings() {
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState(''); // 1 - delete all data , 2 - Delete tables, 3 - Delete devices, 4 - Delete project
-
     const [authenticationResult, setAuthenticationResult] = useState(false);
+    
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
