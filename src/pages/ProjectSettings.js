@@ -43,10 +43,10 @@ function ProjectSettings() {
             if (actionType == 1) {
                 toast.success('Login successful, Deleting data');
                 //handleDataDelete(projectID);
-                
+
             } else if (actionType == 2) {
-                toast.success('Login successful, Deleting tables'); 
-                handleTableDelete(projectID);   
+                toast.success('Login successful, Deleting tables');
+                handleTableDelete(projectID);
             }
             else if (actionType == 3) {
                 toast.success('Login successful, Deleting devices');
@@ -303,23 +303,23 @@ function ProjectSettings() {
 
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">Critical Settings</div>
 
-            <div className="flex flex-col mx-6 mt-4">
+            <div className="flex flex-col mx-6 mt-4 mb-36">
                 <CriticalAction title="Delete all data" subtitle="This will delete all the gathered data in the tables. This will not delete tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
                     setActionType(1);
                     setIsLoginPopupVisible(true)
-                 }} />
-                <CriticalAction title="Delete all tables" subtitle="This will delete all the gathered data as well as tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => { 
+                }} />
+                <CriticalAction title="Delete all tables" subtitle="This will delete all the gathered data as well as tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
                     setActionType(2);
                     setIsLoginPopupVisible(true)
-                 }} />
-                <CriticalAction title="Delete all devices" subtitle="This will delete all the devices and their respective gathered data" buttonText={"Delete"} buttonColor={"red"} onClick={() => { 
+                }} />
+                <CriticalAction title="Delete all devices" subtitle="This will delete all the devices and their respective gathered data" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
                     setActionType(3);
                     setIsLoginPopupVisible(true)
-                 }} />
+                }} />
                 <CriticalAction title="Delete project" subtitle="This will delete this project, including all devices, tables, data and dashboard" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
                     setActionType(4);
                     setIsLoginPopupVisible(true)
-                 }} />
+                }} />
             </div>
 
             {/* Popup container for login authentication popup */}

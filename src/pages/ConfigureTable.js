@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaSalesforce, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
+import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,7 +10,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 // Components
 import SidebarLayout from "../components/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
-import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
@@ -929,9 +928,12 @@ function ConfigureTable() {
                 })}
             </div>
 
-            <div className={`flex flex-row justify-center items-center mt-12`}>
+            <div className={`flex flex-row justify-center items-center mt-12 space-x-4`}>
                 <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => {
                     setIsAddColumnPopupVisible(true)
+                }} />
+                <PillButton text="View Data" icon={FaDatabase} onClick={() => {
+                    navigate('/dataset', { state: { project_id: projectID, tbl_id: tblID } });
                 }} />
             </div>
 

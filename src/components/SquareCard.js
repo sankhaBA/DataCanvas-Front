@@ -5,7 +5,7 @@ const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete, isIc
   return (
     <div
       className={
-        `w-full sm:w-[300px] h-[200px] bg-black3 rounded-3xl ${mx} my-1 sm:my-5
+        `w-full sm:w-[300px] h-[200px] bg-black3 rounded-2xl ${mx} my-1 sm:my-5
         border border-gray1 border-opacity-60 relative overflow-hidden
         transition duration-300 hover:border-green cursor-pointer`
       }
