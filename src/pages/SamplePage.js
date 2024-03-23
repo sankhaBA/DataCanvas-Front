@@ -2,11 +2,12 @@ import React from 'react';
 import SidebarLayout from '../components/SidebarLayout';
 import LoginPopup from '../components/LoginPopup';
 import AddWidgetPopup from '../components/AddWidgetPopup';
+import AddWidgetChart from '../components/AddWidgetChart';
 
 function SamplePage() {
     return (
         <SidebarLayout active={3} addressText={''}>
-            <AddWidgetPopup isOpen={true} closeFunction={() => { }} />
+         <AddWidgetChart isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
     );
 }
