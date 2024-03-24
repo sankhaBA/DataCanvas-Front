@@ -6,7 +6,7 @@ import TextBox from "./TextBox";
 import SelectBox from "./SelectBox";
 import PillButton from "./PillButton"
 
-const GaugeWidget = () => {
+const GaugeWidgetPopup = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
@@ -35,9 +35,13 @@ const GaugeWidget = () => {
             
           <SelectBox label="Select" options={["Temperature", "Option 2"]}  />
           <div style={{ paddingBottom: "15px" }}></div>
+          <div className="flex items-center space-x-2">
 
-          <span className="text-sm">Maximum Value</span>
-          <TextBox type="number" placeholder="Enter maximum value" />
+            <input type="checkbox" className="w-4 h-4"
+                    
+                    onChange={()=> {}} />
+            <label className="text-gray2 text-sm">Work as an input button</label>
+          </div>
           <div style={{ paddingBottom: "30px" }}></div>
 
           <div className="flex justify-center space-x-4">
@@ -50,4 +54,4 @@ const GaugeWidget = () => {
   );
 };
 
-export default GaugeWidget;
+export default GaugeWidgetPopup;
