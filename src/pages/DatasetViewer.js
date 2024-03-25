@@ -67,7 +67,7 @@ function DatasetViewer() {
     // ---------- Data Retrieval ----------
     const [retrievedData, setRetrievedData] = useState([]);
     const [tableRecordCount, setTableRecordCount] = useState(0);
-    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(4);
+    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(10);
     const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
 
     // ---------- Add Data Popup ----------
