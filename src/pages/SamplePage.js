@@ -7,7 +7,7 @@ import GaugeWidgetPopup from '../components/GaugeWidgetPopup';
 function SamplePage() {
     return (
         <SidebarLayout active={3} addressText={''}>
-            <GaugeWidget />
+            <GaugeWidgetPopup isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
 
     );
