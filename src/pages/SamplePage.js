@@ -7,9 +7,9 @@ import GaugeWidgetPopup from '../components/GaugeWidgetPopup';
 function SamplePage() {
     return (
         <SidebarLayout active={3} addressText={''}>
-            <LoginPopup isOpen={true} closeFunction={() => { }} setAuthenticationResult={() => { }} email={''} />
+            <GaugeWidget />
         </SidebarLayout>
-        
+
     );
 }
 
