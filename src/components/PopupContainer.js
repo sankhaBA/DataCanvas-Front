@@ -32,7 +32,7 @@ const PopupContainer = ({
           <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
         </Transition.Child>
 
-        <div className={`w-[350px] sm:w-[550px] fixed inset-0 flex items-center justify-center mx-auto`} style={{width: width}}>
+        <div className={`w-[350px] sm:w-[550px] fixed inset-0 flex items-center justify-center mx-auto`}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-500"
