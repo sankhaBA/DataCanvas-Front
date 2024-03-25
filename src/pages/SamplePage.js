@@ -8,6 +8,7 @@ function SamplePage() {
         <SidebarLayout active={3} addressText={''}>
             <AddWidgetPopup isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
+
     );
 }
 
