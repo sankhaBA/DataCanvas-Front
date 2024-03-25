@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaGoogle, FaGithub } from "react-icons/fa";
 import { getAuth, setPersistence, browserSessionPersistence, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
@@ -31,6 +31,12 @@ function Login() {
 
     const [isLogin, setisLogin] = useState(false);
 
+    useEffect(() => {
+        // Remove local storage keys
+        localStorage.removeItem('auth-token');
+        localStorage.removeItem('uid');
+        localStorage.removeItem('email');
+    }, []);
 
     const handleGoogleLogin = () => {
         if (loading) return;
@@ -96,7 +102,7 @@ function Login() {
                     .then((userCredential) => {
                         const user = userCredential.user;
                         if (user.emailVerified === false) {
-                            toast.error('Email not verified. Please verify your email.');
+                            toast.error('Email not verified. Please verify your email. Check your email inbox');
                             setLoading(false);
                             return;
                         }
@@ -105,7 +111,8 @@ function Login() {
                     .catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
-                        if (errorCode === 'auth/wrong-password') {
+                        console.log(error.code, error.message);
+                        if (errorCode === 'auth/invalid-credential') {
                             toast.warning('Wrong Credentials entered.');
                         } else if (errorCode === 'auth/user-not-found') {
                             toast.warning('User not found.');
@@ -120,14 +127,14 @@ function Login() {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                if (errorCode === 'auth/wrong-password') {
+                if (errorCode === 'Firebase: Error(auth/invalid-credentials)') {
                     toast.warning('Wrong Credentials entered.');
                 } else if (errorCode === 'auth/user-not-found') {
                     toast.warning('User not found.');
                 } else if (errorCode === 'auth/invalid-email') {
                     toast.warning('Invalid email.');
                 } else {
-                    toast.error("Something went wrong! " + errorMessage);
+                    toast.error("Something went wrong! " + errorCode);
                 }
                 setLoading(false);
             });
@@ -156,6 +163,7 @@ function Login() {
                 setTimeout(() => {
                     localStorage.removeItem('auth-token');
                     localStorage.removeItem('uid');
+                    localStorage.removeItem('email');
                 }, 7200000);
 
                 setLoading(false);

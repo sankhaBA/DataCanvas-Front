@@ -252,7 +252,7 @@ function SignUp() {
             {/* Enter user name - Popup */}
             <PopupContainer isOpen={isOpen} onClose={() => { }} Icon={FaHandshake} title='Verify Email' >
                 <div className="flex flex-col items-center justify-center mt-2 px-3">
-                    <label className="text-gray1 text-sm">Verification email sent to {email}</label>
+                    <label className="text-gray2 text-sm">Verification email sent to {email}</label>
 
                 </div>
                 <div className="flex justify-center mt-4 mb-3">

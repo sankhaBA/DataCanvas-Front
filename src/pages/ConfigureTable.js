@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
+import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog, FaSave } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -80,7 +80,9 @@ function ConfigureTable() {
     const [newColumnDataType, setNewColumnDataType] = useState(-1);
     useEffect(() => {
         if (newColumnDataType == 3) {
-            setNewColumnMaxLength(255);
+            if (newColumnMaxLength == 0 || newColumnMaxLength == '' || newColumnMaxLength == null) {
+                setNewColumnMaxLength(255);
+            }
             setNewColumnAutoIncrement(false);
         } else {
             setNewColumnMaxLength(0);
@@ -525,7 +527,7 @@ function ConfigureTable() {
             <PopupContainer isOpen={isAddColumnPopupVisible}
                 onClose={() => { }}
                 closeFunction={() => setIsAddColumnPopupVisible(false)}
-                Icon={FaPlusCircle}
+                Icon={(selectedColumnID == -1) ? FaPlusCircle : FaSave}
                 title={selectedColumnID == -1 ? 'Add Field' : 'Edit Field'}
                 closeIconVisible={true}
                 width={'550px'}>
@@ -581,7 +583,7 @@ function ConfigureTable() {
 
                 <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
                     {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
-                    {newColumnDataType != 3 ? (
+                    {newColumnDataType == 1 ? (
                         <div className="flex justify-center items-center space-x-2">
                             <input type="checkbox" className="w-4 h-4"
                                 checked={newColumnAutoIncrement}

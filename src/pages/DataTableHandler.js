@@ -135,7 +135,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -150,6 +150,9 @@ const DataTableHandler = () => {
                 case 404:
                     toast.error('Project not found!');
                     navigate('/projects');
+                    break;
+                case 409:
+                    toast.error('Table already exists!');
                     break;
                 default:
                     toast.error('Something went wrong!');
@@ -242,8 +245,11 @@ const DataTableHandler = () => {
                         );
                     })
                 ) : (
-                    <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                    <div className={`w-full flex flex-col justify-center items-center`}>
+                        <div className={`text-gray2 text-sm`}>No data tables found</div>
+                        <div className={`flex flex-row justify-center items-center mt-4`}>
+                            <PillButton text="Add Your First Data Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                        </div>
                     </div>
                 )}
             </div>
