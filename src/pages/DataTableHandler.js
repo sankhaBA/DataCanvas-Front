@@ -180,7 +180,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;

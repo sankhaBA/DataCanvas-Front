@@ -93,7 +93,7 @@ function ProjectOverview() {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -146,7 +146,7 @@ function ProjectOverview() {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -198,7 +198,7 @@ function ProjectOverview() {
                 setLoading(false);
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;

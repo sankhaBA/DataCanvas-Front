@@ -129,7 +129,7 @@ const Device = () => {
         toggleDeviceAddingDoneModal();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -175,7 +175,7 @@ const Device = () => {
         setDevices(newDevices);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -225,7 +225,7 @@ const Device = () => {
         getAllDevices();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -298,7 +298,7 @@ const Device = () => {
         setLoading(false);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
