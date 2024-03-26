@@ -1,14 +1,9 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlusCircle, FaCheck, FaKey } from "react-icons/fa";
 import { MdRouter } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-//Pages for navigation
 import { useNavigate, useLocation } from "react-router-dom";
-
-// Components
 import SidebarLayout from "../components/layouts/SidebarLayout";
 import SquareCard from "../components/cards/SquareCard";
 import Spinner from "../components/Spinner";
@@ -29,7 +24,7 @@ const Device = () => {
   //--Get states from navigation location for retrieval of project_id--
   const { state } = useLocation();
 
-  //--Add Device Modal--
+  //--Add Device Modal Visiblity--
   const [isAddDeviceOpen, setIsAddDeviceOpen] = useState(false);
 
   const toggleAddDeviceModal = () => {
@@ -45,19 +40,17 @@ const Device = () => {
     setIsDeviceAddingDoneOpen(!isDeviceAddingDoneOpen);
   };
 
-  //--Device Update Modal--
+  //--Device Update Modal Visiblity--
   const [isDeviceUpdateOpen, setIsDeviceUpdateOpen] = useState(false);
 
   const toggleDeviceUpdateModal = () => {
     setIsDeviceUpdateOpen(!isDeviceUpdateOpen);
   };
 
-  //----Device States----
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState([]); // For storing devices of the project
   const [newDeviceName, setNewDeviceName] = useState(""); // For text box of Add Device
   const [newDeviceDescription, setNewDeviceDescription] = useState(""); // For text box of Add Device
-  //--Get device Fingerprint
-  const [fingerprint, setFingerprint] = useState("");
+  const [fingerprint, setFingerprint] = useState(""); // For showing device fingerprint of newly added device
 
   const [projectID, setProjectID] = useState(-1);
 
@@ -94,7 +87,6 @@ const Device = () => {
   }, [projectID]);
 
   //------------ critical section proceeding with authentication
-
   const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
   const [authenticationResult, setAuthenticationResult] = useState(false);
   useEffect(() => {
@@ -105,7 +97,6 @@ const Device = () => {
 
     }
   }, [authenticationResult]);
-
 
   //--Api call for adding device--
   const handleDeviceAdding = async () => {
@@ -227,7 +218,6 @@ const Device = () => {
           device_name: newDeviceName,
           description: newDeviceDescription,
         },
-
         {
           headers: {
             authorization: localStorage.getItem("auth-token"),
@@ -358,8 +348,6 @@ const Device = () => {
               <PillButton text="Add Your First Device" icon={FaPlusCircle} onClick={toggleAddDeviceModal} />
             </div>
           </div>
-
-
         ) : (
           devices.map((device) => (
             <SquareCard
@@ -373,7 +361,6 @@ const Device = () => {
                 () => {
                   setSelectedDeviceId(device.device_id);
                   setIsLoginPopupVisible(true)
-
                 }
               }
               onUpdate={() => {

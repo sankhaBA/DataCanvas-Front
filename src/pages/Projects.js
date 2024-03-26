@@ -1,13 +1,8 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaPlusCircle, FaCheck, FaCheckCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-//Navigation
-import { Link, useNavigate } from "react-router-dom";
-
-// Components
+import { useNavigate } from "react-router-dom";
 import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import PillButton from "../components/input/PillButton";
 import TextBox from "../components/input/TextBox";
@@ -38,29 +33,6 @@ function Projects() {
     }
     setIsProjectAddingDoneOpen(!isProjectAddingDoneOpen);
   };
-
-  // ---------- States for Project Details and API calls ----------
-
-  // const [projects, setProjects] = useState([
-  //     {
-  //         project_id: 1,
-  //         project_name: "Project 1",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  //     {
-  //         project_id: 2,
-  //         project_name: "Project 2",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  //     {
-  //         project_id: 3,
-  //         project_name: "Project 3",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  // ]); // This fills by the projects from the server
 
   const [projects, setProjects] = useState([]); // This fills by the projects from the server
   const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
@@ -161,7 +133,6 @@ function Projects() {
       );
 
       if (result.status === 200) {
-        // Project added successfully
         setNewProjectID(result.data.project_id);
         toggleAddProjectModal();
         toggleProjectAddingDoneModal();

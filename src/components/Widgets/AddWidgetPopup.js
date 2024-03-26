@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import PopupContainer from "../PopupContainer";
 import PillButton from "../input/PillButton";
 import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
-import { toast } from 'react-toastify';
-import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {

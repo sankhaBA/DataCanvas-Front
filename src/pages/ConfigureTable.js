@@ -1,13 +1,8 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog, FaSave } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
+import { useNavigate, useLocation } from 'react-router-dom';
 import SidebarLayout from "../components/layouts/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
 import PillButton from "../components/input/PillButton";
@@ -87,8 +82,6 @@ function ConfigureTable() {
         } else {
             setNewColumnMaxLength(0);
         }
-
-        //setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
     const [newColumnDefaultValue, setNewColumnDefaultValue] = useState('');
@@ -304,9 +297,7 @@ function ConfigureTable() {
         }
     }
 
-
     const AddColumnPopup = () => {
-
         const checkSpaces = (str) => {
             return /\s/.test(str);
         }
@@ -594,7 +585,6 @@ function ConfigureTable() {
                 {/* Auto Increment, Not Null, Unique Checkboxes */}
                 {(selectedColumnID != -1) ? null : (
                     <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
-                        {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
                         {newColumnDataType == 1 ? (
                             <div className="flex justify-center items-center space-x-2">
                                 <input type="checkbox" className="w-4 h-4"
@@ -904,16 +894,12 @@ function ConfigureTable() {
                         icon={FaPlusCircle}
                     />
                 </div>
-
-
             </PopupContainer>
         );
     }
 
     return (
-        // Sidebar Layout Component
         <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
-            {/* Devices Section */}
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>
@@ -922,7 +908,6 @@ function ConfigureTable() {
             </div>
 
             <div className={`flex flex-col justify-center px-7 sm:px-10 mt-2`}>
-                {/* <ConfigTableCard columnName="id" dataType="Integer" defaultValue="N/A" isAutoIncrement={true} isNullAllowed={false} isUnique={true} onClick={() => { }} /> */}
                 {columns.map((column) => {
                     return (
                         <ConfigTableCard key={column.clm_id}
@@ -965,7 +950,6 @@ function ConfigureTable() {
             {isUpdateTablePopupVisible ? UpdateTablePopup() : null}
 
             {/* Popup container for login authentication popup */}
-            {/* {isLoginPopupVisible ? LoginPopup(isLoginPopupVisible, () => { setIsLoginPopupVisible(false) }) : null} */}
             <LoginPopup
                 isOpen={isLoginPopupVisible}
                 closeFunction={() => setIsLoginPopupVisible(false)}

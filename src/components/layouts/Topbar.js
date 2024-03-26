@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaWindowClose, FaBars, FaTimes } from 'react-icons/fa';
-
-//Pages for navigation
+import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, addressText }) => {

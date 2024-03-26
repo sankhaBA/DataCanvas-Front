@@ -1,19 +1,13 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlusCircle, FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
+import { useNavigate, useLocation } from 'react-router-dom';
 import SidebarLayout from "../components/layouts/SidebarLayout";
 import PillButton from "../components/input/PillButton";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AddDataPopup from "../components/AddDataPopup";
-
 import axios from "axios";
 import './../styles/scrollbar.css';
 
@@ -304,7 +298,6 @@ function DatasetViewer() {
 
     return (
         <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
-            {/* Devices Section */}
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Gathered Data - {tblName}</span>
                 <div className={`flex mt-2 sm:mt-0 space-x-4`}>
@@ -325,8 +318,6 @@ function DatasetViewer() {
                         </tr>
                     </thead>
                     <tbody>
-
-                        {/* Example rows */}
                         {retrievedData.map((row, index) => {
                             return (
                                 <tr key={index}>
@@ -338,8 +329,6 @@ function DatasetViewer() {
                                 </tr>
                             )
                         })}
-
-                        {/* Add more rows as needed */}
                     </tbody>
                 </table>
             </div>

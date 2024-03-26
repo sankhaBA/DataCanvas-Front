@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import { FaTools, FaCheck } from "react-icons/fa";
 import PopupContainer from "../PopupContainer";
-import ButtonRectangle from "../input/ButtonRectangle";
-import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
 import PillButton from "../input/PillButton"
 
-const GaugeWidgetPopup = ({ isOpen, closeFunction }) => {
+const AddToggleWidgetPopup = ({ isOpen, closeFunction }) => {
   return (
     <PopupContainer
       title="Configure Widget"
@@ -39,4 +37,4 @@ const GaugeWidgetPopup = ({ isOpen, closeFunction }) => {
   );
 };
 
-export default GaugeWidgetPopup;
+export default AddToggleWidgetPopup;

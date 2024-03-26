@@ -1,19 +1,12 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
-import { FaMicrochip, FaDatabase, FaClock, FaPlusCircle, FaAngleRight, FaForward } from "react-icons/fa";
+import { FaPlusCircle, FaAngleRight } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
+import { useNavigate, useLocation } from 'react-router-dom';
 import SidebarLayout from "../components/layouts/SidebarLayout";
-import ButtonRectangle from "../components/input/ButtonRectangle";
 import PillButton from "../components/input/PillButton";
 import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/cards/InsightCard";
 import RectangularCard from "../components/cards/RectangularCard";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
@@ -32,7 +25,6 @@ const DataTableHandler = () => {
 
     // ---------- Table name for new addings ------
     const [newTableName, setNewTableName] = useState('');
-    const [newTableNameDescription, setNewTableNameDescription] = useState('');
 
     //--Add Data table Modal--
     const [isAddDatatableOpen, setIsAddDatatableOpen] = useState(false);
@@ -40,8 +32,6 @@ const DataTableHandler = () => {
     const toggleAddDatatableModal = () => {
         setIsAddDatatableOpen(!isAddDatatableOpen);
     };
-
-    const [isDatatableAddingDoneOpen, setisDatatableAddingDoneOpen] = useState(false);
 
     // ---------- Data Table states ----------
     const [dataTables, setDataTables] = useState([
@@ -59,9 +49,7 @@ const DataTableHandler = () => {
     ]);
     const [projectID, setProjectID] = useState(-1);
 
-
     useEffect(() => {
-
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
@@ -71,13 +59,11 @@ const DataTableHandler = () => {
         }
     }, []);
 
-
     useEffect(() => {
         if (projectID != -1) {
             loadDataTables();
         }
     }, [projectID]);
-
 
     // ---------- Create new table ----------      
     const handleTableAdding = async () => {
@@ -157,14 +143,11 @@ const DataTableHandler = () => {
                 default:
                     toast.error('Something went wrong!');
                     break;
-
             }
         } finally {
             setLoading(false);
         }
     }
-
-
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {

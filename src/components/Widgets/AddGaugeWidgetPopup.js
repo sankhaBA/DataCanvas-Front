@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaTools, FaCheck } from "react-icons/fa";
 import PopupContainer from "../PopupContainer";
-import ButtonRectangle from "../input/ButtonRectangle";
 import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
 import PillButton from "../input/PillButton"

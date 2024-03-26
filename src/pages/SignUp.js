@@ -1,50 +1,32 @@
-// Dependencies
 import React, { useState } from "react";
-import { FaUser, FaFacebook, FaGoogle, FaGithub, FaHandshake } from "react-icons/fa";
-
-//Pages for navigation
+import { FaUser, FaGoogle, FaGithub, FaHandshake } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-
-// Components
 import ButtonRectangle from "../components/input/ButtonRectangle";
 import TextBox from "../components/input/TextBox";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
-
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import axios from "axios";
-
-
 
 function SignUp() {
     const [loading, setLoading] = useState(false);
-
     const [email, setEmail] = useState("");
     const [username, setUserName] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
 
-
-
     const auth = getAuth();
 
     const API_URL = "http://localhost:3001/api/user"
 
-    const navigate = useNavigate();
-
     const handleSignup = (e) => {
         e.preventDefault();
-
         setLoading(true);
         createUserWithEmailAndPassword(auth, email, password1, username)
             .then((userCredential) => {
                 const user = userCredential.user;
-
                 if (user) {
                     sendEmailVerification(user)
                         .then(async () => {
@@ -71,7 +53,6 @@ function SignUp() {
                 setLoading(false);
             });
     };
-
 
     const validateForm = (e) => {
         if (email === "" || password1 === "" || password2 === "") {
@@ -101,11 +82,9 @@ function SignUp() {
                 const displayName = user.displayName;
                 const email = user.email;
                 createNewUser(email, displayName, 1);
-
             })
             .catch((error) => {
                 const errorMessage = error.message;
-                const email = error.customData.email;
                 toast.error(errorMessage);
                 setLoading(false);
             });
@@ -120,15 +99,12 @@ function SignUp() {
                 const user = result.user;
                 console.log(user);
                 createNewUser(user.email, user.displayName, 2);
-
             })
             .catch((error) => {
                 const errorMessage = error.message;
-                const email = error.customData.email;
                 toast.error(errorMessage);
                 setLoading(false);
             });
-
     }
 
     const createNewUser = async (email, username, type) => { // type -> determine the authentication type, 0 - for Email/Password, 1 - for Google, 2 - for Github 
@@ -136,7 +112,6 @@ function SignUp() {
             try {
                 const result = await axios.get(API_URL + "?email=" + email);
                 if (result.status === 200) {
-                    // User already exits
                     // navigate to the project handling page
                     toast.success("User signed in successfully");
                     return;
@@ -145,7 +120,6 @@ function SignUp() {
                     return;
                 }
             } catch (error) {
-
                 switch (error.response.status) {
                     case 404:
                         // User does not exist
@@ -178,8 +152,6 @@ function SignUp() {
         }
     }
 
-
-
     const [isOpen, setIsOpen] = useState(false);
 
     const openModal = () => {
@@ -189,7 +161,6 @@ function SignUp() {
     const closeModal = () => {
         setIsOpen(false);
     };
-
 
     return (
         <div className="relative min-h-screen bg-black">

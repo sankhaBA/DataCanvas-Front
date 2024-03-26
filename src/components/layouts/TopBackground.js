@@ -1,5 +1,3 @@
-// TopBackground.js
-
 import React from 'react';
 
 function TopBackground() {
