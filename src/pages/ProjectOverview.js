@@ -52,14 +52,12 @@ function ProjectOverview() {
 
     useEffect(() => {
         if (projectID !== -1) {
-            console.log('Project ID', projectID);
             loadProjectDetails();
         }
     }, [projectID]);
 
     useEffect(() => {
         if (projectDetails.name !== '') {
-            console.log('Project Details', projectDetails);
             loadDevices();
             loadDataTables();
         }
@@ -95,7 +93,7 @@ function ProjectOverview() {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -129,8 +127,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let devicesArray = [];
                 response.data.forEach((device) => {
                     // Specify the locale as 'si-LK' for Sri Lanka
@@ -150,7 +146,7 @@ function ProjectOverview() {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -184,8 +180,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
 
@@ -204,7 +198,7 @@ function ProjectOverview() {
                 setLoading(false);
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;

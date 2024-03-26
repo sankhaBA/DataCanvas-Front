@@ -36,12 +36,10 @@ function ForgotPassword() {
       }
 
       setLoading(true);
-      console.log(email);
       // const response = await axios.get(`http://localhost:3001/api/user?email=${email}`);
       const response = await axios.get('http://localhost:3001/api/user?email=' + email);
 
       if (response.status === 200) {
-        console.log('Success:', response.data);
         authEmail(email);
 
       }
@@ -72,7 +70,6 @@ function ForgotPassword() {
       const auth = getAuth(app);
       await sendPasswordResetEmail(auth, email);
       openModal();
-      console.log('Password reset email sent successfully.');
       toast.success('Password reset email sent successfully.');
     } catch (error) {
       console.error('Error sending password reset email:', error.message);

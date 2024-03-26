@@ -72,7 +72,6 @@ const Device = () => {
 
   useEffect(() => {
     try {
-      console.log("Device-state", state.project_id);
       setProjectID(state.project_id);
     } catch (err) {
       console.log(err);
@@ -125,13 +124,12 @@ const Device = () => {
 
       if (response.status === 200) {
         setFingerprint(response.data.fingerprint);
-        console.log(response.data);
         setDevices([...devices, response.data]);
         toggleAddDeviceModal();
         toggleDeviceAddingDoneModal();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -161,7 +159,6 @@ const Device = () => {
   const handleDeviceDelete = async (device_id) => {
     setLoading(true);
     // delete request to localhost:3001/api/device
-    console.log(localStorage.getItem("auth-token"));
     try {
       const response = await axios.delete(`http://localhost:3001/api/device`, {
         headers: {
@@ -171,7 +168,6 @@ const Device = () => {
       });
 
       if (response.status === 200) {
-        console.log(response.data);
         // Remove the deleted device from the devices array
         let newDevices = devices.filter(
           (device) => device.device_id !== device_id
@@ -179,7 +175,7 @@ const Device = () => {
         setDevices(newDevices);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -226,11 +222,10 @@ const Device = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         getAllDevices();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -272,8 +267,6 @@ const Device = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
-
         let devicesArray = [];
         response.data.forEach((device) => {
           // Specify the locale as 'si-LK' for Sri Lanka
@@ -305,7 +298,7 @@ const Device = () => {
         setLoading(false);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;

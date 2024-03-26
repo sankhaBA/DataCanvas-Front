@@ -30,7 +30,6 @@ function SignUp() {
                 if (user) {
                     sendEmailVerification(user)
                         .then(async () => {
-                            console.log("Verification email sent to " + email);
                             createNewUser(email, username, 0);
                         });
                 }
@@ -78,7 +77,6 @@ function SignUp() {
         signInWithPopup(auth, provider)
             .then((result) => {
                 const user = result.user;
-                console.log(user);
                 const displayName = user.displayName;
                 const email = user.email;
                 createNewUser(email, displayName, 1);
@@ -97,7 +95,6 @@ function SignUp() {
         signInWithPopup(auth, provider)
             .then((result) => {
                 const user = result.user;
-                console.log(user);
                 createNewUser(user.email, user.displayName, 2);
             })
             .catch((error) => {

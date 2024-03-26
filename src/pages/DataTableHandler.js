@@ -161,8 +161,6 @@ const DataTableHandler = () => {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
 
@@ -182,7 +180,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;

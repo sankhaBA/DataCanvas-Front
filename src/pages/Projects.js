@@ -72,8 +72,6 @@ function Projects() {
       );
 
       if (result.status === 200) {
-        // Projects retrieved successfully
-        console.log(result.data);
         setProjects(result.data);
       }
     } catch (err) {

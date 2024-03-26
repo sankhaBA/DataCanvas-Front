@@ -72,7 +72,6 @@ function DatasetViewer() {
         try {
             setTblID(state.tbl_id);
             setProjectID(state.project_id);
-            console.log('tbl_id : ' + state.tbl_id);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -121,7 +120,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Data Types : ', res.data);
             setDataTypes(res.data);
             setLoading(false);
         } catch (err) {
@@ -149,7 +147,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Constraints : ', res.data);
             setConstraints(res.data);
             setLoading(false);
         } catch (err) {
@@ -208,7 +205,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Columns : ', res.data);
             // Sort columns by clm_id
             res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
             setColumns(res.data);
@@ -240,7 +236,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Record Count : ', res.data);
             setTableRecordCount(res.data[0].count);
             setLoading(false);
         } catch (err) {
@@ -271,7 +266,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Data : ', res.data);
             for (let dataItem of res.data) {
                 let device_id = dataItem.device;
                 dataItem.device = dataItem.device_name

@@ -36,7 +36,6 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
                     setPassword('');
                     return;
                 } else {
-                    console.log('Login success using google');
                     setAuthenticationResult(true);
                     setLoading(false);
                     setPassword('');
@@ -63,7 +62,6 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
                     setPassword('');
                     return;
                 } else {
-                    console.log('Login success using github');
                     setAuthenticationResult(true);
                     setLoading(false);
                     setPassword('');
@@ -88,7 +86,6 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
         setAuthenticationResult(false);
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                console.log('Login success using email');
                 setAuthenticationResult(true);
                 setPassword('');
                 setLoading(false);

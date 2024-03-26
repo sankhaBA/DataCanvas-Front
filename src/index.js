@@ -24,7 +24,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const uid = localStorage.getItem('uid');
 const token = localStorage.getItem('auth-token');
-console.log(uid, token);
 
 root.render(
   <Router>
