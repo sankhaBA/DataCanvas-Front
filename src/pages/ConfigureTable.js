@@ -87,6 +87,7 @@ function ConfigureTable() {
         } else {
             setNewColumnMaxLength(0);
         }
+
         //setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
@@ -405,7 +406,7 @@ function ConfigureTable() {
                 }
 
                 const requestBody = {
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     tbl_id: tblID,
                     default_value: newColumnDefaultValue,
@@ -480,7 +481,7 @@ function ConfigureTable() {
 
                 const requestBody = {
                     clm_id: selectedColumnID,
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     default_value: newColumnDefaultValue,
                     max_length: newColumnMaxLength,
@@ -510,6 +511,9 @@ function ConfigureTable() {
                         case 400 || 404:
                             toast.error('Error in updating field');
                             navigate('/overview')
+                            break;
+                        case 405:
+                            toast.error('Field data type cannot be changed');
                             break;
                         default:
                             toast.error('Something went wrong');
@@ -545,7 +549,7 @@ function ConfigureTable() {
 
                     <div className="flex flex-col justify-center sm:w-1/2">
                         <label className="text-gray1 text-sm">Data Type</label>
-                        <SelectBox onChange={(e) => setNewColumnDataType(e.target.value)}
+                        <SelectBox disabled={(selectedColumnID == -1) ? false : true} onChange={(e) => setNewColumnDataType(e.target.value)}
                             value={newColumnDataType}>
                             <option value={-1}>Select Data Type</option>
                             {dataTypes.map((type) => {
