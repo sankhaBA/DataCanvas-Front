@@ -79,12 +79,30 @@ const DataTableHandler = () => {
     }, [projectID]);
 
 
-
     // ---------- Create new table ----------      
     const handleTableAdding = async () => {
+        const checkSpaces = (str) => {
+            return /\s/.test(str);
+        }
+
+        // Function to check a string has special characters or numbers other than letters and underscores
+        const checkSpecialCharacters = (str) => {
+            var regex = /[^a-zA-Z_]/;
+            return regex.test(str);
+        }
 
         if (newTableName === '') {
             toast.error('Please fill in all fields!');
+            return;
+        }
+
+        if (checkSpaces(newTableName)) {
+            toast.error('Table name cannot contain spaces!');
+            return;
+        }
+
+        if (checkSpecialCharacters(newTableName)) {
+            toast.error('Table name cannot contain special characters or numbers! Only letters and underscores are allowed');
             return;
         }
 
@@ -117,7 +135,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -132,6 +150,9 @@ const DataTableHandler = () => {
                 case 404:
                     toast.error('Project not found!');
                     navigate('/projects');
+                    break;
+                case 409:
+                    toast.error('Table already exists!');
                     break;
                 default:
                     toast.error('Something went wrong!');
@@ -224,8 +245,11 @@ const DataTableHandler = () => {
                         );
                     })
                 ) : (
-                    <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                    <div className={`w-full flex flex-col justify-center items-center`}>
+                        <div className={`text-gray2 text-sm`}>No data tables found</div>
+                        <div className={`flex flex-row justify-center items-center mt-4`}>
+                            <PillButton text="Add Your First Data Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                        </div>
                     </div>
                 )}
             </div>

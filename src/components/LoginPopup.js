@@ -26,6 +26,7 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
         if (loading) return;
         setLoading(true);
 
+        setAuthenticationResult(false);
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
             .then((result) => {
@@ -52,6 +53,7 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
         if (loading) return;
         setLoading(true);
 
+        setAuthenticationResult(false);
         const provider = new GithubAuthProvider();
         signInWithPopup(auth, provider)
             .then((result) => {
@@ -83,6 +85,7 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
         if (loading) return;
         setLoading(true);
 
+        setAuthenticationResult(false);
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log('Login success using email');
@@ -107,7 +110,7 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
             closeIconVisible={true}
             width={'550px'}>
             <div className="flex flex-col justify-between items-center mt-4">
-                <p className={`text-gray2`}>{!loading ? 'You need to confirm your identity to proceed with this action' : 'Please wait...'}</p>
+                <p className={`text-gray2 text-sm`}>{!loading ? 'You need to confirm your identity to proceed with this action' : 'Please wait...'}</p>
 
                 {loading ? (
                     <div className={`flex flex-col justify-center items-center mt-5`}>

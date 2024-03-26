@@ -14,6 +14,8 @@ import PillButton from "../components/PillButton";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import CriticalAction from "../components/CriticalAction";
+import LoginPopup from "../components/LoginPopup";
+
 
 function ProjectSettings() {
     // ---------- Navigation hooks ----------
@@ -29,6 +31,36 @@ function ProjectSettings() {
     const [projectID, setProjectID] = useState(-1);
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+
+    // ---------- Login for proceed with critical actions
+    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+    const [actionType, setActionType] = useState(''); // 1 - delete all data , 2 - Delete tables, 3 - Delete devices, 4 - Delete project
+    const [authenticationResult, setAuthenticationResult] = useState(false);
+
+    useEffect(() => {
+        console.log('Authentication result', authenticationResult);
+        if (authenticationResult) {
+            setIsLoginPopupVisible(false);
+            if (actionType == 1) {
+                toast.success('Login successful, Deleting data');
+                //handleDataDelete(projectID);
+
+            } else if (actionType == 2) {
+                toast.success('Login successful, Deleting tables');
+                handleTableDelete(projectID);
+            }
+            else if (actionType == 3) {
+                toast.success('Login successful, Deleting devices');
+                handleDeviceDelete(projectID);
+            }
+            else if (actionType == 4) {
+                toast.success('Login successful, Deleting project');
+                //handleProjectDelete(projectID);
+                navigate('/projects');
+            }
+        }
+    }, [authenticationResult]);
+
 
     useEffect(() => {
 
@@ -202,8 +234,7 @@ function ProjectSettings() {
 
             if (response.status === 200) {
                 console.log(response.data);
-                toast.success("All devices deleted!");
-
+                toast.success("All tables deleted!");
             }
         } catch (err) {
             switch (err.status) {
@@ -271,12 +302,31 @@ function ProjectSettings() {
 
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">Critical Settings</div>
 
-            <div className="flex flex-col mx-6 mt-4">
-                <CriticalAction title="Delete all data" subtitle="This will delete all the gathered data in the tables. This will not delete tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => { }} />
-                <CriticalAction title="Delete all tables" subtitle="This will delete all the gathered data as well as tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => { handleTableDelete(projectID) }} />
-                <CriticalAction title="Delete all devices" subtitle="This will delete all the devices and their respective gathered data" buttonText={"Delete"} buttonColor={"red"} onClick={() => { handleDeviceDelete(projectID) }} />
-                <CriticalAction title="Delete project" subtitle="This will delete this project, including all devices, tables, data and dashboard" buttonText={"Delete"} buttonColor={"red"} onClick={() => { }} />
+            <div className="flex flex-col mx-6 mt-4 mb-36">
+                <CriticalAction title="Delete all data" subtitle="This will delete all the gathered data in the tables. This will not delete tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
+                    setActionType(1);
+                    setIsLoginPopupVisible(true)
+                }} />
+                <CriticalAction title="Delete all tables" subtitle="This will delete all the gathered data as well as tables" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
+                    setActionType(2);
+                    setIsLoginPopupVisible(true)
+                }} />
+                <CriticalAction title="Delete all devices" subtitle="This will delete all the devices and their respective gathered data" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
+                    setActionType(3);
+                    setIsLoginPopupVisible(true)
+                }} />
+                <CriticalAction title="Delete project" subtitle="This will delete this project, including all devices, tables, data and dashboard" buttonText={"Delete"} buttonColor={"red"} onClick={() => {
+                    setActionType(4);
+                    setIsLoginPopupVisible(true)
+                }} />
             </div>
+
+            {/* Popup container for login authentication popup */}
+            <LoginPopup
+                isOpen={isLoginPopupVisible}
+                closeFunction={() => setIsLoginPopupVisible(false)}
+                setAuthenticationResult={(e) => setAuthenticationResult(e)}
+                email={localStorage.getItem('email')} />
 
             {/* Spinner */}
             <Spinner isVisible={loading} />

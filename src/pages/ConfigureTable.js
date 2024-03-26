@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaSalesforce, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
+import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog, FaSave } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,7 +10,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 // Components
 import SidebarLayout from "../components/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
-import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import TextBox from "../components/TextBox";
 import SelectBox from "../components/SelectBox";
@@ -81,11 +80,14 @@ function ConfigureTable() {
     const [newColumnDataType, setNewColumnDataType] = useState(-1);
     useEffect(() => {
         if (newColumnDataType == 3) {
-            setNewColumnMaxLength(255);
+            if (newColumnMaxLength == 0 || newColumnMaxLength == '' || newColumnMaxLength == null) {
+                setNewColumnMaxLength(255);
+            }
             setNewColumnAutoIncrement(false);
         } else {
             setNewColumnMaxLength(0);
         }
+
         //setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
@@ -305,9 +307,29 @@ function ConfigureTable() {
 
     const AddColumnPopup = () => {
 
+        const checkSpaces = (str) => {
+            return /\s/.test(str);
+        }
+
+        // Function to check a string has special characters or numbers other than letters and underscores
+        const checkSpecialCharacters = (str) => {
+            var regex = /[^a-zA-Z_]/;
+            return regex.test(str);
+        }
+
         const validateNewColumn = () => {
             if (newColumnName.trim() == '' || newColumnName.trim() == null) {
                 toast.warning('Field Name cannot be empty');
+                return false;
+            }
+
+            if (checkSpaces(newColumnName)) {
+                toast.warning('Field Name cannot contain spaces');
+                return false;
+            }
+
+            if (checkSpecialCharacters(newColumnName)) {
+                toast.error('Table name cannot contain special characters or numbers! Only letters and underscores are allowed');
                 return false;
             }
 
@@ -384,7 +406,7 @@ function ConfigureTable() {
                 }
 
                 const requestBody = {
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     tbl_id: tblID,
                     default_value: newColumnDefaultValue,
@@ -414,6 +436,9 @@ function ConfigureTable() {
                         case 400 || 404:
                             toast.error('Error in adding field');
                             navigate('/projects')
+                            break;
+                        case 409:
+                            toast.error('Field name already exists');
                             break;
                         default:
                             toast.error('Something went wrong');
@@ -459,7 +484,7 @@ function ConfigureTable() {
 
                 const requestBody = {
                     clm_id: selectedColumnID,
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     default_value: newColumnDefaultValue,
                     max_length: newColumnMaxLength,
@@ -490,6 +515,12 @@ function ConfigureTable() {
                             toast.error('Error in updating field');
                             navigate('/overview')
                             break;
+                        case 405:
+                            toast.error('Field data type cannot be changed');
+                            break;
+                        case 409:
+                            toast.error('Field name already exists');
+                            break;
                         default:
                             toast.error('Something went wrong');
                             break;
@@ -506,7 +537,7 @@ function ConfigureTable() {
             <PopupContainer isOpen={isAddColumnPopupVisible}
                 onClose={() => { }}
                 closeFunction={() => setIsAddColumnPopupVisible(false)}
-                Icon={FaPlusCircle}
+                Icon={(selectedColumnID == -1) ? FaPlusCircle : FaSave}
                 title={selectedColumnID == -1 ? 'Add Field' : 'Edit Field'}
                 closeIconVisible={true}
                 width={'550px'}>
@@ -524,7 +555,7 @@ function ConfigureTable() {
 
                     <div className="flex flex-col justify-center sm:w-1/2">
                         <label className="text-gray1 text-sm">Data Type</label>
-                        <SelectBox onChange={(e) => setNewColumnDataType(e.target.value)}
+                        <SelectBox disabled={(selectedColumnID == -1) ? false : true} onChange={(e) => setNewColumnDataType(e.target.value)}
                             value={newColumnDataType}>
                             <option value={-1}>Select Data Type</option>
                             {dataTypes.map((type) => {
@@ -560,30 +591,33 @@ function ConfigureTable() {
                     </div>
                 </div>
 
-                <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
-                    {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
-                    {newColumnDataType != 3 ? (
+                {/* Auto Increment, Not Null, Unique Checkboxes */}
+                {(selectedColumnID != -1) ? null : (
+                    <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
+                        {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
+                        {newColumnDataType == 1 ? (
+                            <div className="flex justify-center items-center space-x-2">
+                                <input type="checkbox" className="w-4 h-4"
+                                    checked={newColumnAutoIncrement}
+                                    onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
+                                <label className="text-gray2 text-sm">Auto Increment</label>
+                            </div>
+                        ) : null}
+
                         <div className="flex justify-center items-center space-x-2">
                             <input type="checkbox" className="w-4 h-4"
-                                checked={newColumnAutoIncrement}
-                                onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
-                            <label className="text-gray2 text-sm">Auto Increment</label>
+                                checked={newColumnNullAllowed}
+                                onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Not Null</label>
                         </div>
-                    ) : null}
-
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnNullAllowed}
-                            onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Not Null</label>
+                        <div className="flex justify-center items-center space-x-2">
+                            <input type="checkbox" className="w-4 h-4"
+                                checked={newColumnUnique}
+                                onChange={(e) => setNewColumnUnique(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Unique</label>
+                        </div>
                     </div>
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnUnique}
-                            onChange={(e) => setNewColumnUnique(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Unique</label>
-                    </div>
-                </div>
+                )}
 
                 <div className="flex justify-center items-center mt-6">
                     <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} isPopup={true} />
@@ -909,9 +943,12 @@ function ConfigureTable() {
                 })}
             </div>
 
-            <div className={`flex flex-row justify-center items-center mt-12`}>
+            <div className={`flex flex-row justify-center items-center mt-12 space-x-4`}>
                 <PillButton text="Add Fields" icon={FaPlusCircle} onClick={() => {
                     setIsAddColumnPopupVisible(true)
+                }} />
+                <PillButton text="View Data" icon={FaDatabase} onClick={() => {
+                    navigate('/dataset', { state: { project_id: projectID, tbl_id: tblID } });
                 }} />
             </div>
 

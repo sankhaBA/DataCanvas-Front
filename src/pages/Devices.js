@@ -17,6 +17,7 @@ import ButtonRectangle from "../components/ButtonRectangle";
 import PillButton from "../components/PillButton";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
+import LoginPopup from "../components/LoginPopup";
 
 const Device = () => {
   //------ Navigations -------
@@ -92,10 +93,24 @@ const Device = () => {
     }
   }, [projectID]);
 
+  //------------ critical section proceeding with authentication
+
+  const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+  const [authenticationResult, setAuthenticationResult] = useState(false);
+  useEffect(() => {
+    if (authenticationResult) {
+      setIsLoginPopupVisible(false);
+      toast.success('Login successful, Deleting Device...');
+      handleDeviceDelete(selectedDeviceId);
+
+    }
+  }, [authenticationResult]);
+
+
   //--Api call for adding device--
   const handleDeviceAdding = async () => {
-    if (newDeviceName === "" || newDeviceDescription === "") {
-      toast.error("Device name and description cannot be empty!");
+    if (newDeviceName === "") {
+      toast.error("Device name cannot be empty!");
       return;
     }
 
@@ -198,8 +213,8 @@ const Device = () => {
 
   //----API call for updating device
   const handleDeviceUpdate = async (device_id) => {
-    if (newDeviceName === "" || newDeviceDescription === "") {
-      toast.error("Device name and description cannot be empty!");
+    if (newDeviceName === "") {
+      toast.error("Device name cannot be empty!");
       return;
     }
     setLoading(true);
@@ -336,26 +351,43 @@ const Device = () => {
         </div>
       </div>
       <div className={`flex-wrap flex ${devices.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
-        {devices.map((device) => (
-          <SquareCard
-            isIconShown
-            key={device.device_id}
-            title={device.device_name}
-            subtitle={device.description}
-            footer={"Last Update:" + device.footer}
-            mx="mx-2"
-            onDelete={() => handleDeviceDelete(device.device_id)}
-            onUpdate={() => {
-              toggleDeviceUpdateModal();
-              handleDeviceSelection(device);
-            }}
-            onClick={() => {
-              navigate("/devices", {
-                state: { device_id: device.device_id },
-              });
-            }}
-          />
-        ))}
+        {devices.length === 0 ? (
+          <div className={`w-full flex flex-col justify-center items-center`}>
+            <div className={`text-gray2 text-sm`}>No devices found</div>
+            <div className={`flex flex-row justify-center items-center mt-4`}>
+              <PillButton text="Add Your First Device" icon={FaPlusCircle} onClick={toggleAddDeviceModal} />
+            </div>
+          </div>
+
+
+        ) : (
+          devices.map((device) => (
+            <SquareCard
+              isIconShown
+              key={device.device_id}
+              title={device.device_name}
+              subtitle={device.description}
+              footer={"Last Update:" + device.footer}
+              mx="mx-2"
+              onDelete={
+                () => {
+                  setSelectedDeviceId(device.device_id);
+                  setIsLoginPopupVisible(true)
+
+                }
+              }
+              onUpdate={() => {
+                toggleDeviceUpdateModal();
+                handleDeviceSelection(device);
+              }}
+              onClick={() => {
+                navigate("/devices", {
+                  state: { device_id: device.device_id },
+                });
+              }}
+            />
+          ))
+        )}
       </div>
 
       {/* Add Device Modal */}
@@ -410,10 +442,10 @@ const Device = () => {
         title={"Device Added Successfully"}
         closeIconVisible={true}
       >
-        <div className="flex flex-col justify-center items-center mt-3">
+        <div className="flex flex-col justify-center items-center mt-4">
           <div className="flex    mt-1">
             <FaKey className="text-green" />
-            <label className="text-gray1 text-sm ml-2">
+            <label className="text-gray2 text-sm ml-2">
               Device Fingerprint
             </label>
           </div>
@@ -423,9 +455,9 @@ const Device = () => {
             className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2"
             readOnly
           />
-          {/* <span className="text-gray2 text-xs text-center mt-2">
-            This project ID should be included in data send requests
-          </span> */}
+          <span className="text-gray1 text-xs text-center mt-2">
+            This device fingerprint should be included in data send requests
+          </span>
         </div>
         <div className="flex flex-col items-center justify-center mt-4">
           <PillButton
@@ -479,6 +511,13 @@ const Device = () => {
           />
         </div>
       </PopupContainer>
+
+      {/* Popup container for login authentication popup */}
+      <LoginPopup
+        isOpen={isLoginPopupVisible}
+        closeFunction={() => setIsLoginPopupVisible(false)}
+        setAuthenticationResult={(e) => setAuthenticationResult(e)}
+        email={localStorage.getItem('email')} />
 
       {/* Spinner */}
       <Spinner isVisible={loading} />

@@ -1,9 +1,9 @@
 import React from 'react';
 
-const SelectBox = ({ children, onChange, value, width, mt }) => {
+const SelectBox = ({ children, onChange, value, width, mt, disabled }) => {
 
     return (
-        <select className={`bg-black3 border border-gray2 border-opacity-30 rounded-full px-4 py-1 text-gray2 ${mt} ${width}`} onChange={onChange} value={value}>
+        <select disabled={disabled} className={`bg-black3 border border-gray2 border-opacity-30 rounded-full px-4 py-1 text-gray2 ${mt} ${width}`} onChange={onChange} value={value}>
             {children}
         </select>
     );
@@ -14,6 +14,7 @@ SelectBox.defaultProps = {
     value: -1,
     width: "w-full",
     mt: "mt-2",
+    disabled: false
 };
 
 export default SelectBox;
