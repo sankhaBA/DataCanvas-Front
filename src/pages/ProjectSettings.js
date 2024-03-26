@@ -36,8 +36,9 @@ function ProjectSettings() {
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState(''); // 1 - delete all data , 2 - Delete tables, 3 - Delete devices, 4 - Delete project
     const [authenticationResult, setAuthenticationResult] = useState(false);
-    
+
     useEffect(() => {
+        console.log('Authentication result', authenticationResult);
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
             if (actionType == 1) {
@@ -57,7 +58,6 @@ function ProjectSettings() {
                 //handleProjectDelete(projectID);
                 navigate('/projects');
             }
-
         }
     }, [authenticationResult]);
 
@@ -234,8 +234,7 @@ function ProjectSettings() {
 
             if (response.status === 200) {
                 console.log(response.data);
-                toast.success("All devices deleted!");
-
+                toast.success("All tables deleted!");
             }
         } catch (err) {
             switch (err.status) {

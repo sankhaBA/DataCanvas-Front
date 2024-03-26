@@ -437,6 +437,9 @@ function ConfigureTable() {
                             toast.error('Error in adding field');
                             navigate('/projects')
                             break;
+                        case 409:
+                            toast.error('Field name already exists');
+                            break;
                         default:
                             toast.error('Something went wrong');
                             break;
@@ -514,6 +517,9 @@ function ConfigureTable() {
                             break;
                         case 405:
                             toast.error('Field data type cannot be changed');
+                            break;
+                        case 409:
+                            toast.error('Field name already exists');
                             break;
                         default:
                             toast.error('Something went wrong');
