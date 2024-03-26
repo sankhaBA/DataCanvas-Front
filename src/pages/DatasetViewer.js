@@ -67,7 +67,7 @@ function DatasetViewer() {
     // ---------- Data Retrieval ----------
     const [retrievedData, setRetrievedData] = useState([]);
     const [tableRecordCount, setTableRecordCount] = useState(0);
-    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(10);
+    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(20);
     const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
 
     // ---------- Add Data Popup ----------
@@ -278,6 +278,11 @@ function DatasetViewer() {
                 }
             });
             console.log('Data : ', res.data);
+            for (let dataItem of res.data) {
+                let device_id = dataItem.device;
+                dataItem.device = dataItem.device_name
+                dataItem.device_id = device_id;
+            }
             setRetrievedData(res.data);
             setLoading(false);
         } catch (err) {

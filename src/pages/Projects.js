@@ -128,7 +128,7 @@ function Projects() {
 
   // ---------- API call for adding new project ----------
   const handleProjectAdding = async () => {
-    if (newProjectName === "" || newProjectName == null) {
+    if (newProjectName === "" || newProjectName == null || newProjectDescription === "" || newProjectDescription == null) {
       toast.error("Project name and description cannot be empty!");
       return;
     }
