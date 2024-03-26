@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -95,13 +95,6 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                 {/* Edit and Delete Section */}
                 {!disabled ? (
                     <div className={`flex flex-row justify-start items-center space-x-12`}>
-                        {/* Edit Section */}
-                        {/* <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-green  transition-all duration-300 hover:text-gray2`}>
-                            <FaPencilAlt className="text-sm" />
-                            <span className="text-xs">Edit</span>
-                        </div> */}
-
-                        {/* Delete Section */}
                         <div className={`flex flex-row justify-between items-center space-x-2 cursor-pointer text-red  transition-all duration-300 hover:text-gray2`}
                             onClick={(e) => {
                                 e.stopPropagation();

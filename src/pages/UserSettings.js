@@ -1,34 +1,20 @@
-//dependencies
 import React, { useState, useEffect } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-
-
-//pages for navigation
-
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
-//components
-import TextBox from "../components/TextBox";
+import { useNavigate } from "react-router-dom";
+import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
 import axios from "axios";
-import NonSidebarLayout from "../components/NonSidebarLayout";
+import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
-import PillButton from "../components/PillButton";
+import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
 
-
-
-
 function UserSettings() {
-
     // navigation hooks
     const navigate = useNavigate();
-
-
-    // loading state variables
 
     const [loading, setLoading] = useState(false);
 
@@ -40,31 +26,24 @@ function UserSettings() {
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
-            if (actionType == 1) {
+            if (actionType === 1) {
                 toast.success('Action Confirmed, Deleting Account! We are sorry to see you go!');
-                // handleDeleteAccount();
+                // handleDeleteAccount(); -> TODO: This function should be implemented
             }
-            else if (actionType == 2) {
+            else if (actionType === 2) {
                 toast.success('login Sucessful! You will be redirected to change email!');
-                // handleChangeEmail();
+                // handleChangeEmail(); TODO: This function should be implemented
             }
-
         }
     }, [authenticationResult]);
 
-
     //user state details
-    const [user, setUser] = useState({});
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-
-
 
     useEffect(() => {
         loadUserDetails();
     }, []);
-
-    //handle changes
 
     const handleNameChange = (e) => {
         setName(e.target.value);
@@ -89,21 +68,6 @@ function UserSettings() {
 
     // Load user details
     const loadUserDetails = () => {
-
-        const handlePasswordReset = () => {
-            const auth = getAuth();
-            sendPasswordResetEmail(auth, email)
-                .then(() => {
-                    toast.success('Password reset email sent successfully. Check your Mailbox.');
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    toast.error('Error sending password reset email:', errorCode, errorMessage);
-                });
-        }
-
-        // Set loading to true before the data is fetched
         setLoading(true);
 
         // Construct the URL with the email parameter
@@ -115,7 +79,6 @@ function UserSettings() {
             .then((response) => {
                 // Check if the user is found
                 if (response.status === 200) {
-                    setUser(response.data);
                     setName(response.data.user_name); // Assuming user_name is the correct field name
                     setEmail(response.data.email);
                 }
@@ -186,15 +149,9 @@ function UserSettings() {
 
     };
 
-
-
     return (
-
-
         <NonSidebarLayout>
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
-                {/* <div class="overflow-y-auto h-screen absolute inset-0 bg-cover bg-center opacity-20 blur-sm" style={{backgroundImage: `url('/img/projects_back_gray.png')`}}> </div> */}
-
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
                     <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
                         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
@@ -218,9 +175,7 @@ function UserSettings() {
                             maxLength={50} textAlign="left" width="w-full" onChange={handleEmailChange} />
                     </div>
                     <div className="flex justify-center mt-8">
-
                         <PillButton text="Save Changes" onClick={handleSubmit} isPopup={true} icon={FaUpload} />
-
                     </div>
 
                     <div className="border-t border-gray1 border-opacity-80 my-8"></div>

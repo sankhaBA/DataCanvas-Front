@@ -16,7 +16,7 @@ const InsightCard = ({ title, subtitle, icon: Icon, onClick }) => {
                     <div className="text-gray2 text-3xl sm:text-4xl font-bold">{title}</div>
                     <div className="text-gray1 text-sm sm:text-lg">{subtitle}</div>
                 </div>
-                
+
             </div>
         </div>
     );

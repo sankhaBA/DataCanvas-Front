@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import PopupContainer from "./PopupContainer";
-import ButtonRectangle from "./ButtonRectangle";
-import TextBox from "./TextBox";
-import SelectBox from "./SelectBox";
+import ButtonRectangle from "./input/ButtonRectangle";
+import TextBox from "./input/TextBox";
+import SelectBox from "./input/SelectBox";
 import { toast } from 'react-toastify';
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';

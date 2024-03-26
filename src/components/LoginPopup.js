@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaKey, FaGoogle, FaGithub } from "react-icons/fa";
 import PopupContainer from "./PopupContainer";
-import ButtonRectangle from "./ButtonRectangle";
-import TextBox from "./TextBox";
+import ButtonRectangle from "./input/ButtonRectangle";
+import TextBox from "./input/TextBox";
 import { ScaleLoader } from "react-spinners";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { getAuth, setPersistence, browserSessionPersistence, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
 
 const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) => {
@@ -18,8 +18,8 @@ const LoginPopup = ({ isOpen, closeFunction, setAuthenticationResult, email }) =
     const [password, setPassword] = useState('');
 
     if (isOpen) {
-        var auth = getAuth();
         // Get the currently signed-in user
+        var auth = getAuth();
     }
 
     const handleGoogleLogin = () => {

@@ -1,5 +1,3 @@
-// ScrollableContainer.js
-
 import React from 'react';
 
 function ScrollableContainer({ children }) {

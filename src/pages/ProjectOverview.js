@@ -1,18 +1,13 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaMicrochip, FaDatabase, FaClock, FaPlusCircle, FaAngleRight, FaForward } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import PillButton from "../components/PillButton";
+import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import PillButton from "../components/input/PillButton";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/InsightCard";
-import RectangularCard from "../components/RectangularCard";
+import InsightCard from "../components/cards/InsightCard";
+import RectangularCard from "../components/cards/RectangularCard";
 import axios from "axios";
 
 function ProjectOverview() {
@@ -46,7 +41,6 @@ function ProjectOverview() {
     const [lastRecordUpdate, setLastRecordUpdate] = useState('2021-08-01');
 
     useEffect(() => {
-
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
@@ -78,7 +72,6 @@ function ProjectOverview() {
     // ---------- Load project details from the backend ----------
     const loadProjectDetails = async () => {
         setLoading(true);
-
         // Get request to localhost:3001/api/project/<project_id> to get project details
         try {
             const response = await axios.get(`http://localhost:3001/api/project/${projectID}`, {
@@ -210,7 +203,6 @@ function ProjectOverview() {
                 setDataTables(dataTablesArray);
                 setLoading(false);
             }
-
         } catch (err) {
             switch (err.status) {
                 case 400:
