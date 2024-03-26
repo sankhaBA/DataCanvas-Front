@@ -9,7 +9,6 @@ function SamplePage() {
         <SidebarLayout active={3} addressText={''}>
             <AddWidgetChart isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
-
     );
 }
 
