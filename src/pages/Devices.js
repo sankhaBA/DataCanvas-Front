@@ -456,7 +456,7 @@ const Device = () => {
             readOnly
           />
           <span className="text-gray1 text-xs text-center mt-2">
-            This project ID should be included in data send requests
+            This device fingerprint should be included in data send requests
           </span>
         </div>
         <div className="flex flex-col items-center justify-center mt-4">
