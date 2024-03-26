@@ -14,8 +14,8 @@ import { app } from "../firebase";
 import { Link, useNavigate } from 'react-router-dom';
 
 // Components
-import ButtonRectangle from "../components/ButtonRectangle";
-import TextBox from "../components/TextBox";
+import ButtonRectangle from "../components/input/ButtonRectangle";
+import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 

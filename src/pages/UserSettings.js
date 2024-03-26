@@ -11,12 +11,12 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 //components
-import TextBox from "../components/TextBox";
+import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
 import axios from "axios";
-import NonSidebarLayout from "../components/NonSidebarLayout";
+import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
-import PillButton from "../components/PillButton";
+import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
 
 

@@ -8,8 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
-import SidebarLayout from "../components/SidebarLayout";
-import PillButton from "../components/PillButton";
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import PillButton from "../components/input/PillButton";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AddDataPopup from "../components/AddDataPopup";

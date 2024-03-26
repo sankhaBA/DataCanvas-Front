@@ -1,14 +1,14 @@
 import React from 'react';
-import SidebarLayout from '../components/SidebarLayout';
+import SidebarLayout from '../components/layouts/SidebarLayout';
 import LoginPopup from '../components/LoginPopup';
-import AddWidgetPopup from '../components/Widgets/AddWidgetPopup';
-import AddWidgetChart from '../components/Widgets/AddChartWidgetPopup';
-import AddToggleWidgetPopup from '../components/Widgets/AddToggleWidgetPopup';
+import AddWidgetPopup from '../components/widgets/AddWidgetPopup';
+import AddWidgetChart from '../components/widgets/AddChartWidgetPopup';
+import AddToggleWidgetPopup from '../components/widgets/AddToggleWidgetPopup';
 
 function SamplePage() {
     return (
         <SidebarLayout active={3} addressText={''}>
-            <AddWidgetPopup isOpen={true} closeFunction={() => { }} />
+            <AddToggleWidgetPopup isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
     );
 }

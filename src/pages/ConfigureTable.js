@@ -8,14 +8,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Components
-import SidebarLayout from "../components/SidebarLayout";
+import SidebarLayout from "../components/layouts/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
-import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
-import SelectBox from "../components/SelectBox";
+import PillButton from "../components/input/PillButton";
+import TextBox from "../components/input/TextBox";
+import SelectBox from "../components/input/SelectBox";
 import Spinner from "../components/Spinner";
 import CriticalAction from "../components/CriticalAction";
-import ConfigTableCard from "../components/ConfigTableCard";
+import ConfigTableCard from "../components/cards/ConfigTableCard";
 import LoginPopup from "../components/LoginPopup";
 import axios from "axios";
 

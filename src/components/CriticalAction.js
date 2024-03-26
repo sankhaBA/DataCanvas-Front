@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonRectangle from "./ButtonRectangle";
+import ButtonRectangle from "./input/ButtonRectangle";
 
 const CriticalAction = ({ title, subtitle, buttonText, buttonColor, onClick }) => {
     return (

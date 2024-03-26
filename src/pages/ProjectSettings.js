@@ -8,9 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 // Components
-import SidebarLayout from "../components/SidebarLayout";
-import TextBox from "../components/TextBox";
-import PillButton from "../components/PillButton";
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import TextBox from "../components/input/TextBox";
+import PillButton from "../components/input/PillButton";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import CriticalAction from "../components/CriticalAction";

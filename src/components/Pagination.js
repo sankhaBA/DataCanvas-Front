@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
-import ButtonRectangle from './ButtonRectangle';
+import ButtonRectangle from './input/ButtonRectangle';
 
 const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
     const [upperBound, setUpperBound] = useState(limit + offset);

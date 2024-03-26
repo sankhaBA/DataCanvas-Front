@@ -9,12 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // Components
-import SidebarLayout from "../components/SidebarLayout";
-import SquareCard from "../components/SquareCard";
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import SquareCard from "../components/cards/SquareCard";
 import Spinner from "../components/Spinner";
-import TextBox from "../components/TextBox";
-import ButtonRectangle from "../components/ButtonRectangle";
-import PillButton from "../components/PillButton";
+import TextBox from "../components/input/TextBox";
+import ButtonRectangle from "../components/input/ButtonRectangle";
+import PillButton from "../components/input/PillButton";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
 import LoginPopup from "../components/LoginPopup";
