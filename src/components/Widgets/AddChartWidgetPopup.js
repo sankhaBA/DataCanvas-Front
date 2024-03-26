@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus, FaCheck, FaTrash } from "react-icons/fa";
-import PopupContainer from "./PopupContainer";
-import PillButton from "./PillButton";
-import TextBox from "./TextBox";
-import SelectBox from "./SelectBox";
+import { FaPlus, FaCheck, FaTrash, FaTools } from "react-icons/fa";
+import PopupContainer from "../PopupContainer";
+import PillButton from "../PillButton";
+import TextBox from "../TextBox";
+import SelectBox from "../SelectBox";
 import { toast } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
-const AddWidgetChart = ({ isOpen, closeFunction, tables = [] }) => {
+const AddChartWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {
   const [chartType, setChartTypes] = useState([
     { id: 1, name: "Column Chart" },
     { id: 2, name: "Bar Chart" },
@@ -43,7 +43,7 @@ const AddWidgetChart = ({ isOpen, closeFunction, tables = [] }) => {
       closeFunction={closeFunction}
       onClose={() => { }}
       title={"Configure Widget - <Device>"}
-      Icon={FaPlus}
+      Icon={FaTools}
       closeIconVisible={true}
       width={"675px"}
     >
@@ -135,9 +135,9 @@ const AddWidgetChart = ({ isOpen, closeFunction, tables = [] }) => {
 };
 
 // default props
-AddWidgetChart.defaultProps = {
+AddChartWidgetPopup.defaultProps = {
   isOpen: false,
   closeFunction: () => { },
 };
 
-export default AddWidgetChart;
+export default AddChartWidgetPopup;
