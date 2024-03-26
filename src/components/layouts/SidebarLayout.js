@@ -20,10 +20,6 @@ function SidebarLayout({ children, active, addressText }) {
         };
     }, []);
 
-    useEffect(() => {
-        console.log(isSidebarOpen)
-    }, [isSidebarOpen]);
-
     return (
         <div className={`flex h-screen overflow-hidden`}>
             <Sidebar isSidebarOpen={isSidebarOpen} active={active} toggleSidebar={toggleSidebar} />

@@ -20,7 +20,6 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
   }, [])
 
   useEffect(() => {
-    console.log("Sidebar-projectID", projectID);
   }, [projectID])
 
   const SidebarButton = ({ text, icon: Icon, active, onClick }) => {

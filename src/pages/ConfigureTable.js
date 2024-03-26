@@ -133,7 +133,6 @@ function ConfigureTable() {
         try {
             setTblID(state.tbl_id);
             setProjectID(state.project_id);
-            console.log('tbl_id : ' + state.tbl_id);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -167,7 +166,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Data Types : ', res.data);
             setDataTypes(res.data);
             setLoading(false);
         } catch (err) {
@@ -195,7 +193,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Constraints : ', res.data);
             setConstraints(res.data);
             setLoading(false);
         } catch (err) {
@@ -254,7 +251,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Columns : ', res.data);
             // Sort columns by clm_id
             res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
             setColumns(res.data);
@@ -444,7 +440,6 @@ function ConfigureTable() {
         }
 
         const updateColumn = async () => {
-            console.log('Updating column : ', selectedColumnID);
             if (validateNewColumn()) {
                 setLoading(true);
                 // ---------- Get auth-token from local storage ----------

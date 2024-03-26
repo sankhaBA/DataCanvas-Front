@@ -33,7 +33,6 @@ function ProjectSettings() {
     const [authenticationResult, setAuthenticationResult] = useState(false);
 
     useEffect(() => {
-        console.log('Authentication result', authenticationResult);
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
             if (actionType == 1) {
@@ -69,7 +68,6 @@ function ProjectSettings() {
 
     useEffect(() => {
         if (projectID !== -1) {
-            console.log('Project ID', projectID);
             loadProjectDetails();
         }
     }, [projectID]);
@@ -141,7 +139,6 @@ function ProjectSettings() {
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("Project updated!");
             }
         } catch (err) {
@@ -173,7 +170,6 @@ function ProjectSettings() {
     const handleDeviceDelete = async (project_id) => {
         setLoading(true);
         // delete request to localhost:3001/api/device/all
-        console.log(localStorage.getItem("auth-token"));
         try {
             const response = await axios.delete(`http://localhost:3001/api/device/all`, {
                 headers: {
@@ -183,7 +179,6 @@ function ProjectSettings() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("All devices deleted!");
             }
         } catch (err) {
@@ -215,7 +210,6 @@ function ProjectSettings() {
     const handleTableDelete = async (project_id) => {
         setLoading(true);
         // delete request to localhost:3001/api/table/all
-        console.log(localStorage.getItem("auth-token"));
         try {
             const response = await axios.delete(`http://localhost:3001/api/data/tbl/all`, {
                 headers: {
@@ -225,7 +219,6 @@ function ProjectSettings() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("All tables deleted!");
             }
         } catch (err) {

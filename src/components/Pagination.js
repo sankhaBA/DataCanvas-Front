@@ -7,12 +7,10 @@ const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
     const [lowerBound, setLowerBound] = useState(offset);
 
     useEffect(() => {
-        console.log('Pagination.js: offset changed', offset);
         loadAllData();
     }, [offset]);
 
     useEffect(() => {
-        console.log("upper bound : ", upperBound);
         if (recordCount < (limit + offset)) {
             setUpperBound(recordCount);
         } else {
@@ -28,14 +26,12 @@ const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
         } else {
             setUpperBound(upperBound + limit);
         }
-        console.log(upperBound, lowerBound, offset);
     }
 
     const handlePrevious = () => {
         setOffset(lowerBound - limit);
         setUpperBound(lowerBound);
         setLowerBound(lowerBound - limit);
-        console.log(upperBound, lowerBound, offset);
     }
 
     return (

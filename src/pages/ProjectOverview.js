@@ -52,14 +52,12 @@ function ProjectOverview() {
 
     useEffect(() => {
         if (projectID !== -1) {
-            console.log('Project ID', projectID);
             loadProjectDetails();
         }
     }, [projectID]);
 
     useEffect(() => {
         if (projectDetails.name !== '') {
-            console.log('Project Details', projectDetails);
             loadDevices();
             loadDataTables();
         }
@@ -129,8 +127,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let devicesArray = [];
                 response.data.forEach((device) => {
                     // Specify the locale as 'si-LK' for Sri Lanka
@@ -184,8 +180,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
 

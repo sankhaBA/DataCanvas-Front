@@ -44,19 +44,16 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
         columns.map((column, index) => {
             if (column.clm_name !== 'id' || column.clm_name !== 'device') {
                 // If column does not have constraint_id 1 newDataObject[column.clm_name] = ''
-                console.log(column);
                 let isAutoIncrement = column.constraints.find((constraint) => { if (constraint.constraint_id == 1) { return true } else { return false } });
                 if (!isAutoIncrement) {
                     newDataObject[column.clm_name] = '';
                 }
             }
         })
-        console.log(newDataObject);
         setNewData(newDataObject);
     }
 
     const handleColumnValueChanged = (clm_name, value) => {
-        console.log(clm_name, value);
         setNewData({ ...newData, [clm_name]: value });
     }
 
@@ -106,8 +103,6 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             }
         })
 
-        console.log(requestBody);
-
         setLoading(true);
         // post request to localhost:3001/api/data/feed/insert
         try {
@@ -117,7 +112,6 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("Data added successfully!");
                 setLoading(false);
                 closeFunction();
@@ -159,7 +153,6 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 setDevices(response.data);
                 setLoading(false);
             }
