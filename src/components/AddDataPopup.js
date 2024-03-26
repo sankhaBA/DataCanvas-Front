@@ -21,12 +21,34 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
 
 
     // setNewData() -> Make this a JSON object with fields same as the clm_name of each element of columns object, except id column
+    /* Column Structure
+        {
+            clm_id: 1,
+            clm_name: 'id',
+            data_type: 1,
+            default_value: 'N/A',
+            max_length: 0,
+            constraints: [
+                {
+                    constraint_id: 1
+                },
+                {
+                    constraint_id: 2
+                }
+            ]
+         }
+        */
     const setNewDataObject = (columns) => {
         let newDataObject = {};
         newDataObject['device'] = 0;
         columns.map((column, index) => {
             if (column.clm_name !== 'id' || column.clm_name !== 'device') {
-                newDataObject[column.clm_name] = '';
+                // If column does not have constraint_id 1 newDataObject[column.clm_name] = ''
+                console.log(column);
+                let isAutoIncrement = column.constraints.find((constraint) => { if (constraint.constraint_id == 1) { return true } else { return false } });
+                if (!isAutoIncrement) {
+                    newDataObject[column.clm_name] = '';
+                }
             }
         })
         console.log(newDataObject);
@@ -205,7 +227,7 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
                     </SelectBox>
                 </div>
                 {columns.map((column, index) => {
-                    if (column.clm_name !== 'id' && column.clm_name !== 'device') {
+                    if (column.clm_name !== 'id' && column.clm_name !== 'device' && !column.constraints.find((constraint) => { if (constraint.constraint_id == 1) { return true } else { return false } })) {
                         return (
                             <div key={index}>
                                 {InputContainer(

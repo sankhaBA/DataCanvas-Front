@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import ButtonRectangle from './ButtonRectangle';
-import PillButton from './PillButton';
 
 const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
-    const [upperBound, setUpperBound] = useState(offset + limit);
+    const [upperBound, setUpperBound] = useState(limit + offset);
     const [lowerBound, setLowerBound] = useState(offset);
 
     useEffect(() => {
         console.log('Pagination.js: offset changed', offset);
         loadAllData();
     }, [offset]);
+
+    useEffect(() => {
+        console.log("upper bound : ", upperBound);
+        if (recordCount < (limit + offset)) {
+            setUpperBound(recordCount);
+        } else {
+            setUpperBound(limit + offset);
+        }
+    }, [recordCount, offset]);
 
     const handleNext = () => {
         setOffset(upperBound);
@@ -21,7 +29,6 @@ const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
             setUpperBound(upperBound + limit);
         }
         console.log(upperBound, lowerBound, offset);
-        //loadAllData();
     }
 
     const handlePrevious = () => {
@@ -29,7 +36,6 @@ const Pagination = ({ recordCount, limit, setOffset, offset, loadAllData }) => {
         setUpperBound(lowerBound);
         setLowerBound(lowerBound - limit);
         console.log(upperBound, lowerBound, offset);
-        //loadAllData();
     }
 
     return (

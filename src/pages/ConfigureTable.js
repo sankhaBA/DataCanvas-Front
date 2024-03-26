@@ -585,30 +585,33 @@ function ConfigureTable() {
                     </div>
                 </div>
 
-                <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
-                    {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
-                    {newColumnDataType == 1 ? (
+                {/* Auto Increment, Not Null, Unique Checkboxes */}
+                {(selectedColumnID != -1) ? null : (
+                    <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
+                        {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
+                        {newColumnDataType == 1 ? (
+                            <div className="flex justify-center items-center space-x-2">
+                                <input type="checkbox" className="w-4 h-4"
+                                    checked={newColumnAutoIncrement}
+                                    onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
+                                <label className="text-gray2 text-sm">Auto Increment</label>
+                            </div>
+                        ) : null}
+
                         <div className="flex justify-center items-center space-x-2">
                             <input type="checkbox" className="w-4 h-4"
-                                checked={newColumnAutoIncrement}
-                                onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
-                            <label className="text-gray2 text-sm">Auto Increment</label>
+                                checked={newColumnNullAllowed}
+                                onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Not Null</label>
                         </div>
-                    ) : null}
-
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnNullAllowed}
-                            onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Not Null</label>
+                        <div className="flex justify-center items-center space-x-2">
+                            <input type="checkbox" className="w-4 h-4"
+                                checked={newColumnUnique}
+                                onChange={(e) => setNewColumnUnique(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Unique</label>
+                        </div>
                     </div>
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnUnique}
-                            onChange={(e) => setNewColumnUnique(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Unique</label>
-                    </div>
-                </div>
+                )}
 
                 <div className="flex justify-center items-center mt-6">
                     <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} isPopup={true} />
