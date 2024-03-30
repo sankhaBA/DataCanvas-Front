@@ -1,12 +1,16 @@
 import React from 'react';
 import SidebarLayout from '../components/SidebarLayout';
-import LoginPopup from '../components/LoginPopup';
+import AddParameterTablePopup from '../components/AddParameterTablePopup';
 
 function SamplePage() {
     return (
         <SidebarLayout active={3} addressText={''}>
-            <LoginPopup isOpen={true} closeFunction={() => { }} setAuthenticationResult={() => { }} email={''} />
+           <AddParameterTablePopup isOpen={true} closeFunction={() => {}} setLoading={() => {}} />
+           
         </SidebarLayout>
+
+       
+
     );
 }
 
