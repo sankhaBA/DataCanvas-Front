@@ -21,7 +21,7 @@ const AddParameterTablePopup = ({ isOpen, closeFunction, setLoading }) => {
                   title="Configure Widget - Weather Data Ratnapura"
                   closeFunction={closeFunction}
                   
-                  width="w-[900px]">
+                  width="w-[950px]">
 
                   <div className="flex flex-col text-md text-gray1 my-2">Select fields to display</div>
 
@@ -67,31 +67,27 @@ const AddParameterTablePopup = ({ isOpen, closeFunction, setLoading }) => {
                         <div className="text-sm">Field Name</div>
                         <div className="text-sm">Value</div>
                   </div>
-                  <div className="flex flex-row my-2"> 
-                        <div className="flex flex-col items-center justify-center">
-                              <PillButton text="Field" isPopup={true} icon={FaAngleDown}/> 
+                  <div className="flex flex-row justify-between space-x-2"> 
+                        <div className="flex flex-col items-center justify-center"> 
+                              <SelectBox value={0}
+                                    onChange={(e) => { }}>
+                                    <option value={0}>Field</option>
+                                    
+                              </SelectBox>
                         </div>
-                        <div>=</div>   
+                        <div class="my-2">=</div>   
                         <div className="flex items-center justify-between">
                               <ButtonRectangle text="Rathnapura" onClick={() => { }}/>  
                         </div>
-                        <div className="flex">
-                        <PillButton
-                              text="Add Condition"
-                              isPopup={true}
-                              icon={FaPlusCircle}
+                        <div className="flex flex-col items-center justify-center">
+                              <PillButton
+                                    text="Add Condition"
+                                    isPopup={true}
+                                    icon={FaPlusCircle}
                         />
                   </div>
 
                   </div>
-                  
-                  <div className="flex flex-col items-center justify-center">
-                        <RectangularRowCard
-                              title="station = UOM ITFac station"
-                              icon={FaWindowClose}
-                        />
-                  </div>
-
                   <div className="flex flex-col items-center justify-center mt-4">
                         <PillButton
                               text="Done"
