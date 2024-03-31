@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { VscSignOut } from "react-icons/vsc";
 import { useNavigate } from 'react-router-dom';
 
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, breadcrumb }) => {
@@ -39,7 +40,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                         ) : null}
 
                         <FaRegQuestionCircle className="text-2xl text-green mr-4 cursor-pointer" />
-                        <FaSignOutAlt className="text-2xl text-green mr-4  cursor-pointer" />
+                        <VscSignOut className="text-2xl text-green mr-4  cursor-pointer" />
                         {!isSidebarOpen && sideBarButtonDisplayed ? (
                             <FaBars className="text-2xl text-green mr-4 cursor-pointer visible lg:hidden" onClick={toggleSidebar} />
                         ) : null}
