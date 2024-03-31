@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { FaTools, FaPlus } from "react-icons/fa";
-import PopupContainer from "./PopupContainer";
-import ButtonRectangle from "./ButtonRectangle";
-import TextBox from "./TextBox";
-import SelectBox from "./SelectBox";
-import PillButton from "./PillButton"
+import React, { } from "react";
+import { FaTools, FaCheck } from "react-icons/fa";
+import PopupContainer from "../PopupContainer";
+import SelectBox from "../input/SelectBox";
+import PillButton from "../input/PillButton"
 
-const GaugeWidgetPopup = ({ isOpen, closeFunction }) => {
+const AddToggleWidgetPopup = ({ isOpen, closeFunction }) => {
   return (
     <PopupContainer
       title="Configure Widget"
@@ -32,11 +30,11 @@ const GaugeWidgetPopup = ({ isOpen, closeFunction }) => {
         <div style={{ paddingBottom: "30px" }}></div>
 
         <div className="flex justify-center space-x-4">
-          <PillButton text="Add Widget" onClick={() => { }} icon={FaPlus} />
+          <PillButton text="Done" onClick={() => { }} icon={FaCheck} />
         </div>
       </div>
     </PopupContainer>
   );
 };
 
-export default GaugeWidgetPopup;
+export default AddToggleWidgetPopup;

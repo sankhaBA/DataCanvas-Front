@@ -1,20 +1,15 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaCheck, FaKey } from "react-icons/fa";
+import { FaPlusCircle, FaCheck, FaKey, FaCopy } from "react-icons/fa";
 import { MdRouter } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-//Pages for navigation
 import { useNavigate, useLocation } from "react-router-dom";
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import SquareCard from "../components/SquareCard";
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import SquareCard from "../components/cards/SquareCard";
 import Spinner from "../components/Spinner";
-import TextBox from "../components/TextBox";
-import ButtonRectangle from "../components/ButtonRectangle";
-import PillButton from "../components/PillButton";
+import TextBox from "../components/input/TextBox";
+import ButtonRectangle from "../components/input/ButtonRectangle";
+import PillButton from "../components/input/PillButton";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
 import LoginPopup from "../components/LoginPopup";
@@ -29,7 +24,7 @@ const Device = () => {
   //--Get states from navigation location for retrieval of project_id--
   const { state } = useLocation();
 
-  //--Add Device Modal--
+  //--Add Device Modal Visiblity--
   const [isAddDeviceOpen, setIsAddDeviceOpen] = useState(false);
 
   const toggleAddDeviceModal = () => {
@@ -45,19 +40,17 @@ const Device = () => {
     setIsDeviceAddingDoneOpen(!isDeviceAddingDoneOpen);
   };
 
-  //--Device Update Modal--
+  //--Device Update Modal Visiblity--
   const [isDeviceUpdateOpen, setIsDeviceUpdateOpen] = useState(false);
 
   const toggleDeviceUpdateModal = () => {
     setIsDeviceUpdateOpen(!isDeviceUpdateOpen);
   };
 
-  //----Device States----
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState([]); // For storing devices of the project
   const [newDeviceName, setNewDeviceName] = useState(""); // For text box of Add Device
   const [newDeviceDescription, setNewDeviceDescription] = useState(""); // For text box of Add Device
-  //--Get device Fingerprint
-  const [fingerprint, setFingerprint] = useState("");
+  const [fingerprint, setFingerprint] = useState(""); // For showing device fingerprint of newly added device
 
   const [projectID, setProjectID] = useState(-1);
 
@@ -79,7 +72,6 @@ const Device = () => {
 
   useEffect(() => {
     try {
-      console.log("Device-state", state.project_id);
       setProjectID(state.project_id);
     } catch (err) {
       console.log(err);
@@ -94,23 +86,21 @@ const Device = () => {
   }, [projectID]);
 
   //------------ critical section proceeding with authentication
+  const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
+  const [authenticationResult, setAuthenticationResult] = useState(false);
+  useEffect(() => {
+    if (authenticationResult) {
+      setIsLoginPopupVisible(false);
+      toast.success('Login successful, Deleting Device...');
+      handleDeviceDelete(selectedDeviceId);
 
-    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
-    const [authenticationResult, setAuthenticationResult] = useState(false);
-    useEffect(() => {
-        if (authenticationResult) {
-            setIsLoginPopupVisible(false);
-            toast.success('Login successful, Deleting Device...');
-            handleDeviceDelete(selectedDeviceId);
-
-        }
-    }, [authenticationResult]);
-
+    }
+  }, [authenticationResult]);
 
   //--Api call for adding device--
   const handleDeviceAdding = async () => {
-    if (newDeviceName === "" || newDeviceDescription === "") {
-      toast.error("Device name and description cannot be empty!");
+    if (newDeviceName === "") {
+      toast.error("Device name cannot be empty!");
       return;
     }
 
@@ -134,13 +124,12 @@ const Device = () => {
 
       if (response.status === 200) {
         setFingerprint(response.data.fingerprint);
-        console.log(response.data);
         setDevices([...devices, response.data]);
         toggleAddDeviceModal();
         toggleDeviceAddingDoneModal();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -170,7 +159,6 @@ const Device = () => {
   const handleDeviceDelete = async (device_id) => {
     setLoading(true);
     // delete request to localhost:3001/api/device
-    console.log(localStorage.getItem("auth-token"));
     try {
       const response = await axios.delete(`http://localhost:3001/api/device`, {
         headers: {
@@ -180,7 +168,6 @@ const Device = () => {
       });
 
       if (response.status === 200) {
-        console.log(response.data);
         // Remove the deleted device from the devices array
         let newDevices = devices.filter(
           (device) => device.device_id !== device_id
@@ -188,7 +175,7 @@ const Device = () => {
         setDevices(newDevices);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -213,8 +200,8 @@ const Device = () => {
 
   //----API call for updating device
   const handleDeviceUpdate = async (device_id) => {
-    if (newDeviceName === "" || newDeviceDescription === "") {
-      toast.error("Device name and description cannot be empty!");
+    if (newDeviceName === "") {
+      toast.error("Device name cannot be empty!");
       return;
     }
     setLoading(true);
@@ -227,7 +214,6 @@ const Device = () => {
           device_name: newDeviceName,
           description: newDeviceDescription,
         },
-
         {
           headers: {
             authorization: localStorage.getItem("auth-token"),
@@ -236,11 +222,10 @@ const Device = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         getAllDevices();
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -282,8 +267,6 @@ const Device = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
-
         let devicesArray = [];
         response.data.forEach((device) => {
           // Specify the locale as 'si-LK' for Sri Lanka
@@ -315,7 +298,7 @@ const Device = () => {
         setLoading(false);
       }
     } catch (err) {
-      switch (err.status) {
+      switch (err.response.status) {
         case 400:
           toast.error("Bad request!");
           break;
@@ -342,41 +325,49 @@ const Device = () => {
   return (
     <SidebarLayout
       active={2}
-      addressText={"John Doe > UOM Weather Station > Devices"}
+      breadcrumb={`${localStorage.getItem('project')} > Devices`}
     >
       <div className={`flex flex-row justify-between px-7 sm:px-10 mt-8 sm:mt-3`}>
-        <div className="text-xl text-gray2 font-semibold">Your Devices</div>
+        <div className="text-lg text-gray2 font-semibold">Your Devices</div>
         <div className="flex">
           <ButtonRectangle text="Add Device" onClick={toggleAddDeviceModal} />
         </div>
       </div>
       <div className={`flex-wrap flex ${devices.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
-        {devices.map((device) => (
-          <SquareCard
-            isIconShown
-            key={device.device_id}
-            title={device.device_name}
-            subtitle={device.description}
-            footer={"Last Update:" + device.footer}
-            mx="mx-2"
-            onDelete={
-              () => {
-                setSelectedDeviceId(device.device_id);
-                setIsLoginPopupVisible(true)
-                
+        {devices.length === 0 ? (
+          <div className={`w-full flex flex-col justify-center items-center`}>
+            <div className={`text-gray2 text-sm`}>No devices found</div>
+            <div className={`flex flex-row justify-center items-center mt-4`}>
+              <PillButton text="Add Your First Device" icon={FaPlusCircle} onClick={toggleAddDeviceModal} />
+            </div>
+          </div>
+        ) : (
+          devices.map((device) => (
+            <SquareCard
+              isIconShown
+              key={device.device_id}
+              title={device.device_name}
+              subtitle={device.description}
+              footer={"Last Update:" + device.footer}
+              mx="mx-2"
+              onDelete={
+                () => {
+                  setSelectedDeviceId(device.device_id);
+                  setIsLoginPopupVisible(true)
+                }
               }
-            }
-            onUpdate={() => {
-              toggleDeviceUpdateModal();
-              handleDeviceSelection(device);
-            }}
-            onClick={() => {
-              navigate("/devices", {
-                state: { device_id: device.device_id },
-              });
-            }}
-          />
-        ))}
+              onUpdate={() => {
+                toggleDeviceUpdateModal();
+                handleDeviceSelection(device);
+              }}
+              onClick={() => {
+                navigate("/devices", {
+                  state: { device_id: device.device_id },
+                });
+              }}
+            />
+          ))
+        )}
       </div>
 
       {/* Add Device Modal */}
@@ -431,24 +422,32 @@ const Device = () => {
         title={"Device Added Successfully"}
         closeIconVisible={true}
       >
-        <div className="flex flex-col justify-center items-center mt-3">
-          <div className="flex    mt-1">
+        <div className="flex flex-col justify-center items-center mt-4">
+          <div className="flex mt-1">
             <FaKey className="text-green" />
-            <label className="text-gray1 text-sm ml-2">
+            <label className="text-gray2 text-sm ml-2">
               Device Fingerprint
             </label>
           </div>
-          <input
-            type="text"
-            value={fingerprint}
-            className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2"
-            readOnly
-          />
-          {/* <span className="text-gray2 text-xs text-center mt-2">
-            This project ID should be included in data send requests
-          </span> */}
+          <div className={`flex items-center space-x-4 w-full`}>
+            <input
+              type="text"
+              value={fingerprint}
+              className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2"
+              readOnly
+            />
+            <FaCopy
+              className="text-lg text-green mt-2 cursor-pointer hover:text-gray2 duration-300 transition-all ease-in-out"
+              onClick={() => {
+                navigator.clipboard.writeText(fingerprint);
+                toast.success("Fingerprint copied to clipboard");
+              }} />
+          </div>
+          <span className="text-red text-xs text-center mt-4">
+            This device fingerprint should be included in data send requests. This can be viewed once. Copy this fingerprint in a safe place
+          </span>
         </div>
-        <div className="flex flex-col items-center justify-center mt-4">
+        <div className="flex flex-col items-center justify-center mt-6">
           <PillButton
             text="Done"
             onClick={toggleDeviceAddingDoneModal}
@@ -503,10 +502,10 @@ const Device = () => {
 
       {/* Popup container for login authentication popup */}
       <LoginPopup
-          isOpen={isLoginPopupVisible}
-          closeFunction={() => setIsLoginPopupVisible(false)}
-          setAuthenticationResult={(e) => setAuthenticationResult(e)}
-          email={localStorage.getItem('email')} />
+        isOpen={isLoginPopupVisible}
+        closeFunction={() => setIsLoginPopupVisible(false)}
+        setAuthenticationResult={(e) => setAuthenticationResult(e)}
+        email={localStorage.getItem('email')} />
 
       {/* Spinner */}
       <Spinner isVisible={loading} />

@@ -1,18 +1,13 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaMicrochip, FaDatabase, FaClock, FaPlusCircle, FaAngleRight, FaForward } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import PillButton from "../components/PillButton";
+import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import PillButton from "../components/input/PillButton";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/InsightCard";
-import RectangularCard from "../components/RectangularCard";
+import InsightCard from "../components/cards/InsightCard";
+import RectangularCard from "../components/cards/RectangularCard";
 import axios from "axios";
 
 function ProjectOverview() {
@@ -42,14 +37,14 @@ function ProjectOverview() {
     const [dataTables, setDataTables] = useState([]);
 
     // ---------- Miscallenous states ----------
-    const [dataRecordsCount, setDataRecordsCount] = useState(548);
-    const [lastRecordUpdate, setLastRecordUpdate] = useState('2021-08-01');
+    const [dataRecordsCount, setDataRecordsCount] = useState('N/A');
+    const [lastRecordUpdate, setLastRecordUpdate] = useState('N/A');
 
     useEffect(() => {
-
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
+            localStorage.removeItem('datatable');
         } catch (err) {
             console.log(err);
             navigate('/login');
@@ -58,27 +53,25 @@ function ProjectOverview() {
 
     useEffect(() => {
         if (projectID !== -1) {
-            console.log('Project ID', projectID);
             loadProjectDetails();
         }
     }, [projectID]);
 
     useEffect(() => {
         if (projectDetails.name !== '') {
-            console.log('Project Details', projectDetails);
             loadDevices();
             loadDataTables();
+            loadProjectDataRecordCount();
+            getLatestDataRecordUpdate();
         }
     }, [projectDetails]);
 
     useEffect(() => {
 
     }, [devices]);
-
     // ---------- Load project details from the backend ----------
     const loadProjectDetails = async () => {
         setLoading(true);
-
         // Get request to localhost:3001/api/project/<project_id> to get project details
         try {
             const response = await axios.get(`http://localhost:3001/api/project/${projectID}`, {
@@ -97,20 +90,23 @@ function ProjectOverview() {
                 }
 
                 setProjectDetails(details);
+                localStorage.setItem('project', response.data.project_name);
 
                 setLoading(false);
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -136,8 +132,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let devicesArray = [];
                 response.data.forEach((device) => {
                     // Specify the locale as 'si-LK' for Sri Lanka
@@ -157,15 +151,17 @@ function ProjectOverview() {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -191,8 +187,6 @@ function ProjectOverview() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
 
@@ -210,17 +204,18 @@ function ProjectOverview() {
                 setDataTables(dataTablesArray);
                 setLoading(false);
             }
-
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -234,19 +229,105 @@ function ProjectOverview() {
         }
     }
 
+    // ---------- Load data records count of the project from all data tables from the backend ----------
+    const loadProjectDataRecordCount = async () => {
+        /*
+            * URL - localhost:3001/api/data/get/count/project/?project_id=<project_id>
+            * Method - GET
+            * Headers - authorization
+            * Response - { count: <count> }
+            * Description - Get the total data records count of the project from all data tables
+        */
+
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/count/project/?project_id=${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
+
+            if (response.status === 200) {
+                setDataRecordsCount(response.data.count);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 404:
+                    setDataRecordsCount(0);
+                    break;
+                default:
+                    toast.error('Something went wrong while loading insights!');
+                    break;
+            }
+        }
+    }
+
+    // Get latest data record update date and time
+    const getLatestDataRecordUpdate = async () => {
+        /*
+            * URL - localhost:3001/api/data/get/latest/project/?project_id=<project_id>
+            * Method - GET
+            * Headers - authorization
+            * Response - { timestamp: <timestamp> }
+            * Description - Get the latest data record update date and time of the project
+        */
+
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/latest/project/?project_id=${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
+
+            if (response.status === 200) {
+                setLastRecordUpdate(response.data.timestamp);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 404:
+                    setLastRecordUpdate('N/A');
+                    break;
+                default:
+                    toast.error('Something went wrong while loading insights!');
+                    break;
+            }
+        }
+    }
+
     return (
         // Sidebar Layout Component
-        <SidebarLayout active={0} addressText={`John Doe > ${projectDetails.name} > Overview`}>
+        <SidebarLayout active={0} breadcrumb={`${localStorage.getItem('project')} > Overview`}>
 
             {/* Page Title - Project Name */}
-            <div className="container  mb-32">
-                <div className={`text-lg px-7 sm:px-10 mb-3`}>{projectDetails.name}</div>
+            <div className="container mb-32">
+                <div className={`text-lg font-semibold px-7 sm:px-10 mb-3`}>{projectDetails.name}</div>
 
                 {/* Insights Section */}
                 <div className={`flex flex-wrap justify-center`}>
                     <InsightCard title={devices.length} subtitle="Registered Devices" icon={FaMicrochip} />
                     <InsightCard title={dataRecordsCount} subtitle="Total Data Records" icon={FaDatabase} />
-                    <InsightCard title={lastRecordUpdate} subtitle="Last Record Update" icon={FaClock} />
+                    <InsightCard title={lastRecordUpdate} subtitle="Last Record Update" icon={FaClock} textSize={'sm'} />
                 </div>
 
                 {/* Devices Section */}
@@ -260,7 +341,10 @@ function ProjectOverview() {
                     {devices.length > 0 ? (
                         devices.slice(0, 5).map((device) => {
                             return (
-                                <RectangularCard key={device.device_id} title={device.device_name} subtitle={`Last Update: ${device.updatedAt}`} icon={FaAngleRight} />
+                                <RectangularCard key={device.device_id} title={device.device_name} subtitle={`Last Update: ${device.updatedAt}`} icon={FaAngleRight}
+                                    onClick={() => {
+                                        navigate('/devices', { state: { project_id: projectID } });
+                                    }} />
                             );
                         })
                     ) : (
@@ -291,7 +375,12 @@ function ProjectOverview() {
                     {dataTables.length > 0 ? (
                         dataTables.slice(0, 5).map((table) => {
                             return (
-                                <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
+                                <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight}
+                                    onClick={() => {
+                                        navigate("/configtable", {
+                                            state: { project_id: projectID, tbl_id: table.tbl_id },
+                                        });
+                                    }} />
                             );
                         })
                     ) : (

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
 import Sidebar from './Sidebar';
 import PagBody from './PageBody';
 
-function SidebarLayout({ children, active, addressText }) {
+function SidebarLayout({ children, active, breadcrumb }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1020);
-   
+
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
@@ -21,14 +20,10 @@ function SidebarLayout({ children, active, addressText }) {
         };
     }, []);
 
-    useEffect(() => {
-        console.log(isSidebarOpen)
-    }, [isSidebarOpen]);
-
     return (
         <div className={`flex h-screen overflow-hidden`}>
-            <Sidebar isSidebarOpen={isSidebarOpen} active={active} toggleSidebar={toggleSidebar}/>
-            <PagBody isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} addressText={addressText}>
+            <Sidebar isSidebarOpen={isSidebarOpen} active={active} toggleSidebar={toggleSidebar} />
+            <PagBody isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} breadcrumb={breadcrumb}>
                 {children}
             </PagBody>
         </div>

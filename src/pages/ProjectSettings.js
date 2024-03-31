@@ -1,16 +1,11 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
 import { useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import TextBox from "../components/TextBox";
-import PillButton from "../components/PillButton";
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import TextBox from "../components/input/TextBox";
+import PillButton from "../components/input/PillButton";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import CriticalAction from "../components/CriticalAction";
@@ -36,13 +31,13 @@ function ProjectSettings() {
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState(''); // 1 - delete all data , 2 - Delete tables, 3 - Delete devices, 4 - Delete project
     const [authenticationResult, setAuthenticationResult] = useState(false);
-    
+
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
             if (actionType == 1) {
                 toast.success('Login successful, Deleting data');
-                //handleDataDelete(projectID);
+                //handleDataDelete(projectID); -> TODO: THis function is not implemented yet
 
             } else if (actionType == 2) {
                 toast.success('Login successful, Deleting tables');
@@ -54,16 +49,14 @@ function ProjectSettings() {
             }
             else if (actionType == 4) {
                 toast.success('Login successful, Deleting project');
-                //handleProjectDelete(projectID);
+                //handleProjectDelete(projectID);  -> TODO: THis function is not implemented yet
                 navigate('/projects');
             }
-
         }
     }, [authenticationResult]);
 
 
     useEffect(() => {
-
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
@@ -75,7 +68,6 @@ function ProjectSettings() {
 
     useEffect(() => {
         if (projectID !== -1) {
-            console.log('Project ID', projectID);
             loadProjectDetails();
         }
     }, [projectID]);
@@ -94,12 +86,11 @@ function ProjectSettings() {
             if (response.status === 200) {
                 setProjectName(response.data.project_name);
                 setProjectDescription(response.data.description);
-
                 setLoading(false);
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     navigate('/login');
@@ -148,11 +139,10 @@ function ProjectSettings() {
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("Project updated!");
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error("Bad request!");
                     break;
@@ -180,7 +170,6 @@ function ProjectSettings() {
     const handleDeviceDelete = async (project_id) => {
         setLoading(true);
         // delete request to localhost:3001/api/device/all
-        console.log(localStorage.getItem("auth-token"));
         try {
             const response = await axios.delete(`http://localhost:3001/api/device/all`, {
                 headers: {
@@ -190,12 +179,10 @@ function ProjectSettings() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("All devices deleted!");
-
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error("Bad request!");
                     break;
@@ -223,7 +210,6 @@ function ProjectSettings() {
     const handleTableDelete = async (project_id) => {
         setLoading(true);
         // delete request to localhost:3001/api/table/all
-        console.log(localStorage.getItem("auth-token"));
         try {
             const response = await axios.delete(`http://localhost:3001/api/data/tbl/all`, {
                 headers: {
@@ -233,12 +219,10 @@ function ProjectSettings() {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-                toast.success("All devices deleted!");
-
+                toast.success("All tables deleted!");
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error("Bad request!");
                     break;
@@ -264,10 +248,8 @@ function ProjectSettings() {
 
 
     return (
-        //Sidebar Component
-        <SidebarLayout active={4} addressText={`John Doe > ${projectName} >Project Settings`}>
-
-            <div className="text-xl text-gray2 font-semibold mx-8 mt-2">Project Settings</div>
+        <SidebarLayout active={4} breadcrumb={`${localStorage.getItem('project')} > Project Settings`}>
+            <div className="text-lg text-gray2 font-semibold mx-8 mt-2">Project Settings</div>
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">General Settings</div>
 
             <div className='flex flex-row ml-8 mt-1'>

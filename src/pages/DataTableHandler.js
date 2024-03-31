@@ -1,20 +1,13 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
-import { FaMicrochip, FaDatabase, FaClock, FaPlusCircle, FaAngleRight, FaForward } from "react-icons/fa";
+import { FaPlusCircle, FaAngleRight } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import ButtonRectangle from "../components/ButtonRectangle";
-import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
+import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import PillButton from "../components/input/PillButton";
+import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
-import InsightCard from "../components/InsightCard";
-import RectangularCard from "../components/RectangularCard";
+import RectangularCard from "../components/cards/RectangularCard";
 import axios from "axios";
 import PopupContainer from "../components/PopupContainer";
 
@@ -32,7 +25,6 @@ const DataTableHandler = () => {
 
     // ---------- Table name for new addings ------
     const [newTableName, setNewTableName] = useState('');
-    const [newTableNameDescription, setNewTableNameDescription] = useState('');
 
     //--Add Data table Modal--
     const [isAddDatatableOpen, setIsAddDatatableOpen] = useState(false);
@@ -40,8 +32,6 @@ const DataTableHandler = () => {
     const toggleAddDatatableModal = () => {
         setIsAddDatatableOpen(!isAddDatatableOpen);
     };
-
-    const [isDatatableAddingDoneOpen, setisDatatableAddingDoneOpen] = useState(false);
 
     // ---------- Data Table states ----------
     const [dataTables, setDataTables] = useState([
@@ -59,25 +49,22 @@ const DataTableHandler = () => {
     ]);
     const [projectID, setProjectID] = useState(-1);
 
-
     useEffect(() => {
-
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
+            localStorage.removeItem('datatable');
         } catch (err) {
             console.log(err);
             navigate('/login');
         }
     }, []);
 
-
     useEffect(() => {
         if (projectID != -1) {
             loadDataTables();
         }
     }, [projectID]);
-
 
     // ---------- Create new table ----------      
     const handleTableAdding = async () => {
@@ -135,7 +122,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -151,17 +138,17 @@ const DataTableHandler = () => {
                     toast.error('Project not found!');
                     navigate('/projects');
                     break;
+                case 409:
+                    toast.error('Table already exists!');
+                    break;
                 default:
                     toast.error('Something went wrong!');
                     break;
-
             }
         } finally {
             setLoading(false);
         }
     }
-
-
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {
@@ -175,8 +162,6 @@ const DataTableHandler = () => {
             });
 
             if (response.status === 200) {
-                console.log(response.data);
-
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
 
@@ -196,7 +181,7 @@ const DataTableHandler = () => {
             }
 
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error('Bad request!');
                     break;
@@ -219,9 +204,9 @@ const DataTableHandler = () => {
     }
 
     return (
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > Data Tables`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
-                <span className={`text-lg`}>Data Tables</span>
+                <span className={`text-lg font-semibold`}>Data Tables</span>
                 {dataTables.length > 0 ? (
                     <div className={``}>
                         <PillButton text="Add Data Table" icon={FaPlusCircle} onClick={() => { setIsAddDatatableOpen(true) }} />
@@ -242,8 +227,11 @@ const DataTableHandler = () => {
                         );
                     })
                 ) : (
-                    <div className={`flex flex-row justify-center items-center mt-4`}>
-                        <PillButton text="Add Your First Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                    <div className={`w-full flex flex-col justify-center items-center`}>
+                        <div className={`text-gray2 text-sm`}>No data tables found</div>
+                        <div className={`flex flex-row justify-center items-center mt-4`}>
+                            <PillButton text="Add Your First Data Table" icon={FaPlusCircle} onClick={() => { toggleAddDatatableModal() }} />
+                        </div>
                     </div>
                 )}
             </div>

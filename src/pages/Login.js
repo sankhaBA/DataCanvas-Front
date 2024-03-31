@@ -1,21 +1,12 @@
-// Dependencies
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaGoogle, FaGithub } from "react-icons/fa";
-import { getAuth, setPersistence, browserSessionPersistence, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence, signInWithEmailAndPassword } from "firebase/auth";
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//remove this if error occurs. Vishwani added this to app.js so not everyone need to add this whenever an auth based page is created
-// I added this to test the app functionality. when merging, remove this if error occurs - yours loving, Luke
-import { app } from "../firebase";
-
-//Pages for navigation
 import { Link, useNavigate } from 'react-router-dom';
-
-// Components
-import ButtonRectangle from "../components/ButtonRectangle";
-import TextBox from "../components/TextBox";
+import ButtonRectangle from "../components/input/ButtonRectangle";
+import TextBox from "../components/input/TextBox";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 
@@ -29,8 +20,12 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
 
-    const [isLogin, setisLogin] = useState(false);
-
+    useEffect(() => {
+        // Remove local storage keys
+        localStorage.removeItem('auth-token');
+        localStorage.removeItem('uid');
+        localStorage.removeItem('email');
+    }, []);
 
     const handleGoogleLogin = () => {
         if (loading) return;
@@ -39,10 +34,7 @@ function Login() {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
             .then((result) => {
-                //const credential = GoogleAuthProvider.credentialFromResult(result);
-                //const token = credential.accessToken;
                 const user = result.user;
-                setisLogin(true);
                 getAuthToken(user.email);
             }).catch((error) => {
                 const errorCode = error.code;
@@ -63,8 +55,6 @@ function Login() {
         const provider = new GithubAuthProvider();
         signInWithPopup(auth, provider)
             .then((result) => {
-                //const credential = GithubAuthProvider.credentialFromResult(result);
-                //const token = credential.accessToken;
                 const user = result.user;
                 getAuthToken(user.email);
             }).catch((error) => {
@@ -96,7 +86,7 @@ function Login() {
                     .then((userCredential) => {
                         const user = userCredential.user;
                         if (user.emailVerified === false) {
-                            toast.error('Email not verified. Please verify your email.');
+                            toast.error('Email not verified. Please verify your email. Check your email inbox');
                             setLoading(false);
                             return;
                         }
@@ -105,7 +95,7 @@ function Login() {
                     .catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
-                        if (errorCode === 'auth/wrong-password') {
+                        if (errorCode === 'auth/invalid-credential') {
                             toast.warning('Wrong Credentials entered.');
                         } else if (errorCode === 'auth/user-not-found') {
                             toast.warning('User not found.');
@@ -119,15 +109,14 @@ function Login() {
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                if (errorCode === 'auth/wrong-password') {
+                if (errorCode === 'auth/invalid-credential') {
                     toast.warning('Wrong Credentials entered.');
                 } else if (errorCode === 'auth/user-not-found') {
                     toast.warning('User not found.');
                 } else if (errorCode === 'auth/invalid-email') {
                     toast.warning('Invalid email.');
                 } else {
-                    toast.error("Something went wrong! " + errorMessage);
+                    toast.error("Something went wrong! " + errorCode);
                 }
                 setLoading(false);
             });
@@ -156,6 +145,7 @@ function Login() {
                 setTimeout(() => {
                     localStorage.removeItem('auth-token');
                     localStorage.removeItem('uid');
+                    localStorage.removeItem('email');
                 }, 7200000);
 
                 setLoading(false);

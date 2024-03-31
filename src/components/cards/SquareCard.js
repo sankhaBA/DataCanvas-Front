@@ -22,10 +22,6 @@ const SquareCard = ({ title, subtitle, footer, onClick, onUpdate, onDelete, isIc
           </div>
         </div>
         {/* Content for the footer */}
-        {/* <div className="flex justify-between">
-          <div className="text-neutral-600 text-xs font-semibold w-full"></div>
-        </div> */}
-
         <div className="flex justify-between w-full pr-6">
           <div className="text-neutral-600 text-xs font-semibold flex">{footer}</div>
           <div className="flex">

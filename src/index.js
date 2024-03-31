@@ -20,18 +20,12 @@ import ProjectSettings from './pages/ProjectSettings';
 import DatasetViewer from './pages/DatasetViewer';
 import SamplePage from './pages/SamplePage';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const uid = localStorage.getItem('uid');
 const token = localStorage.getItem('auth-token');
-console.log(uid, token);
 
 root.render(
-  // <React.StrictMode>
-  //   <SignUp />
-  // </React.StrictMode>
-
   <Router>
     <Routes>
       <Route exact path="/login" element={<Login />} />
