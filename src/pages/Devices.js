@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaCheck, FaKey } from "react-icons/fa";
+import { FaPlusCircle, FaCheck, FaKey, FaCopy } from "react-icons/fa";
 import { MdRouter } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -328,7 +328,7 @@ const Device = () => {
       breadcrumb={`${localStorage.getItem('project')} > Devices`}
     >
       <div className={`flex flex-row justify-between px-7 sm:px-10 mt-8 sm:mt-3`}>
-        <div className="text-xl text-gray2 font-semibold">Your Devices</div>
+        <div className="text-lg text-gray2 font-semibold">Your Devices</div>
         <div className="flex">
           <ButtonRectangle text="Add Device" onClick={toggleAddDeviceModal} />
         </div>
@@ -423,23 +423,31 @@ const Device = () => {
         closeIconVisible={true}
       >
         <div className="flex flex-col justify-center items-center mt-4">
-          <div className="flex    mt-1">
+          <div className="flex mt-1">
             <FaKey className="text-green" />
             <label className="text-gray2 text-sm ml-2">
               Device Fingerprint
             </label>
           </div>
-          <input
-            type="text"
-            value={fingerprint}
-            className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2"
-            readOnly
-          />
-          <span className="text-gray1 text-xs text-center mt-2">
-            This device fingerprint should be included in data send requests
+          <div className={`flex items-center space-x-4 w-full`}>
+            <input
+              type="text"
+              value={fingerprint}
+              className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full text-center px-4 py-1 mt-2 text-gray2"
+              readOnly
+            />
+            <FaCopy
+              className="text-lg text-green mt-2 cursor-pointer hover:text-gray2 duration-300 transition-all ease-in-out"
+              onClick={() => {
+                navigator.clipboard.writeText(fingerprint);
+                toast.success("Fingerprint copied to clipboard");
+              }} />
+          </div>
+          <span className="text-red text-xs text-center mt-4">
+            This device fingerprint should be included in data send requests. This can be viewed once. Copy this fingerprint in a safe place
           </span>
         </div>
-        <div className="flex flex-col items-center justify-center mt-4">
+        <div className="flex flex-col items-center justify-center mt-6">
           <PillButton
             text="Done"
             onClick={toggleDeviceAddingDoneModal}

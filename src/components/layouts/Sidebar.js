@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose } from 'react-icons/fa';
+import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose, FaBackspace } from 'react-icons/fa';
 import { MdBarChart, MdDashboard } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
 
   return (
     <div className={`h-screen lg:w-3/12 xl:w-2/12 w-64 fixed top-0 left-0 bg-black2 text-gray2 transition-all duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} z-10`}>
-      <div className="flex justify-center items-center mt-5">
+      <div className="flex justify-center items-center mt-5 cursor-pointer" onClick={() => { navigate('/overview', { state: { project_id: projectID } }) }}>
         {!isSidebarOpen ? '' : <FaWindowClose className="text-2xl text-green mr-3 visible lg:hidden" onClick={() => toggleSidebar()} />}
         <img src={process.env.PUBLIC_URL + '/img/logo.png'} alt="Logo" className=" w-8" />
         <span className="text-xl text-gray2 font-bold font-poppins ml-2">DataCanvas</span>
@@ -57,7 +57,14 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
           navigate('/projectsettings', { state: { project_id: projectID } });
         }} />
 
+        {/* Horizontal Rule */}
+        <div className="border-t border-gray1 border-opacity-40 my-4"></div>
+
+        <SidebarButton text="Back to All Projects" icon={FaBackspace} active={false} onClick={() => {
+          navigate('/projects', { state: { project_id: projectID } });
+        }} />
       </div>
+
     </div>
   );
 }

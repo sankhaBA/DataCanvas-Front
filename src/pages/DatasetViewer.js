@@ -293,7 +293,7 @@ function DatasetViewer() {
     return (
         <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Dataset`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
-                <span className={`text-lg`}>Gathered Data - {tblName}</span>
+                <span className={`text-lg font-semibold`}>Gathered Data - {tblName}</span>
                 <div className={`flex mt-2 sm:mt-0 space-x-4`}>
                     <PillButton text="View API" icon={FaUpload} onClick={() => { }} />
                     <PillButton text="Add Data" icon={FaPlusCircle} onClick={() => { setAddDataPopupVisible(true) }} />

@@ -314,8 +314,8 @@ function ProjectOverview() {
         <SidebarLayout active={0} breadcrumb={`${localStorage.getItem('project')} > Overview`}>
 
             {/* Page Title - Project Name */}
-            <div className="container  mb-32">
-                <div className={`text-lg px-7 sm:px-10 mb-3`}>{projectDetails.name}</div>
+            <div className="container mb-32">
+                <div className={`text-lg font-semibold px-7 sm:px-10 mb-3`}>{projectDetails.name}</div>
 
                 {/* Insights Section */}
                 <div className={`flex flex-wrap justify-center`}>
