@@ -37,8 +37,8 @@ function ProjectOverview() {
     const [dataTables, setDataTables] = useState([]);
 
     // ---------- Miscallenous states ----------
-    const [dataRecordsCount, setDataRecordsCount] = useState(548);
-    const [lastRecordUpdate, setLastRecordUpdate] = useState('2021-08-01');
+    const [dataRecordsCount, setDataRecordsCount] = useState('N/A');
+    const [lastRecordUpdate, setLastRecordUpdate] = useState('N/A');
 
     useEffect(() => {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
@@ -60,13 +60,14 @@ function ProjectOverview() {
         if (projectDetails.name !== '') {
             loadDevices();
             loadDataTables();
+            loadProjectDataRecordCount();
+            getLatestDataRecordUpdate();
         }
     }, [projectDetails]);
 
     useEffect(() => {
 
     }, [devices]);
-
     // ---------- Load project details from the backend ----------
     const loadProjectDetails = async () => {
         setLoading(true);
@@ -99,9 +100,11 @@ function ProjectOverview() {
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -152,9 +155,11 @@ function ProjectOverview() {
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -204,9 +209,11 @@ function ProjectOverview() {
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
@@ -217,6 +224,86 @@ function ProjectOverview() {
             }
             setDataTables([]);
             setLoading(false);
+        }
+    }
+
+    // ---------- Load data records count of the project from all data tables from the backend ----------
+    const loadProjectDataRecordCount = async () => {
+        /*
+            * URL - localhost:3001/api/data/get/count/project/?project_id=<project_id>
+            * Method - GET
+            * Headers - authorization
+            * Response - { count: <count> }
+            * Description - Get the total data records count of the project from all data tables
+        */
+
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/count/project/?project_id=${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
+
+            if (response.status === 200) {
+                setDataRecordsCount(response.data.count);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Something went wrong while loading insights!');
+                    break;
+            }
+        }
+    }
+
+    // Get latest data record update date and time
+    const getLatestDataRecordUpdate = async () => {
+        /*
+            * URL - localhost:3001/api/data/get/latest/project/?project_id=<project_id>
+            * Method - GET
+            * Headers - authorization
+            * Response - { timestamp: <timestamp> }
+            * Description - Get the latest data record update date and time of the project
+        */
+
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/latest/project/?project_id=${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
+
+            if (response.status === 200) {
+                setLastRecordUpdate(response.data.timestamp);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                default:
+                    toast.error('Something went wrong while loading insights!');
+                    break;
+            }
         }
     }
 
@@ -232,7 +319,7 @@ function ProjectOverview() {
                 <div className={`flex flex-wrap justify-center`}>
                     <InsightCard title={devices.length} subtitle="Registered Devices" icon={FaMicrochip} />
                     <InsightCard title={dataRecordsCount} subtitle="Total Data Records" icon={FaDatabase} />
-                    <InsightCard title={lastRecordUpdate} subtitle="Last Record Update" icon={FaClock} />
+                    <InsightCard title={lastRecordUpdate} subtitle="Last Record Update" icon={FaClock} textSize={'sm'} />
                 </div>
 
                 {/* Devices Section */}
