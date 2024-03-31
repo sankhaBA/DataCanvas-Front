@@ -262,6 +262,9 @@ function ProjectOverview() {
                     toast.error('Unauthorized access!');
                     navigate('/login');
                     break;
+                case 404:
+                    setDataRecordsCount(0);
+                    break;
                 default:
                     toast.error('Something went wrong while loading insights!');
                     break;
@@ -302,6 +305,9 @@ function ProjectOverview() {
                     toast.error('Unauthorized access!');
                     navigate('/login');
                     break;
+                case 404:
+                    setLastRecordUpdate('N/A');
+                    break;
                 default:
                     toast.error('Something went wrong while loading insights!');
                     break;
@@ -335,7 +341,10 @@ function ProjectOverview() {
                     {devices.length > 0 ? (
                         devices.slice(0, 5).map((device) => {
                             return (
-                                <RectangularCard key={device.device_id} title={device.device_name} subtitle={`Last Update: ${device.updatedAt}`} icon={FaAngleRight} />
+                                <RectangularCard key={device.device_id} title={device.device_name} subtitle={`Last Update: ${device.updatedAt}`} icon={FaAngleRight}
+                                    onClick={() => {
+                                        navigate('/devices', { state: { project_id: projectID } });
+                                    }} />
                             );
                         })
                     ) : (
@@ -366,7 +375,12 @@ function ProjectOverview() {
                     {dataTables.length > 0 ? (
                         dataTables.slice(0, 5).map((table) => {
                             return (
-                                <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight} />
+                                <RectangularCard key={table.tbl_id} title={table.tbl_name} subtitle={`Last Update: ${table.updatedAt}`} icon={FaAngleRight}
+                                    onClick={() => {
+                                        navigate("/configtable", {
+                                            state: { project_id: projectID, tbl_id: table.tbl_id },
+                                        });
+                                    }} />
                             );
                         })
                     ) : (
