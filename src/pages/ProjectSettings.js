@@ -248,7 +248,7 @@ function ProjectSettings() {
 
 
     return (
-        <SidebarLayout active={4} addressText={`John Doe > ${projectName} >Project Settings`}>
+        <SidebarLayout active={4} breadcrumb={`${localStorage.getItem('project')} > Project Settings`}>
             <div className="text-xl text-gray2 font-semibold mx-8 mt-2">Project Settings</div>
             <div className="text-m text-gray2 font-semibold mx-8 mt-8">General Settings</div>
 

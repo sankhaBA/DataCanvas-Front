@@ -44,6 +44,7 @@ function ProjectOverview() {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
+            localStorage.removeItem('datatable');
         } catch (err) {
             console.log(err);
             navigate('/login');
@@ -89,6 +90,7 @@ function ProjectOverview() {
                 }
 
                 setProjectDetails(details);
+                localStorage.setItem('project', response.data.project_name);
 
                 setLoading(false);
             }
@@ -309,7 +311,7 @@ function ProjectOverview() {
 
     return (
         // Sidebar Layout Component
-        <SidebarLayout active={0} addressText={`John Doe > ${projectDetails.name} > Overview`}>
+        <SidebarLayout active={0} breadcrumb={`${localStorage.getItem('project')} > Overview`}>
 
             {/* Page Title - Project Name */}
             <div className="container  mb-32">

@@ -4,7 +4,7 @@ import AddToggleWidgetPopup from '../components/widgets/AddToggleWidgetPopup';
 
 function SamplePage() {
     return (
-        <SidebarLayout active={3} addressText={''}>
+        <SidebarLayout active={3} breadcrumb={''}>
             <AddToggleWidgetPopup isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
     );

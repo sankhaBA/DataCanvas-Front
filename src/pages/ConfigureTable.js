@@ -128,7 +128,6 @@ function ConfigureTable() {
 
 
     useEffect(() => {
-
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
         try {
             setTblID(state.tbl_id);
@@ -894,7 +893,7 @@ function ConfigureTable() {
     }
 
     return (
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Configure`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>

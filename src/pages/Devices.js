@@ -325,7 +325,7 @@ const Device = () => {
   return (
     <SidebarLayout
       active={2}
-      addressText={"John Doe > UOM Weather Station > Devices"}
+      breadcrumb={`${localStorage.getItem('project')} > Devices`}
     >
       <div className={`flex flex-row justify-between px-7 sm:px-10 mt-8 sm:mt-3`}>
         <div className="text-xl text-gray2 font-semibold">Your Devices</div>
