@@ -291,7 +291,7 @@ function DatasetViewer() {
 
 
     return (
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Dataset`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
                 <span className={`text-lg`}>Gathered Data - {tblName}</span>
                 <div className={`flex mt-2 sm:mt-0 space-x-4`}>

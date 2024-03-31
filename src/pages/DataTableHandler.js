@@ -53,6 +53,7 @@ const DataTableHandler = () => {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
+            localStorage.removeItem('datatable');
         } catch (err) {
             console.log(err);
             navigate('/login');
@@ -203,7 +204,7 @@ const DataTableHandler = () => {
     }
 
     return (
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > Data Table Handler'}>
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > Data Tables`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
                 <span className={`text-lg`}>Data Tables</span>
                 {dataTables.length > 0 ? (

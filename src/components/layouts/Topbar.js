@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, addressText }) => {
+const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, breadcrumb }) => {
     // ---------- Navigation ----------
     const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
             ) : (
                 <div className="flex w-full items-center justify-end sm:justify-between h-20 px-5">
                     <div className='text-gray2 text-sm hidden sm:block truncate mr-3'>
-                        {addressText}
+                        {`${breadcrumb}`}
                     </div>
                     <div className='flex flex-row justify-center items-center'>
                         {searchBarDisplayed ? (

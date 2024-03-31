@@ -150,7 +150,7 @@ function UserSettings() {
     };
 
     return (
-        <NonSidebarLayout>
+        <NonSidebarLayout breadcrumb={`${name} > User Settings`}>
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
                     <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"

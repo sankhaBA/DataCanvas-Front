@@ -188,7 +188,7 @@ function Projects() {
   };
 
   return (
-    <NonSidebarLayout>
+    <NonSidebarLayout breadcrumb={''}>
       <div className={`container pt-10 xl:px-32`}>
         <h1 className={`text-xl text-gray2 mx-5`}>Your DataCanvas Projects</h1>
         <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
@@ -201,6 +201,7 @@ function Projects() {
               footer={"Created on " + project.createdAt.substring(0, 10)}
               mx="mx-2"
               onClick={() => {
+                localStorage.setItem("project", project.project_name);
                 navigate("/overview", {
                   state: { project_id: project.project_id },
                 });
