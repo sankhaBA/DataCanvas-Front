@@ -1,6 +1,6 @@
 import React from 'react';
-import SidebarLayout from '../components/layouts/SidebarLayout';
 
+import SidebarLayout from '../components/layouts/SidebarLayout';
 
 function SamplePage() {
     return (

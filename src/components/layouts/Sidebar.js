@@ -3,6 +3,7 @@ import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose, FaBackspace } from 'rea
 import { MdBarChart, MdDashboard } from 'react-icons/md';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
   // ---------- Navigation ----------
@@ -46,7 +47,7 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
           navigate('/overview', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} onClick={() => {
-          navigate('/overview', { state: { project_id: projectID } });
+          toast.info("Dashboard is under development. Please check back later.");
         }} />
         <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} onClick={() => {
           navigate('/devices', { state: { project_id: projectID } });
