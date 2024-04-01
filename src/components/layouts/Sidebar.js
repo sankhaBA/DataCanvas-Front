@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose, FaBackspace } from 'react-icons/fa';
 import { MdBarChart, MdDashboard } from 'react-icons/md';
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -61,7 +62,7 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
         {/* Horizontal Rule */}
         <div className="border-t border-gray1 border-opacity-40 my-4"></div>
 
-        <SidebarButton text="Back to All Projects" icon={FaBackspace} active={false} onClick={() => {
+        <SidebarButton text="Back to Projects" icon={IoMdArrowRoundBack} active={false} onClick={() => {
           navigate('/projects', { state: { project_id: projectID } });
         }} />
       </div>

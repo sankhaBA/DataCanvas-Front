@@ -31,7 +31,7 @@ root.render(
       <Route exact path="/login" element={<Login />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/projects" element={(uid && token) ? <Projects /> : <Login />} />
+      <Route path="/projects" element={(localStorage.getItem('uid') && localStorage.getItem('auth-token')) ? <Projects /> : <Login />} />
       <Route path="/overview" element={(uid && token) ? <ProjectOverview /> : <Login />} />
       <Route path="/devices" element={<Devices />} />
       <Route path="/configtable" element={<ConfigureTable />} />
