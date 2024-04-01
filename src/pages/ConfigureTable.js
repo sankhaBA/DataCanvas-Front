@@ -1,21 +1,16 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog } from "react-icons/fa";
+import { FaPlusCircle, FaDatabase, FaTrash, FaUpload, FaWindowClose, FaCog, FaSave } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
+import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarLayout from "../components/layouts/SidebarLayout";
 import PopupContainer from "../components/PopupContainer";
-import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
-import SelectBox from "../components/SelectBox";
+import PillButton from "../components/input/PillButton";
+import TextBox from "../components/input/TextBox";
+import SelectBox from "../components/input/SelectBox";
 import Spinner from "../components/Spinner";
 import CriticalAction from "../components/CriticalAction";
-import ConfigTableCard from "../components/ConfigTableCard";
+import ConfigTableCard from "../components/cards/ConfigTableCard";
 import LoginPopup from "../components/LoginPopup";
 import axios from "axios";
 
@@ -80,12 +75,13 @@ function ConfigureTable() {
     const [newColumnDataType, setNewColumnDataType] = useState(-1);
     useEffect(() => {
         if (newColumnDataType == 3) {
-            setNewColumnMaxLength(255);
+            if (newColumnMaxLength == 0 || newColumnMaxLength == '' || newColumnMaxLength == null) {
+                setNewColumnMaxLength(255);
+            }
             setNewColumnAutoIncrement(false);
         } else {
             setNewColumnMaxLength(0);
         }
-        //setNewColumnDefaultValue('');
     }, [newColumnDataType]);
     const [newColumnMaxLength, setNewColumnMaxLength] = useState(0);
     const [newColumnDefaultValue, setNewColumnDefaultValue] = useState('');
@@ -132,12 +128,10 @@ function ConfigureTable() {
 
 
     useEffect(() => {
-
         // ---------- Getting tbl_id from the location state and uypdating tblID state ----------
         try {
             setTblID(state.tbl_id);
             setProjectID(state.project_id);
-            console.log('tbl_id : ' + state.tbl_id);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -171,7 +165,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Data Types : ', res.data);
             setDataTypes(res.data);
             setLoading(false);
         } catch (err) {
@@ -199,7 +192,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Constraints : ', res.data);
             setConstraints(res.data);
             setLoading(false);
         } catch (err) {
@@ -258,7 +250,6 @@ function ConfigureTable() {
                     'authorization': token
                 }
             });
-            console.log('Columns : ', res.data);
             // Sort columns by clm_id
             res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
             setColumns(res.data);
@@ -301,9 +292,7 @@ function ConfigureTable() {
         }
     }
 
-
     const AddColumnPopup = () => {
-
         const checkSpaces = (str) => {
             return /\s/.test(str);
         }
@@ -403,7 +392,7 @@ function ConfigureTable() {
                 }
 
                 const requestBody = {
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     tbl_id: tblID,
                     default_value: newColumnDefaultValue,
@@ -434,6 +423,9 @@ function ConfigureTable() {
                             toast.error('Error in adding field');
                             navigate('/projects')
                             break;
+                        case 409:
+                            toast.error('Field name already exists');
+                            break;
                         default:
                             toast.error('Something went wrong');
                             break;
@@ -447,7 +439,6 @@ function ConfigureTable() {
         }
 
         const updateColumn = async () => {
-            console.log('Updating column : ', selectedColumnID);
             if (validateNewColumn()) {
                 setLoading(true);
                 // ---------- Get auth-token from local storage ----------
@@ -478,7 +469,7 @@ function ConfigureTable() {
 
                 const requestBody = {
                     clm_id: selectedColumnID,
-                    clm_name: newColumnName,
+                    clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     default_value: newColumnDefaultValue,
                     max_length: newColumnMaxLength,
@@ -509,6 +500,12 @@ function ConfigureTable() {
                             toast.error('Error in updating field');
                             navigate('/overview')
                             break;
+                        case 405:
+                            toast.error('Field data type cannot be changed');
+                            break;
+                        case 409:
+                            toast.error('Field name already exists');
+                            break;
                         default:
                             toast.error('Something went wrong');
                             break;
@@ -525,7 +522,7 @@ function ConfigureTable() {
             <PopupContainer isOpen={isAddColumnPopupVisible}
                 onClose={() => { }}
                 closeFunction={() => setIsAddColumnPopupVisible(false)}
-                Icon={FaPlusCircle}
+                Icon={(selectedColumnID == -1) ? FaPlusCircle : FaSave}
                 title={selectedColumnID == -1 ? 'Add Field' : 'Edit Field'}
                 closeIconVisible={true}
                 width={'550px'}>
@@ -543,7 +540,7 @@ function ConfigureTable() {
 
                     <div className="flex flex-col justify-center sm:w-1/2">
                         <label className="text-gray1 text-sm">Data Type</label>
-                        <SelectBox onChange={(e) => setNewColumnDataType(e.target.value)}
+                        <SelectBox disabled={(selectedColumnID == -1) ? false : true} onChange={(e) => setNewColumnDataType(e.target.value)}
                             value={newColumnDataType}>
                             <option value={-1}>Select Data Type</option>
                             {dataTypes.map((type) => {
@@ -579,30 +576,32 @@ function ConfigureTable() {
                     </div>
                 </div>
 
-                <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
-                    {/* 3 Check boxes with captions Auto Increment, Not Null, Unique. Checkbox and the caption should be horizontally aligned*/}
-                    {newColumnDataType != 3 ? (
+                {/* Auto Increment, Not Null, Unique Checkboxes */}
+                {(selectedColumnID != -1) ? null : (
+                    <div className="sm:flex justify-center items-center mt-4 sm:mt-8 space-y-4 sm:space-y-0 space-x-0 sm:space-x-12">
+                        {newColumnDataType == 1 ? (
+                            <div className="flex justify-center items-center space-x-2">
+                                <input type="checkbox" className="w-4 h-4"
+                                    checked={newColumnAutoIncrement}
+                                    onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
+                                <label className="text-gray2 text-sm">Auto Increment</label>
+                            </div>
+                        ) : null}
+
                         <div className="flex justify-center items-center space-x-2">
                             <input type="checkbox" className="w-4 h-4"
-                                checked={newColumnAutoIncrement}
-                                onChange={(e) => setNewColumnAutoIncrement(e.target.checked)} />
-                            <label className="text-gray2 text-sm">Auto Increment</label>
+                                checked={newColumnNullAllowed}
+                                onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Not Null</label>
                         </div>
-                    ) : null}
-
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnNullAllowed}
-                            onChange={(e) => setNewColumnNullAllowed(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Not Null</label>
+                        <div className="flex justify-center items-center space-x-2">
+                            <input type="checkbox" className="w-4 h-4"
+                                checked={newColumnUnique}
+                                onChange={(e) => setNewColumnUnique(e.target.checked)} />
+                            <label className="text-gray2 text-sm">Unique</label>
+                        </div>
                     </div>
-                    <div className="flex justify-center items-center space-x-2">
-                        <input type="checkbox" className="w-4 h-4"
-                            checked={newColumnUnique}
-                            onChange={(e) => setNewColumnUnique(e.target.checked)} />
-                        <label className="text-gray2 text-sm">Unique</label>
-                    </div>
-                </div>
+                )}
 
                 <div className="flex justify-center items-center mt-6">
                     <PillButton text={selectedColumnID == -1 ? 'Save Field' : 'Update Field'} onClick={() => { (selectedColumnID == -1) ? saveNewColumn() : updateColumn() }} icon={FaUpload} isPopup={true} />
@@ -889,25 +888,20 @@ function ConfigureTable() {
                         icon={FaPlusCircle}
                     />
                 </div>
-
-
             </PopupContainer>
         );
     }
 
     return (
-        // Sidebar Layout Component
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
-            {/* Devices Section */}
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Configure`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
-                <span className={`text-lg`}>Configure Table - {tblName}</span>
+                <span className={`text-lg font-semibold`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>
                     <PillButton text="Table Settings" icon={FaPlusCircle} onClick={() => { setIsTableSettingsPopupVisible(true) }} />
                 </div>
             </div>
 
             <div className={`flex flex-col justify-center px-7 sm:px-10 mt-2`}>
-                {/* <ConfigTableCard columnName="id" dataType="Integer" defaultValue="N/A" isAutoIncrement={true} isNullAllowed={false} isUnique={true} onClick={() => { }} /> */}
                 {columns.map((column) => {
                     return (
                         <ConfigTableCard key={column.clm_id}
@@ -950,7 +944,6 @@ function ConfigureTable() {
             {isUpdateTablePopupVisible ? UpdateTablePopup() : null}
 
             {/* Popup container for login authentication popup */}
-            {/* {isLoginPopupVisible ? LoginPopup(isLoginPopupVisible, () => { setIsLoginPopupVisible(false) }) : null} */}
             <LoginPopup
                 isOpen={isLoginPopupVisible}
                 closeFunction={() => setIsLoginPopupVisible(false)}

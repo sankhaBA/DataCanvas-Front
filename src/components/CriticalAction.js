@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonRectangle from "./ButtonRectangle";
+import ButtonRectangle from "./input/ButtonRectangle";
 
 const CriticalAction = ({ title, subtitle, buttonText, buttonColor, onClick }) => {
     return (
@@ -9,11 +9,6 @@ const CriticalAction = ({ title, subtitle, buttonText, buttonColor, onClick }) =
         transition duration-300 hover:border-green hover:border-opacity-50 hover:text-green`
         }
             onClick={onClick}>
-            {/* Single row should be there. In left side, title and subtitle should be there one after the other vertically. In right side section, there is a button */}
-
-            {/* Content for the title and subtitle */}
-
-
             <div className="flex flex-col justify-center">
                 <div className="w-full h-full flex justify-between items-center">
                     <div className="">
@@ -28,8 +23,6 @@ const CriticalAction = ({ title, subtitle, buttonText, buttonColor, onClick }) =
                 </div>
                 <div className="w-full h-0.5 bg-gray1 bg-opacity-20 mt-1"></div>
             </div>
-
-
         </div>
     );
 }

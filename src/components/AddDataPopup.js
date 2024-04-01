@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import PopupContainer from "./PopupContainer";
-import ButtonRectangle from "./ButtonRectangle";
-import TextBox from "./TextBox";
-import SelectBox from "./SelectBox";
+import ButtonRectangle from "./input/ButtonRectangle";
+import TextBox from "./input/TextBox";
+import SelectBox from "./input/SelectBox";
 import { toast } from 'react-toastify';
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,20 +21,39 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
 
 
     // setNewData() -> Make this a JSON object with fields same as the clm_name of each element of columns object, except id column
+    /* Column Structure
+        {
+            clm_id: 1,
+            clm_name: 'id',
+            data_type: 1,
+            default_value: 'N/A',
+            max_length: 0,
+            constraints: [
+                {
+                    constraint_id: 1
+                },
+                {
+                    constraint_id: 2
+                }
+            ]
+         }
+        */
     const setNewDataObject = (columns) => {
         let newDataObject = {};
         newDataObject['device'] = 0;
         columns.map((column, index) => {
             if (column.clm_name !== 'id' || column.clm_name !== 'device') {
-                newDataObject[column.clm_name] = '';
+                // If column does not have constraint_id 1 newDataObject[column.clm_name] = ''
+                let isAutoIncrement = column.constraints.find((constraint) => { if (constraint.constraint_id == 1) { return true } else { return false } });
+                if (!isAutoIncrement) {
+                    newDataObject[column.clm_name] = '';
+                }
             }
         })
-        console.log(newDataObject);
         setNewData(newDataObject);
     }
 
     const handleColumnValueChanged = (clm_name, value) => {
-        console.log(clm_name, value);
         setNewData({ ...newData, [clm_name]: value });
     }
 
@@ -84,8 +103,6 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             }
         })
 
-        console.log(requestBody);
-
         setLoading(true);
         // post request to localhost:3001/api/data/feed/insert
         try {
@@ -95,7 +112,6 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 toast.success("Data added successfully!");
                 setLoading(false);
                 closeFunction();
@@ -137,12 +153,11 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             );
 
             if (response.status === 200) {
-                console.log(response.data);
                 setDevices(response.data);
                 setLoading(false);
             }
         } catch (err) {
-            switch (err.status) {
+            switch (err.response.status) {
                 case 400:
                     toast.error("Bad request!");
                     break;
@@ -205,7 +220,7 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
                     </SelectBox>
                 </div>
                 {columns.map((column, index) => {
-                    if (column.clm_name !== 'id' && column.clm_name !== 'device') {
+                    if (column.clm_name !== 'id' && column.clm_name !== 'device' && !column.constraints.find((constraint) => { if (constraint.constraint_id == 1) { return true } else { return false } })) {
                         return (
                             <div key={index}>
                                 {InputContainer(

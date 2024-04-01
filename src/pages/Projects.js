@@ -1,17 +1,12 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaPlusCircle, FaCheck, FaCheckCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-//Navigation
-import { Link, useNavigate } from "react-router-dom";
-
-// Components
-import NonSidebarLayout from "../components/NonSidebarLayout";
-import PillButton from "../components/PillButton";
-import TextBox from "../components/TextBox";
-import SquareCard from "../components/SquareCard";
+import { useNavigate } from "react-router-dom";
+import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
+import PillButton from "../components/input/PillButton";
+import TextBox from "../components/input/TextBox";
+import SquareCard from "../components/cards/SquareCard";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
 import axios from "axios";
@@ -38,29 +33,6 @@ function Projects() {
     }
     setIsProjectAddingDoneOpen(!isProjectAddingDoneOpen);
   };
-
-  // ---------- States for Project Details and API calls ----------
-
-  // const [projects, setProjects] = useState([
-  //     {
-  //         project_id: 1,
-  //         project_name: "Project 1",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  //     {
-  //         project_id: 2,
-  //         project_name: "Project 2",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  //     {
-  //         project_id: 3,
-  //         project_name: "Project 3",
-  //         description: "This is a project",
-  //         created_at: "2021-10-10"
-  //     },
-  // ]); // This fills by the projects from the server
 
   const [projects, setProjects] = useState([]); // This fills by the projects from the server
   const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
@@ -100,8 +72,6 @@ function Projects() {
       );
 
       if (result.status === 200) {
-        // Projects retrieved successfully
-        console.log(result.data);
         setProjects(result.data);
       }
     } catch (err) {
@@ -128,7 +98,7 @@ function Projects() {
 
   // ---------- API call for adding new project ----------
   const handleProjectAdding = async () => {
-    if (newProjectName === "" || newProjectName == null) {
+    if (newProjectName === "" || newProjectName == null || newProjectDescription === "" || newProjectDescription == null) {
       toast.error("Project name and description cannot be empty!");
       return;
     }
@@ -161,7 +131,6 @@ function Projects() {
       );
 
       if (result.status === 200) {
-        // Project added successfully
         setNewProjectID(result.data.project_id);
         toggleAddProjectModal();
         toggleProjectAddingDoneModal();
@@ -219,7 +188,7 @@ function Projects() {
   };
 
   return (
-    <NonSidebarLayout>
+    <NonSidebarLayout breadcrumb={''}>
       <div className={`container pt-10 xl:px-32`}>
         <h1 className={`text-xl text-gray2 mx-5`}>Your DataCanvas Projects</h1>
         <div className={`flex-wrap flex justify-center mt-5 mb-48`}>
@@ -232,6 +201,7 @@ function Projects() {
               footer={"Created on " + project.createdAt.substring(0, 10)}
               mx="mx-2"
               onClick={() => {
+                localStorage.setItem("project", project.project_name);
                 navigate("/overview", {
                   state: { project_id: project.project_id },
                 });

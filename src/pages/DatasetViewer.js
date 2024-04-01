@@ -1,19 +1,13 @@
-// Dependencies
 import React, { useState, useEffect } from "react";
 import { FaPlusCircle, FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-//Pages for navigation
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-// Components
-import SidebarLayout from "../components/SidebarLayout";
-import PillButton from "../components/PillButton";
+import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarLayout from "../components/layouts/SidebarLayout";
+import PillButton from "../components/input/PillButton";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import AddDataPopup from "../components/AddDataPopup";
-
 import axios from "axios";
 import './../styles/scrollbar.css';
 
@@ -67,7 +61,7 @@ function DatasetViewer() {
     // ---------- Data Retrieval ----------
     const [retrievedData, setRetrievedData] = useState([]);
     const [tableRecordCount, setTableRecordCount] = useState(0);
-    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(4);
+    const [dataRetrievalLimit, setDataRetrievalLimit] = useState(20);
     const [dataRetrievalOffset, setDataRetrievalOffset] = useState(0);
 
     // ---------- Add Data Popup ----------
@@ -78,7 +72,6 @@ function DatasetViewer() {
         try {
             setTblID(state.tbl_id);
             setProjectID(state.project_id);
-            console.log('tbl_id : ' + state.tbl_id);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
             getDataTypes(token);
@@ -127,7 +120,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Data Types : ', res.data);
             setDataTypes(res.data);
             setLoading(false);
         } catch (err) {
@@ -155,7 +147,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Constraints : ', res.data);
             setConstraints(res.data);
             setLoading(false);
         } catch (err) {
@@ -214,7 +205,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Columns : ', res.data);
             // Sort columns by clm_id
             res.data.sort((a, b) => (a.clm_id > b.clm_id) ? 1 : -1);
             setColumns(res.data);
@@ -246,7 +236,6 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Record Count : ', res.data);
             setTableRecordCount(res.data[0].count);
             setLoading(false);
         } catch (err) {
@@ -277,7 +266,11 @@ function DatasetViewer() {
                     'authorization': token
                 }
             });
-            console.log('Data : ', res.data);
+            for (let dataItem of res.data) {
+                let device_id = dataItem.device;
+                dataItem.device = dataItem.device_name
+                dataItem.device_id = device_id;
+            }
             setRetrievedData(res.data);
             setLoading(false);
         } catch (err) {
@@ -298,10 +291,9 @@ function DatasetViewer() {
 
 
     return (
-        <SidebarLayout active={3} addressText={'John Doe > UOM Weather Station > tblsensor_data > Configure'}>
-            {/* Devices Section */}
+        <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Dataset`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
-                <span className={`text-lg`}>Gathered Data - {tblName}</span>
+                <span className={`text-lg font-semibold`}>Gathered Data - {tblName}</span>
                 <div className={`flex mt-2 sm:mt-0 space-x-4`}>
                     <PillButton text="View API" icon={FaUpload} onClick={() => { }} />
                     <PillButton text="Add Data" icon={FaPlusCircle} onClick={() => { setAddDataPopupVisible(true) }} />
@@ -320,8 +312,6 @@ function DatasetViewer() {
                         </tr>
                     </thead>
                     <tbody>
-
-                        {/* Example rows */}
                         {retrievedData.map((row, index) => {
                             return (
                                 <tr key={index}>
@@ -333,8 +323,6 @@ function DatasetViewer() {
                                 </tr>
                             )
                         })}
-
-                        {/* Add more rows as needed */}
                     </tbody>
                 </table>
             </div>

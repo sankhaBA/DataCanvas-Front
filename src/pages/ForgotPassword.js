@@ -1,20 +1,13 @@
-// Dependencies
 import React, { useState } from "react";
 import { FaKey } from "react-icons/fa";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//Pages for navigation
 import { Link } from "react-router-dom";
-
-// Components
-import ButtonRectangle from "../components/ButtonRectangle";
-import TextBox from "../components/TextBox";
+import ButtonRectangle from "../components/input/ButtonRectangle";
+import TextBox from "../components/input/TextBox";
 import PopupContainer from "../components/PopupContainer";
 import Spinner from "../components/Spinner";
 import axios from 'axios';
-
-//import Firebase
 import app from "../firebase";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
@@ -43,12 +36,10 @@ function ForgotPassword() {
       }
 
       setLoading(true);
-      console.log(email);
       // const response = await axios.get(`http://localhost:3001/api/user?email=${email}`);
       const response = await axios.get('http://localhost:3001/api/user?email=' + email);
 
       if (response.status === 200) {
-        console.log('Success:', response.data);
         authEmail(email);
 
       }
@@ -79,7 +70,6 @@ function ForgotPassword() {
       const auth = getAuth(app);
       await sendPasswordResetEmail(auth, email);
       openModal();
-      console.log('Password reset email sent successfully.');
       toast.success('Password reset email sent successfully.');
     } catch (error) {
       console.error('Error sending password reset email:', error.message);
@@ -132,7 +122,6 @@ function ForgotPassword() {
                 value={email}
               />
             </div>
-
             <div className="flex flex-col items-center justify-center mt-8">
               <ButtonRectangle
                 text="Send Password Reset Link"
@@ -162,7 +151,7 @@ function ForgotPassword() {
         pauseOnHover
         theme="dark" />
 
-
+      {/* Password reset link sent to email displaying popup */}
       <PopupContainer isOpen={isOpen} onClose={() => { }} Icon={FaKey} title='Forgot Password?' >
         <div className="flex flex-col items-center justify-center mt-2 px-3">
           <label className="text-gray1 text-sm">Check {email} for password reset link</label>

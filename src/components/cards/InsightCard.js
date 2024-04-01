@@ -1,6 +1,6 @@
 import React from "react";
 
-const InsightCard = ({ title, subtitle, icon: Icon, onClick }) => {
+const InsightCard = ({ title, subtitle, icon: Icon, onClick, textSize }) => {
     return (
         <div className={
             `w-full sm:w-[300px] h-[120px] sm:h-[140px] bg-black3 rounded-2xl my-1 sm:my-5 py-2 mx-5
@@ -13,12 +13,17 @@ const InsightCard = ({ title, subtitle, icon: Icon, onClick }) => {
                     <Icon className="text-green text-3xl" />
                 </div>
                 <div className="flex flex-col flex-1 justify-center pb-5">
-                    <div className="text-gray2 text-3xl sm:text-4xl font-bold">{title}</div>
+                    <div className={`text-gray2 ${(textSize == 'lg') ? 'text-3xl sm:text-4xl' : 'text-lg sm:text-xl'} font-bold`}>{title}</div>
                     <div className="text-gray1 text-sm sm:text-lg">{subtitle}</div>
                 </div>
-                
+
             </div>
         </div>
     );
 }
+
+InsightCard.defaultProps = {
+    textSize: 'lg'
+}
+
 export default InsightCard;
