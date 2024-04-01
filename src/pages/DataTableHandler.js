@@ -206,7 +206,7 @@ const DataTableHandler = () => {
     return (
         <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > Data Tables`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
-                <span className={`text-lg`}>Data Tables</span>
+                <span className={`text-lg font-semibold`}>Data Tables</span>
                 {dataTables.length > 0 ? (
                     <div className={``}>
                         <PillButton text="Add Data Table" icon={FaPlusCircle} onClick={() => { setIsAddDatatableOpen(true) }} />

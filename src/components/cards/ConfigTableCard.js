@@ -100,8 +100,7 @@ const ConfigTableCard = ({ columnName, dataType, defaultValue, isAutoIncrement, 
                                 e.stopPropagation();
                                 onDelete()
                             }}>
-                            <FaTrash className="text-sm" />
-                            <span className="text-xs hidden sm:block ">Delete</span>
+                            <FaTrash className="text-lg" />
                         </div>
                     </div>
                 ) : null}

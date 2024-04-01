@@ -895,7 +895,7 @@ function ConfigureTable() {
     return (
         <SidebarLayout active={3} breadcrumb={`${localStorage.getItem('project')} > ${tblName} > Configure`}>
             <div className={`flex flex-col sm:flex-row justify-center items-center text-center sm:justify-between px-7 sm:px-10 mt-5 sm:mt-3`}>
-                <span className={`text-lg`}>Configure Table - {tblName}</span>
+                <span className={`text-lg font-semibold`}>Configure Table - {tblName}</span>
                 <div className={`mt-2 sm:mt-0`}>
                     <PillButton text="Table Settings" icon={FaPlusCircle} onClick={() => { setIsTableSettingsPopupVisible(true) }} />
                 </div>
