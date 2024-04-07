@@ -54,6 +54,9 @@ const AddWidgetContainer = ({
     const [widgetType, setWidgetType] = useState(0);
     const [dataset, setDataset] = useState(0);
 
+    // ---------- State to store configuration of the selected widget after configuring ----------
+    const [configuration, setConfiguration] = useState({});
+
     // ---------- State to store columns of the selected dataset ----------
     const [columns, setColumns] = useState([]);
 
@@ -110,6 +113,8 @@ const AddWidgetContainer = ({
                     closeFunction={closePopup}
                     columns={columns}
                     devices={devices}
+                    configuration={configuration}
+                    setConfiguration={setConfiguration}
                 />
             ) : (visiblePopup == 3 ? (
                 <AddParameterTablePopup

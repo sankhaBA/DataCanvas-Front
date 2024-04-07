@@ -11,6 +11,8 @@ const AddChartWidgetPopup = ({
   closeFunction,
   columns,
   devices,
+  configuration,
+  setConfiguration,
 }) => {
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Area Chart" },
@@ -34,15 +36,20 @@ const AddChartWidgetPopup = ({
 
   // ------------- Function to add series to the series list -------------
   const addSeries = () => {
+    if (seriesName.trim() == "" || yParameter == 0) {
+      toast.warn("Please fill all the fields");
+      return;
+    }
+
     // Check for series with the same name
-    let seriesExists = series.filter((s) => s.name === seriesName);
+    let seriesExists = series.filter((s) => s.name == seriesName.trim());
     if (seriesExists.length > 0) {
       toast.warn("Series with the same name already exists");
       return;
     }
 
     // Add the series to the series list
-    let newSeries = [...series, { name: seriesName, parameter: yParameter, device: device }];
+    let newSeries = [...series, { name: seriesName.trim(), parameter: yParameter, device: device }];
     setSeries(newSeries);
 
     // Reset the input fields
@@ -65,6 +72,31 @@ const AddChartWidgetPopup = ({
         <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
       </div>
     )
+  }
+
+  const saveConfiguration = () => {
+    if (XAxisParameter == -1) {
+      toast.error("Please select X-Axis Parameter");
+      return;
+    }
+
+    if (selectedChartType == 0) {
+      toast.error("Please select Chart Type");
+      return;
+    }
+
+    if (series.length == 0) {
+      toast.error("Please add at least one series");
+      return;
+    }
+
+    let newConfiguration = {
+      XAxisParameter: XAxisParameter,
+      selectedChartType: selectedChartType,
+      series: series,
+    }
+
+    setConfiguration(newConfiguration);
   }
 
   return (
@@ -185,7 +217,7 @@ const AddChartWidgetPopup = ({
         <hr className="border-gray1 border-opacity-30 my-5" />
 
         <div className="flex justify-center mt-4">
-          <PillButton text="Done" onClick={() => { }} icon={FaCheck} />
+          <PillButton text="Done" onClick={() => { saveConfiguration() }} icon={FaCheck} />
         </div>
       </div>
     </PopupContainer>

@@ -59,7 +59,7 @@ function Dashboard() {
                 }
             });
 
-            if (response.status === 200) {
+            if (response.status == 200) {
                 let dataTablesArray = [];
                 response.data.forEach((dataTable) => {
                     let tableDetails = {
@@ -111,7 +111,7 @@ function Dashboard() {
                 }
             );
 
-            if (response.status === 200) {
+            if (response.status == 200) {
                 let devicesArray = [];
                 response.data.forEach((device) => {
                     let deviceDetails = {
