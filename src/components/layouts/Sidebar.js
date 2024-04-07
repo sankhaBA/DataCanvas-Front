@@ -47,7 +47,7 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
           navigate('/overview', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} onClick={() => {
-          toast.info("Dashboard is under development. Please check back later.");
+          navigate('/dashboard', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} onClick={() => {
           navigate('/devices', { state: { project_id: projectID } });

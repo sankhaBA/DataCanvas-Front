@@ -187,12 +187,15 @@ const DataTableHandler = () => {
                     break;
                 case 401:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 403:
                     toast.error('Unauthorized access!');
+                    navigate('/login');
                     break;
                 case 404:
                     toast.error('Project not found!');
+                    navigate('/projects');
                     break;
                 default:
                     toast.error('Something went wrong!');

@@ -5,7 +5,11 @@ import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
 import PillButton from "../input/PillButton"
 
-const AddGaugeWidgetPopup = ({ isOpen, closeFunction }) => {
+const AddGaugeWidgetPopup = ({
+  isOpen,
+  closeFunction,
+  columns
+}) => {
 
   return (
     <PopupContainer

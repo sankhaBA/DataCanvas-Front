@@ -7,7 +7,12 @@ import SelectBox from "../input/SelectBox";
 import 'react-toastify/dist/ReactToastify.css';
 import PillButton from "../input/PillButton";
 
-const AddParameterTablePopup = ({ isOpen, closeFunction }) => {
+const AddParameterTablePopup = ({
+      isOpen,
+      closeFunction,
+      columns,
+      devices,
+}) => {
       const SeriesCard = ({ text, onDelete }) => {
             return (
                   <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
@@ -21,16 +26,15 @@ const AddParameterTablePopup = ({ isOpen, closeFunction }) => {
       return (
             <PopupContainer
                   isOpen={isOpen}
-                  onClose={closeFunction}
+                  onClose={() => { }}
                   Icon={FaTools}
                   title="Configure Widget - Weather Data Ratnapura"
                   closeFunction={closeFunction}
+                  width="w-[950px]"
+                  closeIconVisible={true}>
+                  <div className="flex flex-col text-md text-gray1 mt-6">Select fields to display</div>
 
-                  width="w-[950px]">
-
-                  <div className="flex flex-col text-md text-gray1 my-2">Select fields to display</div>
-
-                  <div class="grid grid-cols-3 gap-3 my-8">
+                  <div className="grid grid-cols-3 gap-3 my-4">
 
                         <div className="w-2/3 flex">
                               <input type="checkbox" className="w-4 h-4" />
@@ -67,7 +71,27 @@ const AddParameterTablePopup = ({ isOpen, closeFunction }) => {
 
                   </div>
 
-                  <div className="flex flex-col text-md text-gray1">Select records only if,</div>
+                  {/* Horizontal Rule */}
+                  <hr className="border-gray1 border-opacity-30 my-5" />
+
+                  <label className="text-gray2 font-normal text-sm mt-2">
+                        Device
+                  </label>
+                  <SelectBox value={''} onChange={() => { }}>
+                        <option value={0}>Select Parameter</option>
+                        {devices.map((device) => {
+                              return (
+                                    <option key={device.device_id} value={device.device_id}>
+                                          {device.device_name}
+                                    </option>
+                              )
+                        })}
+                  </SelectBox>
+
+                  {/* Horizontal Rule */}
+                  <hr className="border-gray1 border-opacity-30 my-5" />
+
+                  {/* <div className="flex flex-col text-md text-gray1">Select records only if,</div>
                   <div className="w-48 flex flex-row justify-between my-2">
                         <div className="text-sm">Field Name</div>
                         <div className="text-sm">Value</div>
@@ -80,7 +104,7 @@ const AddParameterTablePopup = ({ isOpen, closeFunction }) => {
 
                               </SelectBox>
                         </div>
-                        <div class="my-2">=</div>
+                        <div className="my-2">=</div>
                         <div className="w-32">
                               <TextBox placeholder="Value" />
                         </div>
@@ -94,7 +118,7 @@ const AddParameterTablePopup = ({ isOpen, closeFunction }) => {
                   </div>
                   <div className="flex flex-col mt-4">
                         <SeriesCard text={'device = Elpitiya'} onClick={() => { }} />
-                  </div>
+                  </div> */}
                   <div className="flex flex-col items-center justify-center mt-4">
                         <PillButton
                               text="Done"

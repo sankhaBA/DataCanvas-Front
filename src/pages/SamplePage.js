@@ -1,12 +1,12 @@
 import React from 'react';
-import AddParameterTablePopup from '../components/Widgets/AddParameterTablePopup';
+import AddWidgetPopup from '../components/Widgets/AddWidgetPopup';
 import SidebarLayout from '../components/layouts/SidebarLayout';
 
 
 function SamplePage() {
     return (
         <SidebarLayout active={3} breadcrumb={''}>
-            <AddParameterTablePopup isOpen={true} closeFunction={() => { }} />
+            <AddWidgetPopup isOpen={true} closeFunction={() => { }} />
         </SidebarLayout>
     );
 }

@@ -4,7 +4,11 @@ import PopupContainer from "../PopupContainer";
 import SelectBox from "../input/SelectBox";
 import PillButton from "../input/PillButton"
 
-const AddToggleWidgetPopup = ({ isOpen, closeFunction }) => {
+const AddToggleWidgetPopup = ({
+  isOpen,
+  closeFunction,
+  columns
+}) => {
   return (
     <PopupContainer
       title="Configure Widget"
