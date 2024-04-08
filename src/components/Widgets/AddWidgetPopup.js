@@ -6,7 +6,15 @@ import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
 import 'react-toastify/dist/ReactToastify.css';
 
-const AddWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {
+const AddWidgetPopup = ({
+    isOpen,
+    closeFunction,
+    tables = [],
+    widgetName, setWidgetName,
+    widgetType, setWidgetType,
+    dataset, setDataset,
+    nextFunction
+}) => {
     const [widgetTypes, setWidgetTypes] = useState([
         { id: 1, name: 'Chart (Any)' },
         { id: 2, name: 'Table' },
@@ -27,14 +35,14 @@ const AddWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {
                     <label className="text-gray2 font-normal text-sm">Widget Name</label>
                     <TextBox
                         placeholder="Enter widget name"
-                        value={''}
-                        onChange={() => { }}
+                        value={widgetName}
+                        onChange={(e) => { setWidgetName(e.target.value) }}
                         maxLength={50}
                         textAlign={'left'} />
                 </div>
                 <div className="flex flex-col">
                     <label className="text-gray2 font-normal text-sm">Widget Type</label>
-                    <SelectBox value={''} onChange={() => { }}>
+                    <SelectBox value={widgetType} onChange={(e) => { setWidgetType(e.target.value) }}>
                         <option value={0}>Select Widget Type</option>
                         {widgetTypes.map((widgetType) => {
                             return (
@@ -45,11 +53,11 @@ const AddWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {
                 </div>
                 <div className="flex flex-col">
                     <label className="text-gray2 font-normal text-sm">Dataset</label>
-                    <SelectBox value={''} onChange={() => { }}>
+                    <SelectBox value={dataset} onChange={(e) => { setDataset(e.target.value) }}>
                         <option value={0}>Select Dataset</option>
                         {tables.map((table) => {
                             return (
-                                <option key={table.id} value={table.id}>{table.name}</option>
+                                <option key={table.tbl_id} value={table.tbl_id}>{table.tbl_name}</option>
                             )
                         })}
                     </SelectBox>
@@ -59,7 +67,7 @@ const AddWidgetPopup = ({ isOpen, closeFunction, tables = [] }) => {
                 <hr className="border-gray2 border-opacity-10" />
 
                 <div className="flex justify-center mt-4">
-                    <PillButton text="Add Widget" onClick={() => { }} icon={FaPlus} />
+                    <PillButton text="Add Widget" onClick={() => { nextFunction() }} icon={FaPlus} />
                 </div>
 
             </div>
