@@ -59,7 +59,8 @@ const AddGaugeWidgetPopup = ({
         <div className="mt-4">
           <span className="text-sm mt-4">Device</span>
           <SelectBox value={''} onChange={(e) => { }}>
-            <option value={0}>Select Device</option>
+            <option value={-1}>Select Device</option>
+            <option value={0}>All Devices</option>
             {devices.map((device) => {
               return (
                 <option key={device.device_id} value={device.device_id}>

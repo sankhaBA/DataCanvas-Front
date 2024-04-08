@@ -14,7 +14,7 @@ const AddParameterTablePopup = ({
       setConfiguration,
 }) => {
       const [selectedFields, setSelectedFields] = useState([]);
-      const [selectedDevice, setSelectedDevice] = useState(0);
+      const [selectedDevice, setSelectedDevice] = useState(-1);
 
       // ------------- Function to handle field selecting -------------
       const handleFieldSelect = (field) => {
@@ -27,7 +27,7 @@ const AddParameterTablePopup = ({
 
       // ------------- Function to handle configuration saving -------------
       const handleSaveConfiguration = () => {
-            if (selectedFields.length == 0 || selectedDevice == 0) {
+            if (selectedFields.length == 0 || selectedDevice == -1) {
                   toast.error('Please select fields and device');
                   return;
             }
@@ -82,7 +82,8 @@ const AddParameterTablePopup = ({
                         Device
                   </label>
                   <SelectBox value={selectedDevice} onChange={(e) => { setSelectedDevice(e.target.value) }}>
-                        <option value={0}>Select Device</option>
+                        <option value={-1}>Select Device</option>
+                        <option value={0}>All Devices</option>
                         {devices.map((device) => {
                               return (
                                     <option key={device.device_id} value={device.device_id}>
