@@ -125,7 +125,7 @@ const AddChartWidgetPopup = ({
             </label>
             <SelectBox value={XAxisParameter} onChange={(e) => { setXAxisParameter(e.target.value) }}>
               <option value={-1}>Select Parameter</option>
-              <option value={0}>Timestamp</option>
+              <option value={0}>Record Timestamp</option>
               {columns.map((column) => {
                 return (
                   column.clm_name != 'id' ? (

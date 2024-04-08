@@ -33,8 +33,8 @@ const AddParameterTablePopup = ({
             }
 
             setConfiguration({
-                  fields: selectedFields,
-                  device: selectedDevice
+                  columns: selectedFields,
+                  device_id: (selectedDevice == 0) ? null : selectedDevice
             });
       }
 
