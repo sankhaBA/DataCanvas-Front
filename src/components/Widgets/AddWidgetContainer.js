@@ -122,18 +122,26 @@ const AddWidgetContainer = ({
                     closeFunction={closePopup}
                     columns={columns}
                     devices={devices}
+                    configuration={configuration}
+                    setConfiguration={setConfiguration}
                 />
             ) : (visiblePopup == 4 ? (
                 <AddToggleWidgetPopup
                     isOpen={isOpen}
                     closeFunction={closePopup}
                     columns={columns}
+                    devices={devices}
+                    configuration={configuration}
+                    setConfiguration={setConfiguration}
                 />
             ) : (visiblePopup == 5 ? (
                 <AddGaugeWidgetPopup
                     isOpen={isOpen}
                     closeFunction={closePopup}
                     columns={columns}
+                    devices={devices}
+                    configuration={configuration}
+                    setConfiguration={setConfiguration}
                 />
             ) : null)))
             )}
