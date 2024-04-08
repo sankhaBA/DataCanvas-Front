@@ -14,27 +14,6 @@ const AddGaugeWidgetPopup = ({
   configuration,
   setConfiguration
 }) => {
-  // ------------- States for storing the widget configuration -------------
-  const [fieldName, setFieldName] = useState('');
-  const [maxValue, setMaxValue] = useState('');
-  const [gaugeType, setGaugeType] = useState(0);
-  const [device, setDevice] = useState(0);
-
-  // ------------- Function to save the widget configuration -------------
-  const saveConfiguration = () => {
-    if (fieldName == 0 || maxValue == '' || gaugeType == 0 || device == 0) {
-      toast.error('Please fill all the fields');
-      return;
-    }
-
-    setConfiguration({
-      fieldName: fieldName,
-      maxValue: maxValue,
-      gaugeType: gaugeType,
-      device: device
-    });
-  }
-
   return (
     <PopupContainer
       title="Configure Widget - Gauge"
@@ -48,8 +27,8 @@ const AddGaugeWidgetPopup = ({
       <div className="my-3">
         <span className="text-sm">Field Name</span>
         <SelectBox
-          value={fieldName}
-          onChange={(e) => setFieldName(e.target.value)}>
+          value={''}
+          onChange={(e) => { }}>
           <option value={0}>Select Field</option>
           {columns.map((column) => {
             return (
@@ -63,14 +42,14 @@ const AddGaugeWidgetPopup = ({
         <div className="mt-4">
           <span className="text-sm">Maximum Value</span>
           <TextBox type="number" placeholder="Enter maximum value"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)} />
+            value={''}
+            onChange={(e) => { }} />
         </div>
 
         <div className="mt-4">
           <span className="text-sm mt-4">Gauge Type</span>
-          <SelectBox value={gaugeType}
-            onChange={(e) => setGaugeType(e.target.value)}>
+          <SelectBox value={''}
+            onChange={(e) => { }}>
             <option value={0}>Select Gauge Type</option>
             <option value={1}>Radial (Speedometer)</option>
             <option value={2}>Linear (Progress Bar)</option>
@@ -79,7 +58,7 @@ const AddGaugeWidgetPopup = ({
 
         <div className="mt-4">
           <span className="text-sm mt-4">Device</span>
-          <SelectBox value={device} onChange={(e) => setDevice(e.target.value)}>
+          <SelectBox value={''} onChange={(e) => { }}>
             <option value={0}>Select Device</option>
             {devices.map((device) => {
               return (
@@ -94,7 +73,7 @@ const AddGaugeWidgetPopup = ({
         <hr className="border-gray1 border-opacity-30 my-5" />
 
         <div className="flex justify-center mt-4">
-          <PillButton text="Done" onClick={saveConfiguration} icon={FaCheck} />
+          <PillButton text="Done" onClick={() => { }} icon={FaCheck} />
         </div>
       </div>
     </PopupContainer >

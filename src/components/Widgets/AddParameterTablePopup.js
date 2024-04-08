@@ -13,62 +13,66 @@ const AddParameterTablePopup = ({
       configuration,
       setConfiguration,
 }) => {
-      const SeriesCard = ({ text, onDelete }) => {
-            return (
-                  <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
-              border border-gray1 border-opacity-60">
-                        <div className="text-gray2 font-normal text-sm">{text}</div>
-                        <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
-                  </div>
-            )
+      const [selectedFields, setSelectedFields] = useState([]);
+      const [selectedDevice, setSelectedDevice] = useState(0);
+
+      // ------------- Function to handle field selecting -------------
+      const handleFieldSelect = (field) => {
+            if (selectedFields.includes(field)) {
+                  setSelectedFields(selectedFields.filter((f) => f !== field));
+            } else {
+                  setSelectedFields([...selectedFields, field]);
+            }
       }
+
+      // ------------- Function to handle configuration saving -------------
+      const handleSaveConfiguration = () => {
+            if (selectedFields.length == 0 || selectedDevice == 0) {
+                  toast.error('Please select fields and device');
+                  return;
+            }
+
+            setConfiguration({
+                  fields: selectedFields,
+                  device: selectedDevice
+            });
+      }
+
+      // const SeriesCard = ({ text, onDelete }) => {
+      //       return (
+      //             <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
+      //         border border-gray1 border-opacity-60">
+      //                   <div className="text-gray2 font-normal text-sm">{text}</div>
+      //                   <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
+      //             </div>
+      //       )
+      // }
 
       return (
             <PopupContainer
                   isOpen={isOpen}
                   onClose={() => { }}
                   Icon={FaTools}
-                  title="Configure Widget - Weather Data Ratnapura"
+                  title="Configure Widget - Table"
                   closeFunction={closeFunction}
                   width="w-[950px]"
                   closeIconVisible={true}>
-                  <div className="flex flex-col text-md text-gray1 mt-6">Select fields to display</div>
+                  <div className="flex flex-col text-sm text-gray1 mt-6">Select fields to display</div>
 
                   <div className="grid grid-cols-3 gap-3 my-4">
-
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">id</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">station</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">temperature</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">humidity</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">rainfall</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">wind speed</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">device</label>
-                        </div>
-                        <div className="w-2/3 flex">
-                              <input type="checkbox" className="w-4 h-4" />
-                              <label className="text-sm ml-2">timestamp</label>
-                        </div>
-
+                        {columns.map((column) => {
+                              return (
+                                    <div key={column.clm_id} className="w-2/3 flex">
+                                          <input type="checkbox"
+                                                className="w-4 h-4"
+                                                checked={selectedFields.includes(column.clm_id)}
+                                                onChange={(e) => {
+                                                      handleFieldSelect(column.clm_id)
+                                                }} />
+                                          <label className="text-sm ml-2">{column.clm_name}</label>
+                                    </div>
+                              )
+                        })}
                   </div>
 
                   {/* Horizontal Rule */}
@@ -77,8 +81,8 @@ const AddParameterTablePopup = ({
                   <label className="text-gray2 font-normal text-sm mt-2">
                         Device
                   </label>
-                  <SelectBox value={''} onChange={() => { }}>
-                        <option value={0}>Select Parameter</option>
+                  <SelectBox value={selectedDevice} onChange={(e) => { setSelectedDevice(e.target.value) }}>
+                        <option value={0}>Select Device</option>
                         {devices.map((device) => {
                               return (
                                     <option key={device.device_id} value={device.device_id}>
@@ -124,6 +128,7 @@ const AddParameterTablePopup = ({
                               text="Done"
                               isPopup={true}
                               icon={FaCheck}
+                              onClick={handleSaveConfiguration}
                         />
                   </div>
 
