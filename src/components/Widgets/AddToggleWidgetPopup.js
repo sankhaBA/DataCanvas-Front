@@ -1,5 +1,6 @@
 import React, { } from "react";
 import { FaTools, FaCheck } from "react-icons/fa";
+import { toast } from 'react-toastify';
 import PopupContainer from "../PopupContainer";
 import SelectBox from "../input/SelectBox";
 import PillButton from "../input/PillButton"
@@ -7,11 +8,14 @@ import PillButton from "../input/PillButton"
 const AddToggleWidgetPopup = ({
   isOpen,
   closeFunction,
-  columns
+  columns,
+  devices,
+  configuration,
+  setConfiguration,
 }) => {
   return (
     <PopupContainer
-      title="Configure Widget"
+      title="Configure Widget - Toggle Switch"
       Icon={FaTools}
       isOpen={isOpen}
       onClose={() => { }}
@@ -20,18 +24,29 @@ const AddToggleWidgetPopup = ({
     >
       {/* Content of the popup */}
       <div className="my-3">
-        <span className="text-sm">Field Name</span>
+        <div className="mt-4">
+          <span className="text-sm">Field Name</span>
+          <SelectBox value={''} onChange={(e) => { }}>
+            <option value={0}>Select Field</option>
+          </SelectBox>
+        </div>
 
-        <SelectBox label="Select" options={["Temperature", "Option 2"]} />
-        <div style={{ paddingBottom: "15px" }}></div>
-        <div className="flex items-center space-x-2">
-
+        <div className="flex items-center space-x-2 mt-4">
           <input type="checkbox" className="w-4 h-4"
-
+            checked={''}
             onChange={() => { }} />
           <label className="text-gray2 text-sm">Work as an input button</label>
         </div>
-        <div style={{ paddingBottom: "30px" }}></div>
+
+        <div className="mt-4">
+          <span className="text-sm mt-4">Device</span>
+          <SelectBox value={''} onChange={(e) => { }}>
+            <option value={0}>Select Device</option>
+
+          </SelectBox>
+        </div>
+
+        <hr className="border-gray1 border-opacity-30 my-5" />
 
         <div className="flex justify-center space-x-4">
           <PillButton text="Done" onClick={() => { }} icon={FaCheck} />

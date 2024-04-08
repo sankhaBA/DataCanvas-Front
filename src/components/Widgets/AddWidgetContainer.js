@@ -11,7 +11,7 @@ const AddWidgetContainer = ({
     isOpen,
     closeFunction,
     tables = [],
-    loading, setLoading,
+    setLoading,
     devices
 }) => {
     /*

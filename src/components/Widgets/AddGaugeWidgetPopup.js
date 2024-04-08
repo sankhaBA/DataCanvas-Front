@@ -37,7 +37,7 @@ const AddGaugeWidgetPopup = ({
 
   return (
     <PopupContainer
-      title="Configure Widget"
+      title="Configure Widget - Gauge"
       Icon={FaTools}
       isOpen={isOpen}
       closeFunction={closeFunction}

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaTools, FaCheck, FaPlusCircle, FaTrash } from "react-icons/fa";
+import { FaTools, FaCheck, FaTrash } from "react-icons/fa";
+import { toast } from 'react-toastify';
 import PopupContainer from "../PopupContainer";
-import ButtonRectangle from "../input/ButtonRectangle";
-import TextBox from "../input/TextBox";
 import SelectBox from "../input/SelectBox";
-import 'react-toastify/dist/ReactToastify.css';
 import PillButton from "../input/PillButton";
 
 const AddParameterTablePopup = ({
@@ -12,6 +10,8 @@ const AddParameterTablePopup = ({
       closeFunction,
       columns,
       devices,
+      configuration,
+      setConfiguration,
 }) => {
       const SeriesCard = ({ text, onDelete }) => {
             return (

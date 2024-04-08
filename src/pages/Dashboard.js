@@ -159,7 +159,6 @@ function Dashboard() {
                 closeFunction={toggleAddDatatableModal}
                 tables={dataTables}
                 devices={devices}
-                loading={loading}
                 setLoading={setLoading}
             />
 
