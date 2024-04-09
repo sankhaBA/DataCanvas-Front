@@ -63,17 +63,6 @@ const AddChartWidgetPopup = ({
   const [yParameter, setYParameter] = useState(0);
   const [device, setDevice] = useState(0);
 
-  // THis card is used to list down series with the delete button
-  const SeriesCard = ({ text, onDelete }) => {
-    return (
-      <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
-      border border-gray1 border-opacity-60 my-1">
-        <div className="text-gray2 font-normal text-sm">{text}</div>
-        <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
-      </div>
-    )
-  }
-
   const saveConfiguration = () => {
     if (XAxisParameter == -1) {
       toast.error("Please select X-Axis Parameter");
@@ -105,6 +94,17 @@ const AddChartWidgetPopup = ({
     }
 
     setConfiguration(newConfiguration);
+  }
+
+  // THis card is used to list down series with the delete button
+  const SeriesCard = ({ text, onDelete }) => {
+    return (
+      <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
+        border border-gray1 border-opacity-60 my-1">
+        <div className="text-gray2 font-normal text-sm">{text}</div>
+        <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
+      </div>
+    )
   }
 
   return (
