@@ -28,9 +28,9 @@ const AddChartWidgetPopup = ({
   // ------------- States for storing added Series -------------
   const [series, setSeries] = useState([
     // {
-    //   name: "Temperature",
-    //   parameter: 1,
-    //   device: 1,
+    //   series_name: "Temperature",
+    //   clm_id: 1,
+    //   device_id: 1,
     // },
   ])
 
@@ -49,7 +49,7 @@ const AddChartWidgetPopup = ({
     }
 
     // Add the series to the series list
-    let newSeries = [...series, { name: seriesName.trim(), parameter: yParameter, device: device }];
+    let newSeries = [...series, { series_name: seriesName.trim(), clm_id: yParameter, device_id: device }];
     setSeries(newSeries);
 
     // Reset the input fields
@@ -90,10 +90,18 @@ const AddChartWidgetPopup = ({
       return;
     }
 
+    // Following is done because device_id is saved as null in the database if 'All Devices' option is selected
+    let seriesCopy = [...series];
+    seriesCopy.forEach((s) => {
+      if (s.device_id == 0) {
+        s.device_id = null
+      }
+    });
+
     let newConfiguration = {
-      XAxisParameter: XAxisParameter,
-      selectedChartType: selectedChartType,
-      series: series,
+      x_axis: (XAxisParameter == 0 ? null : XAxisParameter), // Following is done because XAxisParameter is saved as null in the database if 'Timestamp' option is selected
+      chart_type: selectedChartType,
+      series: seriesCopy,
     }
 
     setConfiguration(newConfiguration);
@@ -117,7 +125,7 @@ const AddChartWidgetPopup = ({
             </label>
             <SelectBox value={XAxisParameter} onChange={(e) => { setXAxisParameter(e.target.value) }}>
               <option value={-1}>Select Parameter</option>
-              <option value={0}>Timestamp</option>
+              <option value={0}>Record Timestamp</option>
               {columns.map((column) => {
                 return (
                   column.clm_name != 'id' ? (
@@ -202,10 +210,10 @@ const AddChartWidgetPopup = ({
           {series.map((seriesItem) => {
             return (
               <SeriesCard
-                key={seriesItem.name}
-                text={`${seriesItem.name}`}
+                key={seriesItem.series_name}
+                text={`${seriesItem.series_name}`}
                 onDelete={() => {
-                  let newSeries = [...series].filter((s) => s.name !== seriesItem.name);
+                  let newSeries = [...series].filter((s) => s.series_name !== seriesItem.series_name);
                   setSeries(newSeries);
                 }}
               />
