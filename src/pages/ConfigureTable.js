@@ -452,6 +452,7 @@ function ConfigureTable() {
                         "data_type": 1,
                         "default_value": null,
                         "max_length": null,
+                        "tbl_id": int,
                         "constraints": []
                     }
                 */
@@ -473,6 +474,7 @@ function ConfigureTable() {
                     data_type: newColumnDataType,
                     default_value: newColumnDefaultValue,
                     max_length: newColumnMaxLength,
+                    tbl_id: tblID,
                     constraints: constraintsArray
                 }
 

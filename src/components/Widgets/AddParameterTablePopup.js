@@ -38,16 +38,6 @@ const AddParameterTablePopup = ({
             });
       }
 
-      // const SeriesCard = ({ text, onDelete }) => {
-      //       return (
-      //             <div className="flex justify-between items-center bg-black3 p-3 rounded-lg text-gray2
-      //         border border-gray1 border-opacity-60">
-      //                   <div className="text-gray2 font-normal text-sm">{text}</div>
-      //                   <FaTrash className="text-red hover:text-gray2 transition-all duration-300 ease-out cursor-pointer" onClick={onDelete} />
-      //             </div>
-      //       )
-      // }
-
       return (
             <PopupContainer
                   isOpen={isOpen}
