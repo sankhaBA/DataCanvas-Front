@@ -155,6 +155,11 @@ function Dashboard() {
                 <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
             </div>
 
+            <PillButton text="Expand Widget" icon={FaPlusCircle} onClick={() => {
+                navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
+            }} />
+
+            {/* This popup series will open when Add Widget button is clicked */}
             <AddWidgetContainer isOpen={isAddWidgetPopupVisible}
                 closeFunction={toggleAddDatatableModal}
                 tables={dataTables}
@@ -162,8 +167,10 @@ function Dashboard() {
                 setLoading={setLoading}
             />
 
+            {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
 
+            {/* Toast container for notifications */}
             <ToastContainer
                 position="bottom-center"
                 closeFunction={toggleAddDatatableModal}
