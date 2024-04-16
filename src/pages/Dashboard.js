@@ -8,6 +8,10 @@ import PillButton from '../components/input/PillButton';
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import AddWidgetContainer from '../components/Widgets/AddWidgetContainer';
+import DashboardChartCard from '../components/cards/DashboardChartCard';
+import DashboardTableCard from '../components/cards/DashboardTableCard';
+import DashboardToggleCard from '../components/cards/DashboardToggleCard';
+import DashboardGaugeCard from '../components/cards/DashboardGaugeCard';
 
 function Dashboard() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
@@ -35,7 +39,7 @@ function Dashboard() {
     const [widgets, setWidgets] = useState([
         {
             widget_id: 1,
-            widget_name: "Temperature Variation",
+            widget_name: "IT Dept. Temperature Variation",
             dataset: 59,
             widget_type: 1,
             configuration: {
@@ -53,8 +57,8 @@ function Dashboard() {
             }
         },
         {
-            widget_id: 1,
-            widget_name: "IT Department Readings",
+            widget_id: 2,
+            widget_name: "IT Department Readings ",
             dataset: 59,
             widget_type: 2,
             configuration: {
@@ -77,6 +81,45 @@ function Dashboard() {
                 ]
             }
         },
+        {
+            widget_id: 3,
+            widget_name: "IT Department Device Status",
+            dataset: 59,
+            widget_type: 3,
+            configuration: {
+                id: 1,
+                clm_id: 154,
+                write_enabled: true,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 4,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 1,
+                clm_id: 151,
+                max_value: 100,
+                gauge_type: 1,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 5,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 2,
+                clm_id: 151,
+                max_value: 100,
+                gauge_type: 2,
+                device_id: 72
+            }
+        },
+
     ]);
 
     useEffect(() => {
@@ -203,10 +246,6 @@ function Dashboard() {
                 <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
             </div>
 
-            <PillButton text="Expand Widget" icon={FaPlusCircle} onClick={() => {
-                navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
-            }} />
-
             {/* This popup series will open when Add Widget button is clicked */}
             <AddWidgetContainer isOpen={isAddWidgetPopupVisible}
                 closeFunction={toggleAddDatatableModal}
@@ -214,6 +253,22 @@ function Dashboard() {
                 devices={devices}
                 setLoading={setLoading}
             />
+
+            <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
+                {widgets.map((widget, index) => {
+                    return (
+                        (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
+                            navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
+                        }} /> : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
+                            navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                        }} /> : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
+
+                        }} /> : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
+
+                        }} /> : null
+                    )
+                })}
+            </div>
 
             {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
