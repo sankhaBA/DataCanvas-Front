@@ -31,6 +31,54 @@ function Dashboard() {
     const [isAddWidgetPopupVisible, setIsAddWidgetPopupVisible] = useState(false);
     const toggleAddDatatableModal = () => setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
 
+    // ---------- State to store widget details ----------
+    const [widgets, setWidgets] = useState([
+        {
+            widget_id: 1,
+            widget_name: "Temperature Variation",
+            dataset: 59,
+            widget_type: 1,
+            configuration: {
+                chart_id: 1,
+                x_axis: 0,
+                chart_type: 1,
+                series: [
+                    {
+                        series_id: 1,
+                        series_name: "Temperature",
+                        clm_id: 146,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+        {
+            widget_id: 1,
+            widget_name: "IT Department Readings",
+            dataset: 59,
+            widget_type: 2,
+            configuration: {
+                columns: [
+                    {
+                        id: 1,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 2,
+                        clm_id: 147,
+                        device_id: 72
+                    },
+                    {
+                        id: 3,
+                        clm_id: 151,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+    ]);
+
     useEffect(() => {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {

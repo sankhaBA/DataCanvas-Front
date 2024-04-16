@@ -317,7 +317,7 @@ function DatasetViewer() {
                                 <tr key={index}>
                                     {columns.map((column, index) => {
                                         return (
-                                            <td key={column.clm_id} className="border border-gray1 border-opacity-40 text-white text-xs text-center px-2 py-2">{row[column.clm_name]}</td>
+                                            <td key={column.clm_id} className="border border-gray1 border-opacity-40 text-white text-xs text-center px-2 py-2">{row[column.clm_name].toString()}</td>
                                         )
                                     })}
                                 </tr>
