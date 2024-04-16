@@ -14,6 +14,29 @@ const AddGaugeWidgetPopup = ({
   configuration,
   setConfiguration
 }) => {
+  const [selectedColumn,setSelectedColumn] = useState(0);
+  const [maxValue,setMaxValue] = useState(0);
+  const [gaugeType,setGaugeType] = useState(0);
+  const [selectedDevice,setSelectedDevice] = useState(-1);
+
+  const saveConfiguration = () =>{
+
+    if(selectedColumn==0 || maxValue==0 || devices==-1){
+      toast.error("Please fill all the fields");
+      return;
+    }
+    
+
+    setConfiguration({
+      device_id: (selectedDevice == 0) ? null : selectedDevice,
+      selectedColumn: selectedColumn,
+      maxValue: maxValue,
+      gaugeType: gaugeType
+    })
+
+    closeFunction;
+  }
+
   return (
     <PopupContainer
       title="Configure Widget - Gauge"
@@ -27,8 +50,8 @@ const AddGaugeWidgetPopup = ({
       <div className="my-3">
         <span className="text-sm">Field Name</span>
         <SelectBox
-          value={''}
-          onChange={(e) => { }}>
+          value={selectedColumn}
+          onChange={(e) => {setSelectedColumn(e.target.value) }}>
           <option value={0}>Select Field</option>
           {columns.map((column) => {
             return (
@@ -42,8 +65,8 @@ const AddGaugeWidgetPopup = ({
         <div className="mt-4">
           <span className="text-sm">Maximum Value</span>
           <TextBox type="number" placeholder="Enter maximum value"
-            value={''}
-            onChange={(e) => { }} />
+            value={maxValue}
+            onChange={(e) => {setMaxValue(e.target.value) }} />
         </div>
 
         <div className="mt-4">
@@ -58,7 +81,7 @@ const AddGaugeWidgetPopup = ({
 
         <div className="mt-4">
           <span className="text-sm mt-4">Device</span>
-          <SelectBox value={''} onChange={(e) => { }}>
+          <SelectBox value={selectedDevice} onChange={(e) => {setSelectedDevice(e.target.value) }}>
             <option value={-1}>Select Device</option>
             <option value={0}>All Devices</option>
             {devices.map((device) => {
@@ -74,7 +97,7 @@ const AddGaugeWidgetPopup = ({
         <hr className="border-gray1 border-opacity-30 my-5" />
 
         <div className="flex justify-center mt-4">
-          <PillButton text="Done" onClick={() => { }} icon={FaCheck} />
+          <PillButton text="Done" onClick={() => {saveConfiguration }} icon={FaCheck} />
         </div>
       </div>
     </PopupContainer >
