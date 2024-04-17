@@ -15,15 +15,21 @@ const AddToggleWidgetPopup = ({
 }) => {
   const [selectedColumn,setSelectedColumn] = useState(0);
   const [selectedDevice,setSelectedDevice] = useState(-1);
+  const [writeEnabled,setWriteEnabled] = useState(false);
   const saveConfiguration = () =>{
     if(selectedColumn==0 || devices==-1){
       toast.error("Please fill all the fields");
       return;
     }
+    if(selectedDevice==0){
+      selectedDevice=null;
+    }
+
     
     setConfiguration({
-      device_id: (selectedDevice == 0) ? null : selectedDevice,
-      selectedColumn: selectedColumn,
+      clm_id: selectedColumn,
+      write_enabled: writeEnabled,
+      device_id: selectedDevice  
     })
 
     closeFunction;
@@ -50,7 +56,7 @@ const AddToggleWidgetPopup = ({
         <div className="flex items-center space-x-2 mt-4">
           <input type="checkbox" className="w-4 h-4"
             checked={''}
-            onChange={(e) => { }} />
+            onChange={(e) => { setWriteEnabled(e.target.value)}} />
           <label className="text-gray2 text-sm">Work as an input button</label>
         </div>
 

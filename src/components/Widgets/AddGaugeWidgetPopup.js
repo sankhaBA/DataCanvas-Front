@@ -25,13 +25,15 @@ const AddGaugeWidgetPopup = ({
       toast.error("Please fill all the fields");
       return;
     }
-    
+    if(selectedDevice==0){
+      selectedDevice=null;
+    }
 
     setConfiguration({
-      device_id: (selectedDevice == 0) ? null : selectedDevice,
-      selectedColumn: selectedColumn,
-      maxValue: maxValue,
-      gaugeType: gaugeType
+      clm_id: selectedColumn,
+      max_value: maxValue,
+      gauge_type: gaugeType,
+      device_id: selectedDevice
     })
 
     closeFunction;

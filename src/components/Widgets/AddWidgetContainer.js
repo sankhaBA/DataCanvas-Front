@@ -12,7 +12,8 @@ const AddWidgetContainer = ({
     closeFunction,
     tables = [],
     setLoading,
-    devices
+    devices,
+    projects
 }) => {
     /*
         * State to manage the visibility of various popups
@@ -92,6 +93,40 @@ const AddWidgetContainer = ({
         });
     }
 
+    const addWidget = async() => {
+        console.log('Adding widget');
+        if (widgetType == 0 || dataset == 0 || widgetName.trim == '') {
+            toast.error('Please fill all the fields');
+            return;
+        }
+        setLoading(true);
+        try{
+            let response= await axios.post('http://localhost:3001/api/widget', {
+                widget_name: widgetName,
+                widget_type: widgetType,
+                dataset: dataset,
+                configuration: configuration
+            })
+            if(response.status==200){
+                toast.success('Widget added successfully');
+                closePopup();
+            }
+        }catch(err){
+            setLoading(false);
+            console.log(err);
+            switch(err.response.status){
+                case 401 || 403:
+                    toast.error('Unauthorized access! Please login again');
+                    break;
+                default:
+                    toast.error('Error in adding widget');
+                    break;
+            }
+        }
+            
+        
+    }
+
     return (
         <>
             {visiblePopup == 1 ? (
@@ -106,6 +141,7 @@ const AddWidgetContainer = ({
                     dataset={dataset}
                     setDataset={setDataset}
                     nextFunction={togglePopup}
+                    projects={projects}
                 />
             ) : (visiblePopup == 2 ? (
                 <AddChartWidgetPopup
