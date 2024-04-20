@@ -37,87 +37,7 @@ function Dashboard() {
 
     // ---------- State to store widget details ----------
     const [widgets, setWidgets] = useState([
-        {
-            widget_id: 1,
-            widget_name: "IT Dept. Temperature Variation",
-            dataset: 59,
-            DataTable: {
-                tbl_name: 'tbl_data'
-            },
-            widget_type: 1,
-            project_id: 53,
-            configuration: {
-                id: 1,
-                widget_id: 1,
-                x_axis: 0,
-                chart_type: 1,
-                ChartSeries: [
-                    {
-                        id: 1,
-                        chart_id: 1,
-                        series_name: "Temperature",
-                        clm_id: 146,
-                        device_id: 72
-                    }
-                ]
-            }
-        },
-        {
-            widget_id: 2,
-            widget_name: "IT Department Readings ",
-            dataset: 59,
-            widget_type: 2,
-            configuration: {
-                columns: [
-                    {
-                        id: 1,
-                        widget_id: 2,
-                        clm_id: 146,
-                        device_id: 72
-                    },
-                    {
-                        id: 1,
-                        widget_id: 2,
-                        clm_id: 146,
-                        device_id: 72
-                    },
-                    {
-                        id: 1,
-                        widget_id: 2,
-                        clm_id: 146,
-                        device_id: 72
-                    },
-                ]
-            }
-        },
-        {
-            widget_id: 3,
-            widget_name: "IT Department Device Status",
-            dataset: 59,
-            widget_type: 3,
-            configuration: {
-                id: 1,
-                widget_id: 3,
-                clm_id: 154,
-                write_enabled: true,
-                device_id: 72
-            }
-        },
-        {
-            widget_id: 4,
-            widget_name: "IT Dept. CO2 Index",
-            dataset: 59,
-            widget_type: 4,
-            configuration: {
-                id: 1,
-                widget_id: 3,
-                clm_id: 151,
-                min_value: 0,
-                max_value: 100,
-                gauge_type: 1,
-                device_id: 72
-            }
-        },
+        // Sample array is at bottom of this file
     ]);
 
     useEffect(() => {
@@ -136,6 +56,12 @@ function Dashboard() {
             loadDevices();
         }
     }, [projectID]);
+
+    useEffect(() => {
+        if (projectID != -1 && dataTables.length > 0 && devices.length > 0) {
+            loadWidgets();
+        }
+    }, [dataTables, devices]);
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {
@@ -251,19 +177,7 @@ function Dashboard() {
             );
 
             if (response.status == 200) {
-                let widgetsArray = [];
-                response.data.forEach((widget) => {
-                    let widgetDetails = {
-                        widget_id: widget.widget_id,
-                        widget_name: widget.widget_name,
-                        dataset: widget.dataset,
-                        widget_type: widget.widget_type,
-                        configuration: widget.configuration,
-                    };
-                    widgetsArray.push(widgetDetails);
-                });
-
-                setWidgets(widgetsArray);
+                setWidgets(response.data);
                 setLoading(false);
             }
         } catch (err) {
@@ -343,3 +257,91 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+/*
+    * Sample array of widgets
+    [
+        {
+            widget_id: 1,
+            widget_name: "IT Dept. Temperature Variation",
+            dataset: 59,
+            DataTable: {
+                tbl_name: 'tbl_data'
+            },
+            widget_type: 1,
+            project_id: 53,
+            configuration: {
+                id: 1,
+                widget_id: 1,
+                x_axis: 0,
+                chart_type: 1,
+                ChartSeries: [
+                    {
+                        id: 1,
+                        chart_id: 1,
+                        series_name: "Temperature",
+                        clm_id: 146,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+        {
+            widget_id: 2,
+            widget_name: "IT Department Readings ",
+            dataset: 59,
+            widget_type: 2,
+            configuration: {
+                columns: [
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                ]
+            }
+        },
+        {
+            widget_id: 3,
+            widget_name: "IT Department Device Status",
+            dataset: 59,
+            widget_type: 3,
+            configuration: {
+                id: 1,
+                widget_id: 3,
+                clm_id: 154,
+                write_enabled: true,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 4,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 1,
+                widget_id: 3,
+                clm_id: 151,
+                min_value: 0,
+                max_value: 100,
+                gauge_type: 1,
+                device_id: 72
+            }
+        },
+    ]
+*/
