@@ -4,7 +4,11 @@ import { LuGauge } from "react-icons/lu";
 import GaugeComponent from 'react-gauge-component'
 import axios from "axios";
 
-const DashboardGaugeCard = ({ onClick = () => { }, widget }) => {
+const DashboardGaugeCard = ({
+    onClick = () => { },
+    widget,
+    deleteWidget = () => { }
+}) => {
     const [widgetValue, setWidgetValue] = useState(100);
     const [widgetPercentage, setWidgetPercentage] = useState(0);
 
@@ -96,7 +100,8 @@ const DashboardGaugeCard = ({ onClick = () => { }, widget }) => {
                 <div className="flex justify-end w-full px-4">
                     <div className="flex">
                         <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300" />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300" />
+                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+                            onClick={() => { deleteWidget(widget.id) }} />
                     </div>
                 </div>
             </div >

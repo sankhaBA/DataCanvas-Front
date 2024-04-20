@@ -203,6 +203,24 @@ function Dashboard() {
         }
     }
 
+    /*
+        * Delete widget function
+        * API Endpoint : http://localhost:3001/api/widget
+        * Method : DELETE
+        * Request Body : {
+        *   widget_id: <widget_id>
+        * }
+        * Headers : {
+        *  authorization: <auth-token>
+        * }
+        * @param {number} widget_id - The widget_id of the widget to be deleted
+        * @returns {void}
+        * After deleting the widget, the widgets state should be updated to remove the deleted widget
+    */
+    const deleteWidget = async (widget_id) => {
+
+    }
+
     return (
         <SidebarLayout active={1}
             breadcrumb={`${localStorage.getItem('project')} > Dashboard`}>
@@ -218,6 +236,7 @@ function Dashboard() {
                 devices={devices}
                 setLoading={setLoading}
                 projectID={projectID}
+                loadWidgets={loadWidgets}
             />
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
@@ -225,13 +244,19 @@ function Dashboard() {
                     return (
                         (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
                             navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
-                        }} /> : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
-                            navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
-                        }} /> : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
-
-                        }} /> : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
-
-                        }} /> : null
+                        }}
+                            deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                            : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
+                                navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                            }}
+                                deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
+                                }}
+                                    deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                    : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
+                                    }}
+                                        deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                        : null
                     )
                 })}
             </div>

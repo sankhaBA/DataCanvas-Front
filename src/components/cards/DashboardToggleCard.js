@@ -4,7 +4,11 @@ import { IoIosSwitch } from "react-icons/io";
 import Switch from "react-switch";
 import axios from "axios";
 
-const DashboardToggleCard = ({ onClick = () => { }, widget }) => {
+const DashboardToggleCard = ({
+    onClick = () => { },
+    widget,
+    deleteWidget = () => { }
+}) => {
     const [toggleState, setToggleState] = useState(false);
 
     useEffect(() => {
@@ -67,7 +71,8 @@ const DashboardToggleCard = ({ onClick = () => { }, widget }) => {
                 <div className="flex justify-end w-full px-4">
                     <div className="flex">
                         <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300" />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300" />
+                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+                            onClick={() => { deleteWidget(widget.id) }} />
                     </div>
                 </div>
             </div>

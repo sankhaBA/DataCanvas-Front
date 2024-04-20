@@ -2,7 +2,11 @@ import React from "react";
 import { FaTrash, FaPencilAlt, FaExpand, FaTable } from "react-icons/fa";
 import PillButton from "../input/PillButton";
 
-const DashboardTableCard = ({ onClick = () => { }, widget }) => {
+const DashboardTableCard = ({
+    onClick = () => { },
+    widget,
+    deleteWidget = () => { }
+}) => {
     return (
         <div
             className={
@@ -28,7 +32,8 @@ const DashboardTableCard = ({ onClick = () => { }, widget }) => {
                 <div className="flex justify-end w-full px-4">
                     <div className="flex">
                         <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300" />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300" />
+                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+                            onClick={() => { deleteWidget(widget.id) }} />
                     </div>
                 </div>
             </div>

@@ -3,7 +3,11 @@ import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { BsBarChartFill } from "react-icons/bs";
 import PillButton from "../input/PillButton";
 
-const DashboardChartCard = ({ onClick = () => { }, widget }) => {
+const DashboardChartCard = ({
+    onClick = () => { },
+    widget,
+    deleteWidget = () => { }
+}) => {
     return (
         <div
             className={
@@ -29,7 +33,8 @@ const DashboardChartCard = ({ onClick = () => { }, widget }) => {
                 <div className="flex justify-end w-full px-4">
                     <div className="flex">
                         <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300" />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300" />
+                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+                            onClick={() => { deleteWidget(widget.id) }} />
                     </div>
                 </div>
             </div>

@@ -13,7 +13,8 @@ const AddWidgetContainer = ({
     tables = [],
     setLoading,
     devices,
-    projectID
+    projectID,
+    loadWidgets
 }) => {
     /*
         * State to manage the visibility of various popups
@@ -123,6 +124,7 @@ const AddWidgetContainer = ({
 
             if (response.status == 200) {
                 toast.success('Widget added successfully');
+                loadWidgets();
                 closePopup();
             }
 
