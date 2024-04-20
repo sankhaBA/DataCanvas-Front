@@ -16,7 +16,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
         "configuration": {
             "x_axis": NUMBER,
             "chart_type": NUMBER,
-            "series": [
+            "ChartSeries": [
                 {
                     "series_name": STRING,
                     "clm_id": NUMBER,

@@ -46,7 +46,7 @@ function Dashboard() {
                 chart_id: 1,
                 x_axis: 0,
                 chart_type: 1,
-                series: [
+                ChartSeries: [
                     {
                         series_id: 1,
                         series_name: "Temperature",
