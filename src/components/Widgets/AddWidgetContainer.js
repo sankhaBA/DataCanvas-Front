@@ -13,7 +13,7 @@ const AddWidgetContainer = ({
     tables = [],
     setLoading,
     devices,
-    projects
+    projectID
 }) => {
     /*
         * State to manage the visibility of various popups
@@ -95,7 +95,7 @@ const AddWidgetContainer = ({
 
     const addWidget = async() => {
         console.log('Adding widget');
-        if (widgetType == 0 || dataset == 0 || widgetName.trim == '') {
+        if (widgetType == 0 || dataset == 0 || widgetName.trim() == '') {
             toast.error('Please fill all the fields');
             return;
         }
@@ -105,6 +105,7 @@ const AddWidgetContainer = ({
                 widget_name: widgetName,
                 widget_type: widgetType,
                 dataset: dataset,
+                project_id: projectID,
                 configuration: configuration
             })
             if(response.status==200){
@@ -141,7 +142,6 @@ const AddWidgetContainer = ({
                     dataset={dataset}
                     setDataset={setDataset}
                     nextFunction={togglePopup}
-                    projects={projects}
                 />
             ) : (visiblePopup == 2 ? (
                 <AddChartWidgetPopup
