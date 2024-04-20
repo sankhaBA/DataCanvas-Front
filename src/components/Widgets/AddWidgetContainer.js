@@ -12,7 +12,8 @@ const AddWidgetContainer = ({
     closeFunction,
     tables = [],
     setLoading,
-    devices
+    devices,
+    projectID
 }) => {
     /*
         * State to manage the visibility of various popups
@@ -90,6 +91,41 @@ const AddWidgetContainer = ({
                     reject(false);
                 });
         });
+    }
+
+    const addWidget = async() => {
+        console.log('Adding widget');
+        if (widgetType == 0 || dataset == 0 || widgetName.trim() == '') {
+            toast.error('Please fill all the fields');
+            return;
+        }
+        setLoading(true);
+        try{
+            let response= await axios.post('http://localhost:3001/api/widget', {
+                widget_name: widgetName,
+                widget_type: widgetType,
+                dataset: dataset,
+                project_id: projectID,
+                configuration: configuration
+            })
+            if(response.status==200){
+                toast.success('Widget added successfully');
+                closePopup();
+            }
+        }catch(err){
+            setLoading(false);
+            console.log(err);
+            switch(err.response.status){
+                case 401 || 403:
+                    toast.error('Unauthorized access! Please login again');
+                    break;
+                default:
+                    toast.error('Error in adding widget');
+                    break;
+            }
+        }
+            
+        
     }
 
     return (
