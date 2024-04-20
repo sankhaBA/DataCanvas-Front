@@ -37,7 +37,7 @@ function ProjectSettings() {
             setIsLoginPopupVisible(false);
             if (actionType == 1) {
                 toast.success('Login successful, Deleting data');
-                //handleDataDelete(projectID); -> TODO: THis function is not implemented yet
+                handleDeleteData(projectID);
 
             } else if (actionType == 2) {
                 toast.success('Login successful, Deleting tables');
@@ -246,6 +246,57 @@ function ProjectSettings() {
         }
     };
 
+    //--API call for deleting all data
+    /*
+        * API endpoint : http://localhost:3001/api/data/tbl/truncateall
+        * Method : POST
+        * Request body : { project_id: <project_id> }
+        * Response : 
+        * 200 : { message: "All tables truncated successfully" }
+        * 400 : { message: "Bad request" }
+        * 401 : { message: "Unauthorized access" }
+        * 403 : { message: "Token not provided" }
+        * 404 : { message: "Tables not found" }
+        * 500 : { error: "Failed to truncate all tables" }
+    */
+    const handleDeleteData = async (project_id) => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`http://localhost:3001/api/data/tbl/truncateall`, { project_id }, {
+                headers: {
+                    authorization: localStorage.getItem("auth-token"),
+                }
+            });
+
+            if (response.status == 200) {
+                toast.success("All data deleted!");
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    navigate("/projects");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    navigate("/login");
+                    break;
+                case 403:
+                    toast.error("Token not provided!");
+                    navigate("/login");
+                    break;
+                case 404:
+                    toast.warning("Data not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+        }
+        finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <SidebarLayout active={4} breadcrumb={`${localStorage.getItem('project')} > Project Settings`}>

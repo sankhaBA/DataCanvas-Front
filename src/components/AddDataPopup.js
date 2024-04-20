@@ -184,11 +184,20 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
         return (
             <div className="my-3">
                 <span className="text-sm">{caption}</span>
-                <TextBox
-                    type={((dataType == 1 || dataType == 2) ? 'number' : 'text')}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => onChange(caption, e.target.value)} />
+                {dataType == 4 ? (
+                    <SelectBox value={value}
+                        onChange={(e) => onChange(caption, e.target.value)}>
+                        <option value={0}>Select Value</option>
+                        <option value="true">TRUE</option>
+                        <option value="false">FALSE</option>
+                    </SelectBox>
+                ) : (
+                    <TextBox
+                        type={((dataType == 1 || dataType == 2) ? 'number' : 'text')}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={(e) => onChange(caption, e.target.value)} />
+                )}
             </div>
         )
     }

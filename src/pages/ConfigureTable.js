@@ -341,6 +341,12 @@ function ConfigureTable() {
                     toast.warning('Maximum length should be more than 0 for Text data type');
                     return false;
                 }
+            } else if (newColumnDataType == 4) {
+                console.log(newColumnDefaultValue.toLowerCase());
+                if (newColumnDefaultValue.toLowerCase() != 'true' && newColumnDefaultValue.toLowerCase() != 'false') {
+                    toast.warning('Default value should be either true or false for Boolean data type');
+                    return false;
+                }
             } else {
                 if (isNaN(newColumnDefaultValue)) {
                     toast.warning('Default value should be a number for numerical data types');
@@ -395,7 +401,7 @@ function ConfigureTable() {
                     clm_name: newColumnName.trim(),
                     data_type: newColumnDataType,
                     tbl_id: tblID,
-                    default_value: newColumnDefaultValue,
+                    default_value: newColumnDefaultValue.toLowerCase(),
                     max_length: newColumnMaxLength,
                     constraints: constraintsArray
                 }
