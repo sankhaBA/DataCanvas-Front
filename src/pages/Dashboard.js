@@ -8,6 +8,10 @@ import PillButton from '../components/input/PillButton';
 import Spinner from "../components/Spinner";
 import axios from "axios";
 import AddWidgetContainer from '../components/Widgets/AddWidgetContainer';
+import DashboardChartCard from '../components/cards/DashboardChartCard';
+import DashboardTableCard from '../components/cards/DashboardTableCard';
+import DashboardToggleCard from '../components/cards/DashboardToggleCard';
+import DashboardGaugeCard from '../components/cards/DashboardGaugeCard';
 
 function Dashboard() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
@@ -30,6 +34,93 @@ function Dashboard() {
     // ---------- states and functions for Add Widget Popup visibility ----------
     const [isAddWidgetPopupVisible, setIsAddWidgetPopupVisible] = useState(false);
     const toggleAddDatatableModal = () => setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+
+    // ---------- State to store widget details ----------
+    const [widgets, setWidgets] = useState([
+        {
+            widget_id: 1,
+            widget_name: "IT Dept. Temperature Variation",
+            dataset: 59,
+            widget_type: 1,
+            configuration: {
+                chart_id: 1,
+                x_axis: 0,
+                chart_type: 1,
+                series: [
+                    {
+                        series_id: 1,
+                        series_name: "Temperature",
+                        clm_id: 146,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+        {
+            widget_id: 2,
+            widget_name: "IT Department Readings ",
+            dataset: 59,
+            widget_type: 2,
+            configuration: {
+                columns: [
+                    {
+                        id: 1,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 2,
+                        clm_id: 147,
+                        device_id: 72
+                    },
+                    {
+                        id: 3,
+                        clm_id: 151,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+        {
+            widget_id: 3,
+            widget_name: "IT Department Device Status",
+            dataset: 59,
+            widget_type: 3,
+            configuration: {
+                id: 1,
+                clm_id: 154,
+                write_enabled: true,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 4,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 1,
+                clm_id: 151,
+                max_value: 100,
+                gauge_type: 1,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 5,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 2,
+                clm_id: 151,
+                max_value: 100,
+                gauge_type: 2,
+                device_id: 72
+            }
+        },
+
+    ]);
 
     useEffect(() => {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
@@ -155,6 +246,7 @@ function Dashboard() {
                 <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
             </div>
 
+            {/* This popup series will open when Add Widget button is clicked */}
             <AddWidgetContainer isOpen={isAddWidgetPopupVisible}
                 closeFunction={toggleAddDatatableModal}
                 tables={dataTables}
@@ -162,8 +254,26 @@ function Dashboard() {
                 setLoading={setLoading}
             />
 
+            <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
+                {widgets.map((widget, index) => {
+                    return (
+                        (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
+                            navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
+                        }} /> : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
+                            navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                        }} /> : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
+
+                        }} /> : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
+
+                        }} /> : null
+                    )
+                })}
+            </div>
+
+            {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
 
+            {/* Toast container for notifications */}
             <ToastContainer
                 position="bottom-center"
                 closeFunction={toggleAddDatatableModal}
