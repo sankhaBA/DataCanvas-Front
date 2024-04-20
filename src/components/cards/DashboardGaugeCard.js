@@ -1,11 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { LuGauge } from "react-icons/lu";
 import GaugeComponent from 'react-gauge-component'
+import axios from "axios";
 
 const DashboardGaugeCard = ({ onClick = () => { }, widget }) => {
-    const [widgetValue, setWidgetValue] = useState(15);
-    const [widgetPercentage, setWidgetPercentage] = useState(60);
+    const [widgetValue, setWidgetValue] = useState(100);
+    const [widgetPercentage, setWidgetPercentage] = useState(0);
+
+    useEffect(() => {
+        calculatePercentage();
+    }, [widgetValue]);
+
+    /*
+        * Function to load the data for the gauge widget
+        * @param {void}
+        * @returns {void}
+        * Use the relevant API and load data for this gauge widget
+        * Set the value to the widgetValue state
+        * Do not need to set the widgetPercentage as it is calculated based on the widgetValue by the calculatePercentage function
+    */
+    const loadGaugeData = async () => {
+
+    }
 
     /*
         * Function to calculate the percentage of the value
@@ -14,10 +31,25 @@ const DashboardGaugeCard = ({ onClick = () => { }, widget }) => {
         * If the value is less than min_value, the percentage is 0
         * If the value is more than max_value, the percentage is 100
         * Otherwise, the percentage is calculated using the formula:
-        * (value - min_value) / (max_value - min_value) * 100
+        * (value - min_value) / (max_value - min_value) * 100 and round it off to 2 decimal places if it have decimals
     */
     const calculatePercentage = (value) => {
+        const min_value = widget.configuration.min_value;
+        const max_value = widget.configuration.max_value;
 
+        let percentage = 0;
+        if (max_value - min_value == 0) {
+            percentage = 0;
+        } else if (widgetValue < min_value) {
+            percentage = 0;
+        } else if (widgetValue > max_value) {
+            percentage = 100;
+        } else {
+            percentage = Math.round(((widgetValue - min_value) / (max_value - min_value)) * 100 * 100) / 100;
+        }
+
+        console.log("Percentage: ", min_value, max_value, percentage);
+        setWidgetPercentage(percentage);
     }
 
     return (

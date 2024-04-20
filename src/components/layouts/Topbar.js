@@ -9,6 +9,14 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 
     const [searchBarShown, setSearchBarShown] = useState(false);
 
+    const handleLogout = () => {
+        localStorage.removeItem('auth-token');
+        localStorage.removeItem('uid');
+        localStorage.removeItem('email');
+        localStorage.removeItem('project');
+        navigate('/login');
+    }
+
     return (
         <>
             {searchBarShown ? (
@@ -40,7 +48,8 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                         ) : null}
 
                         <FaRegQuestionCircle className="text-2xl text-green mr-4 cursor-pointer" />
-                        <VscSignOut className="text-2xl text-green mr-4  cursor-pointer" />
+                        <VscSignOut className="text-2xl text-green mr-4  cursor-pointer"
+                            onClick={() => { handleLogout() }} />
                         {!isSidebarOpen && sideBarButtonDisplayed ? (
                             <FaBars className="text-2xl text-green mr-4 cursor-pointer visible lg:hidden" onClick={toggleSidebar} />
                         ) : null}

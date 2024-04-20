@@ -10,7 +10,6 @@ const DashboardTableCard = ({ onClick = () => { }, widget }) => {
         border border-gray1 border-opacity-60 relative overflow-hidden
         transition duration-300 hover:border-green cursor-pointer`
             }
-            onClick={onClick}
         >
             <div className="w-full h-full pt-4 pl-4 pb-4 flex flex-col justify-between">
                 <div className="flex items-center justify-start">

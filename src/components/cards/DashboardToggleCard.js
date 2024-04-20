@@ -1,12 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
 import Switch from "react-switch";
+import axios from "axios";
 
 const DashboardToggleCard = ({ onClick = () => { }, widget }) => {
     const [toggleState, setToggleState] = useState(false);
 
-    console.log(widget.configuration.write_enabled);
+    useEffect(() => {
+        loadToggleData();
+    }, []);
+
+    /*
+        * Function to load the data for the toggle widget
+        * @param {void}
+        * @returns {void}
+        * Use the relevant API and load data for this toggle widget
+        * Set the true/false value to the toggleState state
+    */
+    const loadToggleData = async () => {
+
+    }
+
+    /*
+        * Function to update the toggle status
+        * @param {boolean} status - The status of the toggle
+        * @returns {void}
+        * Use the relevant API and update the toggle status
+    */
+    const updateToggleState = async (status) => {
+
+    }
+
+    const handleToggleChange = async (status) => {
+        setToggleState(status);
+        updateToggleState(status);
+    }
+
     return (
         <div
             className={
@@ -24,7 +54,7 @@ const DashboardToggleCard = ({ onClick = () => { }, widget }) => {
                 </div>
 
                 <div className="w-full flex flex-col justify-center items-center">
-                    <Switch onChange={(e) => setToggleState(!toggleState)}
+                    <Switch onChange={(e) => handleToggleChange(!toggleState)}
                         checked={toggleState}
                         width={80}
                         height={40}
