@@ -183,7 +183,7 @@ const AddChartWidgetPopup = ({
               <option value={0}>Select Parameter</option>
               {columns.map((column) => {
                 return (
-                  column.clm_name != 'id' ? (
+                  column.clm_name != 'id' && column.clm_name != 'device' && (column.data_type == 1 || column.data_type == 2) ? (
                     <option key={column.clm_id} value={column.clm_id}>
                       {column.clm_name}
                     </option>

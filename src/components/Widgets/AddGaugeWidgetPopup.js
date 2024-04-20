@@ -61,9 +61,11 @@ const AddGaugeWidgetPopup = ({
           <option value={0}>Select Field</option>
           {columns.map((column) => {
             return (
-              <option key={column.clm_id} value={column.clm_id}>
-                {column.clm_name}
-              </option>
+              (column.data_type == 1 || column.data_type == 2) ? (
+                <option key={column.clm_id} value={column.clm_id}>
+                  {column.clm_name}
+                </option>
+              ) : null
             );
           })}
         </SelectBox>

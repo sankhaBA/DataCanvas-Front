@@ -41,14 +41,20 @@ function Dashboard() {
             widget_id: 1,
             widget_name: "IT Dept. Temperature Variation",
             dataset: 59,
+            DataTable: {
+                tbl_name: 'tbl_data'
+            },
             widget_type: 1,
+            project_id: 53,
             configuration: {
-                chart_id: 1,
+                id: 1,
+                widget_id: 1,
                 x_axis: 0,
                 chart_type: 1,
                 ChartSeries: [
                     {
-                        series_id: 1,
+                        id: 1,
+                        chart_id: 1,
                         series_name: "Temperature",
                         clm_id: 146,
                         device_id: 72
@@ -65,19 +71,22 @@ function Dashboard() {
                 columns: [
                     {
                         id: 1,
+                        widget_id: 2,
                         clm_id: 146,
                         device_id: 72
                     },
                     {
-                        id: 2,
-                        clm_id: 147,
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
                         device_id: 72
                     },
                     {
-                        id: 3,
-                        clm_id: 151,
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
                         device_id: 72
-                    }
+                    },
                 ]
             }
         },
@@ -88,6 +97,7 @@ function Dashboard() {
             widget_type: 3,
             configuration: {
                 id: 1,
+                widget_id: 3,
                 clm_id: 154,
                 write_enabled: true,
                 device_id: 72
@@ -100,26 +110,14 @@ function Dashboard() {
             widget_type: 4,
             configuration: {
                 id: 1,
+                widget_id: 3,
                 clm_id: 151,
+                min_value: 0,
                 max_value: 100,
                 gauge_type: 1,
                 device_id: 72
             }
         },
-        {
-            widget_id: 5,
-            widget_name: "IT Dept. CO2 Index",
-            dataset: 59,
-            widget_type: 4,
-            configuration: {
-                id: 2,
-                clm_id: 151,
-                max_value: 100,
-                gauge_type: 2,
-                device_id: 72
-            }
-        },
-
     ]);
 
     useEffect(() => {
@@ -189,6 +187,7 @@ function Dashboard() {
         }
     }
 
+    // ---------- Load devices from the backend ----------
     const loadDevices = async () => {
         setLoading(true);
         // get request to localhost:3001/api/device?project_id=<projectID>
@@ -234,6 +233,58 @@ function Dashboard() {
                     break;
             }
             setDevices([]);
+            setLoading(false);
+        }
+    }
+
+    const loadWidgets = async () => {
+        setLoading(true);
+        // get request to localhost:3001/api/widget?project_id=<projectID>
+        try {
+            const response = await axios.get(
+                `http://localhost:3001/api/widget?project_id=${projectID}`,
+                {
+                    headers: {
+                        authorization: localStorage.getItem("auth-token"),
+                    },
+                }
+            );
+
+            if (response.status == 200) {
+                let widgetsArray = [];
+                response.data.forEach((widget) => {
+                    let widgetDetails = {
+                        widget_id: widget.widget_id,
+                        widget_name: widget.widget_name,
+                        dataset: widget.dataset,
+                        widget_type: widget.widget_type,
+                        configuration: widget.configuration,
+                    };
+                    widgetsArray.push(widgetDetails);
+                });
+
+                setWidgets(widgetsArray);
+                setLoading(false);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 403:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 404:
+                    toast.error("Project not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+            setWidgets([]);
             setLoading(false);
         }
     }
