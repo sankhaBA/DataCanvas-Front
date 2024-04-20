@@ -13,6 +13,7 @@ const AddChartWidgetPopup = ({
   devices,
   configuration,
   setConfiguration,
+  submitFunction
 }) => {
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Bubble Chart" },
@@ -94,6 +95,8 @@ const AddChartWidgetPopup = ({
     }
 
     setConfiguration(newConfiguration);
+
+    submitFunction(newConfiguration);
   }
 
   // THis card is used to list down series with the delete button

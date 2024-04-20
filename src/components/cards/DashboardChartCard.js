@@ -21,7 +21,7 @@ const DashboardChartCard = ({ onClick = () => { }, widget }) => {
                 </div>
 
                 <div className="w-full flex flex-col justify-center items-center">
-                    <img src={process.env.PUBLIC_URL + '/anim/chart.gif'} alt="chart" className="w-[100px] h-[100px] object-cover mb-3" />
+                    <img src={process.env.PUBLIC_URL + '/anim/chart_gif.gif'} alt="chart" className="w-[100px] h-[100px] object-cover mb-3" />
                     <PillButton text="Expand Chart" icon={FaExpand} onClick={onClick} />
                     <span className="text-gray1 mt-2 text-xs">Thumbnnail cannot be displayed</span>
                 </div>

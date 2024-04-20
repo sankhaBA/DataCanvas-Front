@@ -12,6 +12,7 @@ const AddParameterTablePopup = ({
       devices,
       configuration,
       setConfiguration,
+      submitFunction
 }) => {
       const [selectedFields, setSelectedFields] = useState([]);
       const [selectedDevice, setSelectedDevice] = useState(-1);
@@ -32,10 +33,13 @@ const AddParameterTablePopup = ({
                   return;
             }
 
-            setConfiguration({
+            let newConfiguration = {
                   columns: selectedFields,
                   device_id: (selectedDevice == 0) ? null : selectedDevice
-            });
+            }
+            setConfiguration(newConfiguration);
+
+            submitFunction(newConfiguration);
       }
 
       return (

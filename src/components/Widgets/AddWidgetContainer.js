@@ -93,39 +93,52 @@ const AddWidgetContainer = ({
         });
     }
 
-    const addWidget = async() => {
-        console.log('Adding widget');
+    const addWidget = async (configuration) => {
         if (widgetType == 0 || dataset == 0 || widgetName.trim() == '') {
             toast.error('Please fill all the fields');
             return;
         }
+
+        if (Object.keys(configuration).length == 0) {
+            toast.error('Please configure the widget');
+            return;
+        }
+
         setLoading(true);
-        try{
-            let response= await axios.post('http://localhost:3001/api/widget', {
-                widget_name: widgetName,
-                widget_type: widgetType,
-                dataset: dataset,
-                project_id: projectID,
-                configuration: configuration
-            })
-            if(response.status==200){
+        try {
+            const token = localStorage.getItem('auth-token');
+            let response = await axios.post('http://localhost:3001/api/widget',
+                {
+                    widget_name: widgetName,
+                    widget_type: widgetType,
+                    dataset: dataset,
+                    project_id: projectID,
+                    configuration: configuration
+                },
+                {
+                    headers: {
+                        'authorization': token
+                    }
+                })
+
+            if (response.status == 200) {
                 toast.success('Widget added successfully');
                 closePopup();
             }
-        }catch(err){
+
+            setLoading(false);
+        } catch (err) {
             setLoading(false);
             console.log(err);
-            switch(err.response.status){
+            switch (err.response.status) {
                 case 401 || 403:
                     toast.error('Unauthorized access! Please login again');
                     break;
                 default:
-                    toast.error('Error in adding widget');
+                    toast.error('Something Went Wrong');
                     break;
             }
         }
-            
-        
     }
 
     return (
@@ -151,6 +164,7 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
+                    submitFunction={addWidget}
                 />
             ) : (visiblePopup == 3 ? (
                 <AddParameterTablePopup
@@ -160,6 +174,7 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
+                    submitFunction={addWidget}
                 />
             ) : (visiblePopup == 4 ? (
                 <AddToggleWidgetPopup
@@ -169,6 +184,7 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
+                    submitFunction={addWidget}
                 />
             ) : (visiblePopup == 5 ? (
                 <AddGaugeWidgetPopup
@@ -178,6 +194,7 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
+                    submitFunction={addWidget}
                 />
             ) : null)))
             )}

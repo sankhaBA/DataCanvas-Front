@@ -12,31 +12,35 @@ const AddGaugeWidgetPopup = ({
   columns,
   devices,
   configuration,
-  setConfiguration
+  setConfiguration,
+  submitFunction
 }) => {
-  const [selectedColumn,setSelectedColumn] = useState(0);
-  const [maxValue,setMaxValue] = useState(0);
-  const [gaugeType,setGaugeType] = useState(0);
-  const [selectedDevice,setSelectedDevice] = useState(-1);
+  const [selectedColumn, setSelectedColumn] = useState(0);
+  const [maxValue, setMaxValue] = useState(0);
+  const [minValue, setMinValue] = useState(0);
+  const [gaugeType, setGaugeType] = useState(0);
+  const [selectedDevice, setSelectedDevice] = useState(-1);
 
-  const saveConfiguration = () =>{
+  const saveConfiguration = () => {
 
-    if(selectedColumn==0 || maxValue.toString().trim() == '' || selectedDevice==-1){
+    if (selectedColumn == 0 || maxValue.toString().trim() == '' || minValue.toString().trim() == '' || selectedDevice == -1) {
       toast.error("Please fill all the fields");
       return;
     }
-    if(selectedDevice==0){
-      selectedDevice=null;
+    if (selectedDevice == 0) {
+      selectedDevice = null;
     }
 
-    setConfiguration({
+    let newConfiguration = {
       clm_id: selectedColumn,
       max_value: maxValue,
+      min_value: minValue,
       gauge_type: gaugeType,
       device_id: selectedDevice
-    })
+    }
+    setConfiguration(newConfiguration)
 
-    closeFunction;
+    submitFunction(newConfiguration);
   }
 
   return (
@@ -53,7 +57,7 @@ const AddGaugeWidgetPopup = ({
         <span className="text-sm">Field Name</span>
         <SelectBox
           value={selectedColumn}
-          onChange={(e) => {setSelectedColumn(e.target.value) }}>
+          onChange={(e) => { setSelectedColumn(e.target.value) }}>
           <option value={0}>Select Field</option>
           {columns.map((column) => {
             return (
@@ -66,15 +70,22 @@ const AddGaugeWidgetPopup = ({
 
         <div className="mt-4">
           <span className="text-sm">Maximum Value</span>
+          <TextBox type="number" placeholder="Enter minimum value"
+            value={minValue}
+            onChange={(e) => { setMinValue(e.target.value) }} />
+        </div>
+
+        <div className="mt-4">
+          <span className="text-sm">Maximum Value</span>
           <TextBox type="number" placeholder="Enter maximum value"
             value={maxValue}
-            onChange={(e) => {setMaxValue(e.target.value) }} />
+            onChange={(e) => { setMaxValue(e.target.value) }} />
         </div>
 
         <div className="mt-4">
           <span className="text-sm mt-4">Gauge Type</span>
-          <SelectBox value={''}
-            onChange={(e) => { }}>
+          <SelectBox value={gaugeType}
+            onChange={(e) => { setGaugeType(e.target.value) }}>
             <option value={0}>Select Gauge Type</option>
             <option value={1}>Radial (Speedometer)</option>
             <option value={2}>Linear (Progress Bar)</option>
@@ -83,7 +94,7 @@ const AddGaugeWidgetPopup = ({
 
         <div className="mt-4">
           <span className="text-sm mt-4">Device</span>
-          <SelectBox value={selectedDevice} onChange={(e) => {setSelectedDevice(e.target.value) }}>
+          <SelectBox value={selectedDevice} onChange={(e) => { setSelectedDevice(e.target.value) }}>
             <option value={-1}>Select Device</option>
             <option value={0}>All Devices</option>
             {devices.map((device) => {
@@ -99,7 +110,7 @@ const AddGaugeWidgetPopup = ({
         <hr className="border-gray1 border-opacity-30 my-5" />
 
         <div className="flex justify-center mt-4">
-          <PillButton text="Done" onClick={() => {saveConfiguration }} icon={FaCheck} />
+          <PillButton text="Done" onClick={() => { saveConfiguration() }} icon={FaCheck} />
         </div>
       </div>
     </PopupContainer >

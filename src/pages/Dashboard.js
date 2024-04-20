@@ -252,6 +252,7 @@ function Dashboard() {
                 tables={dataTables}
                 devices={devices}
                 setLoading={setLoading}
+                projectID={projectID}
             />
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
