@@ -21,7 +21,7 @@ const AddGaugeWidgetPopup = ({
 
   const saveConfiguration = () =>{
 
-    if(selectedColumn==0 || maxValue==0 || devices==-1){
+    if(selectedColumn==0 || maxValue.toString().trim() == '' || selectedDevice==-1){
       toast.error("Please fill all the fields");
       return;
     }
