@@ -17,7 +17,7 @@ const AddToggleWidgetPopup = ({
   const [selectedDevice,setSelectedDevice] = useState(-1);
   const [writeEnabled,setWriteEnabled] = useState(false);
   const saveConfiguration = () =>{
-    if(selectedColumn==0 || devices==-1){
+    if(selectedColumn==0 || selectedDevice==-1){
       toast.error("Please fill all the fields");
       return;
     }
