@@ -37,89 +37,7 @@ function Dashboard() {
 
     // ---------- State to store widget details ----------
     const [widgets, setWidgets] = useState([
-        {
-            widget_id: 1,
-            widget_name: "IT Dept. Temperature Variation",
-            dataset: 59,
-            widget_type: 1,
-            configuration: {
-                chart_id: 1,
-                x_axis: 0,
-                chart_type: 1,
-                ChartSeries: [
-                    {
-                        series_id: 1,
-                        series_name: "Temperature",
-                        clm_id: 146,
-                        device_id: 72
-                    }
-                ]
-            }
-        },
-        {
-            widget_id: 2,
-            widget_name: "IT Department Readings ",
-            dataset: 59,
-            widget_type: 2,
-            configuration: {
-                columns: [
-                    {
-                        id: 1,
-                        clm_id: 146,
-                        device_id: 72
-                    },
-                    {
-                        id: 2,
-                        clm_id: 147,
-                        device_id: 72
-                    },
-                    {
-                        id: 3,
-                        clm_id: 151,
-                        device_id: 72
-                    }
-                ]
-            }
-        },
-        {
-            widget_id: 3,
-            widget_name: "IT Department Device Status",
-            dataset: 59,
-            widget_type: 3,
-            configuration: {
-                id: 1,
-                clm_id: 154,
-                write_enabled: true,
-                device_id: 72
-            }
-        },
-        {
-            widget_id: 4,
-            widget_name: "IT Dept. CO2 Index",
-            dataset: 59,
-            widget_type: 4,
-            configuration: {
-                id: 1,
-                clm_id: 151,
-                max_value: 100,
-                gauge_type: 1,
-                device_id: 72
-            }
-        },
-        {
-            widget_id: 5,
-            widget_name: "IT Dept. CO2 Index",
-            dataset: 59,
-            widget_type: 4,
-            configuration: {
-                id: 2,
-                clm_id: 151,
-                max_value: 100,
-                gauge_type: 2,
-                device_id: 72
-            }
-        },
-
+        // Sample array is at bottom of this file
     ]);
 
     useEffect(() => {
@@ -138,6 +56,12 @@ function Dashboard() {
             loadDevices();
         }
     }, [projectID]);
+
+    useEffect(() => {
+        if (projectID != -1 && dataTables.length > 0 && devices.length > 0) {
+            loadWidgets();
+        }
+    }, [dataTables, devices]);
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {
@@ -189,6 +113,7 @@ function Dashboard() {
         }
     }
 
+    // ---------- Load devices from the backend ----------
     const loadDevices = async () => {
         setLoading(true);
         // get request to localhost:3001/api/device?project_id=<projectID>
@@ -238,6 +163,64 @@ function Dashboard() {
         }
     }
 
+    const loadWidgets = async () => {
+        setLoading(true);
+        // get request to localhost:3001/api/widget?project_id=<projectID>
+        try {
+            const response = await axios.get(
+                `http://localhost:3001/api/widget?project_id=${projectID}`,
+                {
+                    headers: {
+                        authorization: localStorage.getItem("auth-token"),
+                    },
+                }
+            );
+
+            if (response.status == 200) {
+                setWidgets(response.data);
+                setLoading(false);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 403:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 404:
+                    toast.error("Project not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+            setWidgets([]);
+            setLoading(false);
+        }
+    }
+
+    /*
+        * Delete widget function
+        * API Endpoint : http://localhost:3001/api/widget
+        * Method : DELETE
+        * Request Body : {
+        *   widget_id: <widget_id>
+        * }
+        * Headers : {
+        *  authorization: <auth-token>
+        * }
+        * @param {number} widget_id - The widget_id of the widget to be deleted
+        * @returns {void}
+        * After deleting the widget, the widgets state should be updated to remove the deleted widget
+    */
+    const deleteWidget = async (widget_id) => {
+
+    }
+
     return (
         <SidebarLayout active={1}
             breadcrumb={`${localStorage.getItem('project')} > Dashboard`}>
@@ -252,6 +235,8 @@ function Dashboard() {
                 tables={dataTables}
                 devices={devices}
                 setLoading={setLoading}
+                projectID={projectID}
+                loadWidgets={loadWidgets}
             />
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
@@ -259,13 +244,19 @@ function Dashboard() {
                     return (
                         (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
                             navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
-                        }} /> : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
-                            navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
-                        }} /> : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
-
-                        }} /> : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
-
-                        }} /> : null
+                        }}
+                            deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                            : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
+                                navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                            }}
+                                deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
+                                }}
+                                    deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                    : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
+                                    }}
+                                        deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                        : null
                     )
                 })}
             </div>
@@ -291,3 +282,91 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+/*
+    * Sample array of widgets
+    [
+        {
+            widget_id: 1,
+            widget_name: "IT Dept. Temperature Variation",
+            dataset: 59,
+            DataTable: {
+                tbl_name: 'tbl_data'
+            },
+            widget_type: 1,
+            project_id: 53,
+            configuration: {
+                id: 1,
+                widget_id: 1,
+                x_axis: 0,
+                chart_type: 1,
+                ChartSeries: [
+                    {
+                        id: 1,
+                        chart_id: 1,
+                        series_name: "Temperature",
+                        clm_id: 146,
+                        device_id: 72
+                    }
+                ]
+            }
+        },
+        {
+            widget_id: 2,
+            widget_name: "IT Department Readings ",
+            dataset: 59,
+            widget_type: 2,
+            configuration: {
+                columns: [
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                    {
+                        id: 1,
+                        widget_id: 2,
+                        clm_id: 146,
+                        device_id: 72
+                    },
+                ]
+            }
+        },
+        {
+            widget_id: 3,
+            widget_name: "IT Department Device Status",
+            dataset: 59,
+            widget_type: 3,
+            configuration: {
+                id: 1,
+                widget_id: 3,
+                clm_id: 154,
+                write_enabled: true,
+                device_id: 72
+            }
+        },
+        {
+            widget_id: 4,
+            widget_name: "IT Dept. CO2 Index",
+            dataset: 59,
+            widget_type: 4,
+            configuration: {
+                id: 1,
+                widget_id: 3,
+                clm_id: 151,
+                min_value: 0,
+                max_value: 100,
+                gauge_type: 1,
+                device_id: 72
+            }
+        },
+    ]
+*/

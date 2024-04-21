@@ -3,7 +3,11 @@ import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { BsBarChartFill } from "react-icons/bs";
 import PillButton from "../input/PillButton";
 
-const DashboardChartCard = ({ onClick = () => { }, widget }) => {
+const DashboardChartCard = ({
+    onClick = () => { },
+    widget,
+    deleteWidget = () => { }
+}) => {
     return (
         <div
             className={
@@ -11,7 +15,6 @@ const DashboardChartCard = ({ onClick = () => { }, widget }) => {
         border border-gray1 border-opacity-60 relative overflow-hidden
         transition duration-300 hover:border-green cursor-pointer`
             }
-            onClick={onClick}
         >
             <div className="w-full h-full pt-4 pl-4 pb-4 flex flex-col justify-between">
                 <div className="flex items-center justify-start">
@@ -21,7 +24,7 @@ const DashboardChartCard = ({ onClick = () => { }, widget }) => {
                 </div>
 
                 <div className="w-full flex flex-col justify-center items-center">
-                    <img src={process.env.PUBLIC_URL + '/anim/chart.gif'} alt="chart" className="w-[100px] h-[100px] object-cover mb-3" />
+                    <img src={process.env.PUBLIC_URL + '/anim/chart_gif.gif'} alt="chart" className="w-[100px] h-[100px] object-cover mb-3" />
                     <PillButton text="Expand Chart" icon={FaExpand} onClick={onClick} />
                     <span className="text-gray1 mt-2 text-xs">Thumbnnail cannot be displayed</span>
                 </div>
@@ -30,7 +33,8 @@ const DashboardChartCard = ({ onClick = () => { }, widget }) => {
                 <div className="flex justify-end w-full px-4">
                     <div className="flex">
                         <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300" />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300" />
+                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+                            onClick={() => { deleteWidget(widget.id) }} />
                     </div>
                 </div>
             </div>

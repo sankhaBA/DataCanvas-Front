@@ -13,6 +13,7 @@ const AddChartWidgetPopup = ({
   devices,
   configuration,
   setConfiguration,
+  submitFunction
 }) => {
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Bubble Chart" },
@@ -94,6 +95,8 @@ const AddChartWidgetPopup = ({
     }
 
     setConfiguration(newConfiguration);
+
+    submitFunction(newConfiguration);
   }
 
   // THis card is used to list down series with the delete button
@@ -180,7 +183,7 @@ const AddChartWidgetPopup = ({
               <option value={0}>Select Parameter</option>
               {columns.map((column) => {
                 return (
-                  column.clm_name != 'id' ? (
+                  column.clm_name != 'id' && column.clm_name != 'device' && (column.data_type == 1 || column.data_type == 2) ? (
                     <option key={column.clm_id} value={column.clm_id}>
                       {column.clm_name}
                     </option>
