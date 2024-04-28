@@ -243,11 +243,11 @@ function Dashboard() {
                 {widgets.map((widget, index) => {
                     return (
                         (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
-                            navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
+                            navigate('/expand', { state: { project_id: projectID, widget: widget } })
                         }}
                             deleteWidget={(widget_id) => deleteWidget(widget_id)} />
                             : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
-                                navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                                navigate('/expand', { state: { project_id: projectID, widget: widget } })
                             }}
                                 deleteWidget={(widget_id) => deleteWidget(widget_id)} />
                                 : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
@@ -323,19 +323,37 @@ export default Dashboard;
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                     {
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                     {
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                 ]
             }
