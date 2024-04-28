@@ -3,6 +3,7 @@ import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
 import Switch from "react-switch";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const DashboardToggleCard = ({
     onClick = () => { },
@@ -23,8 +24,38 @@ const DashboardToggleCard = ({
         * Set the true/false value to the toggleState state
     */
     const loadToggleData = async () => {
+        try{
+            const response = await axios.get(`http://localhost:3001/api/widget/${projectID}`,);
 
+        if(response.status=== 200) {
+            setToggleState(response.data.toggleState);
+        }
+        }catch(err){
+            switch (err.response.status){
+                case 400:
+                    toast.error('Bad request!');
+                    navigate('/login');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 404:
+                    toast.error('Project not found!');
+                    navigate('/projects');
+                    break;
+                default:
+                    toast.error('Something went wrong!');
+                    break;
+            }
+            setLoading(false);
+        }
     }
+
 
     /*
         * Function to update the toggle status
