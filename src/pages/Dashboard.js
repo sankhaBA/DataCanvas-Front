@@ -31,9 +31,22 @@ function Dashboard() {
     // ---------- State to store devices of the selected project ----------
     const [devices, setDevices] = useState([]);
 
-    // ---------- states and functions for Add Widget Popup visibility ----------
+    // ---------- states and functions for Add/Edit Widget Popup visibility ----------
     const [isAddWidgetPopupVisible, setIsAddWidgetPopupVisible] = useState(false);
-    const toggleAddDatatableModal = () => setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+    const toggleAddDatatableModal = () => {
+        setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+        setSelectedWidget(null);
+    }
+    const [selectedWidget, setSelectedWidget] = useState(null);
+    const handleUpdateWidgetClicked = (widget) => {
+        setSelectedWidget(widget);
+    }
+
+    useEffect(() => {
+        if (selectedWidget != null) {
+            setIsAddWidgetPopupVisible(true);
+        }
+    }, [selectedWidget]);
 
     // ---------- State to store widget details ----------
     const [widgets, setWidgets] = useState([
@@ -237,6 +250,8 @@ function Dashboard() {
                 setLoading={setLoading}
                 projectID={projectID}
                 loadWidgets={loadWidgets}
+                type={(selectedWidget == null) ? 0 : 1}
+                selectedWidget={selectedWidget}
             />
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
@@ -245,17 +260,21 @@ function Dashboard() {
                         (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
                             navigate('/expand', { state: { project_id: projectID, widget: widget } })
                         }}
-                            deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                            deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                            updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                             : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
                                 navigate('/expand', { state: { project_id: projectID, widget: widget } })
                             }}
-                                deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                 : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
                                 }}
-                                    deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                    deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                    updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                     : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
                                     }}
-                                        deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                        deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                        updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                         : null
                     )
                 })}
