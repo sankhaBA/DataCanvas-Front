@@ -64,8 +64,42 @@ const DashboardToggleCard = ({
         * Use the relevant API and update the toggle status
     */
     const updateToggleState = async (status) => {
+        try{
+            const response = await axios.put(`http://localhost:3001/api/widget/${projectID}`,
+            {
+               toggleState : status
+            }
+            );
 
-    }
+            if(response.status=== 200){
+               console.log("toggle updated successfully")
+            }
+            }catch(err){
+            switch (err.response.status){
+                case 400:
+                    toast.error('Bad request!');
+                    navigate('/login');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 404:
+                    toast.error('Project not found!');
+                    navigate('/projects');
+                    break;
+                default:
+                    toast.error('Something went wrong!');
+                    break;
+            }
+            setLoading(false);
+        }       
+        }
+    
 
     const handleToggleChange = async (status) => {
         setToggleState(status);
