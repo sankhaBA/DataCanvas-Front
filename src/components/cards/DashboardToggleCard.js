@@ -25,9 +25,8 @@ const DashboardToggleCard = ({
     */
     const loadToggleData = async () => {
         try{
-            const response = await axios.get(`http://localhost:3001/api/widget/${projectID}`,);
-
-        if(response.status=== 200) {
+            const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,);
+        if(response.status === 200) {
             setToggleState(response.data.toggleState);
         }
         }catch(err){
@@ -65,9 +64,9 @@ const DashboardToggleCard = ({
     */
     const updateToggleState = async (status) => {
         try{
-            const response = await axios.put(`http://localhost:3001/api/widget/${projectID}`,
+            const response = await axios.put(`http://localhost:3001/api/data/feed/toggle${widget.id}`,
             {
-               toggleState : status
+               toggleState: status
             }
             );
 
