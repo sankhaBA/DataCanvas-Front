@@ -218,7 +218,46 @@ function Dashboard() {
         * After deleting the widget, the widgets state should be updated to remove the deleted widget
     */
     const deleteWidget = async (widget_id) => {
+        setLoading(true);
+        try {
+            const response = await axios.delete(
+                `http://localhost:3001/api/widget`,
+                {
+                    headers: {
+                        authorization: localStorage.getItem("auth-token"),
+                    },
+                    data: {
+                        widget_id: widget_id,
+                    },
+                }
+            );
 
+            if (response.status == 200) {
+                setWidgets(widgets.filter(widget => widget.id !== widget_id));
+                loadWidgets();
+                toast.success("Widget deleted successfully!");
+
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 403:
+                    toast.error("Unauthorized access!");
+                    break;
+                case 404:
+                    toast.error("Widget not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+            setLoading(false);
+        }
     }
 
     return (
