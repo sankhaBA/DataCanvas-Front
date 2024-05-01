@@ -24,37 +24,29 @@ const DashboardToggleCard = ({
         * Set the true/false value to the toggleState state
     */
     const loadToggleData = async () => {
-        try{
-            const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,);
-        if(response.status === 200) {
-            setToggleState(response.data.toggleState);
-        }
-        }catch(err){
-            switch (err.response.status){
-                case 400:
-                    toast.error('Bad request!');
-                    navigate('/login');
-                    break;
-                case 401:
-                    toast.error('Unauthorized access!');
-                    navigate('/login');
-                    break;
-                case 403:
-                    toast.error('Unauthorized access!');
-                    navigate('/login');
-                    break;
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('auth-token')
+                    }
+                });
+
+            if (response.status == 200) {
+                setToggleState(response.data[widget.configuration.Column.clm_name]);
+            }
+        } catch (err) {
+            switch (err.response.status) {
                 case 404:
-                    toast.error('Project not found!');
-                    navigate('/projects');
+                    toast.error(`Data not found for ${widget.widget_name}!`);
+                    setToggleState(false);
                     break;
                 default:
                     toast.error('Something went wrong!');
                     break;
             }
-            setLoading(false);
         }
     }
-
 
     /*
         * Function to update the toggle status
@@ -63,42 +55,24 @@ const DashboardToggleCard = ({
         * Use the relevant API and update the toggle status
     */
     const updateToggleState = async (status) => {
-        try{
-            const response = await axios.put(`http://localhost:3001/api/data/feed/toggle${widget.id}`,
-            {
-               toggleState: status
-            }
+        try {
+            const response = await axios.put(`http://localhost:3001/api/data/feed/update/toggle`,
+                {
+                    widget_id: widget.id,
+                    new_value: status
+                }
             );
 
-            if(response.status=== 200){
-               console.log("toggle updated successfully")
+            if (response.status == 200) {
+                toast.success("toggle updated successfully")
             }
-            }catch(err){
-            switch (err.response.status){
-                case 400:
-                    toast.error('Bad request!');
-                    navigate('/login');
-                    break;
-                case 401:
-                    toast.error('Unauthorized access!');
-                    navigate('/login');
-                    break;
-                case 403:
-                    toast.error('Unauthorized access!');
-                    navigate('/login');
-                    break;
-                case 404:
-                    toast.error('Project not found!');
-                    navigate('/projects');
-                    break;
-                default:
-                    toast.error('Something went wrong!');
-                    break;
-            }
-            setLoading(false);
-        }       
+        } catch (err) {
+            console.log(err);
+            toast.error(`Something went wrong while updating ${widget.widget_name} status!`);
+            return;
         }
-    
+    }
+
 
     const handleToggleChange = async (status) => {
         setToggleState(status);
