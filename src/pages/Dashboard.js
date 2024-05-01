@@ -12,6 +12,7 @@ import DashboardChartCard from '../components/cards/DashboardChartCard';
 import DashboardTableCard from '../components/cards/DashboardTableCard';
 import DashboardToggleCard from '../components/cards/DashboardToggleCard';
 import DashboardGaugeCard from '../components/cards/DashboardGaugeCard';
+import DeleteWidgetPopup from '../components/Widgets/DeleteWidgetPopup';
 
 function Dashboard() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
@@ -34,6 +35,18 @@ function Dashboard() {
     // ---------- states and functions for Add Widget Popup visibility ----------
     const [isAddWidgetPopupVisible, setIsAddWidgetPopupVisible] = useState(false);
     const toggleAddDatatableModal = () => setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+
+    // ---------- states and functions for Delete Widget Popup visibility ----------    
+    const [isDeleteWidgetPopupVisible, setIsDeleteWidgetPopupVisible] = useState(false);
+    const [selectedWidget, setSelectedWidget] = useState(null);
+    useEffect(() => {
+        if (selectedWidget != null) {
+            setIsDeleteWidgetPopupVisible(true);
+        } else {
+            setIsDeleteWidgetPopupVisible(false);
+        }
+    }, [selectedWidget]);
+
 
     // ---------- State to store widget details ----------
     const [widgets, setWidgets] = useState([
@@ -218,7 +231,7 @@ function Dashboard() {
         * After deleting the widget, the widgets state should be updated to remove the deleted widget
     */
     const deleteWidget = async (widget_id) => {
-
+        setSelectedWidget(widgets.find((widget) => widget.id == widget_id));
     }
 
     return (
@@ -260,6 +273,20 @@ function Dashboard() {
                     )
                 })}
             </div>
+
+            {/* This popup series will open when Delete Widget button is clicked */}
+            {selectedWidget != null && (
+                <DeleteWidgetPopup
+                    widget={selectedWidget}
+                    widgets={widgets}
+                    setWidgets={(widgets) => setWidgets(widgets)}
+                    isDeleteWidgetPopupVisible={isDeleteWidgetPopupVisible}
+                    setSelectedWidget={(widget) => { setSelectedWidget(widget) }}
+                    setLoading={setLoading}
+                    navigate={navigate}
+                />
+
+            )}
 
             {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
