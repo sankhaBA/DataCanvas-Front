@@ -51,14 +51,14 @@ function Dashboard() {
 
     // ---------- states and functions for Delete Widget Popup visibility ----------    
     const [isDeleteWidgetPopupVisible, setIsDeleteWidgetPopupVisible] = useState(false);
-    const [selectedWidget, setSelectedWidget] = useState(null);
+    const [selectedWidget_Deletion, setSelectedWidget_Deletion] = useState(null);
     useEffect(() => {
-        if (selectedWidget != null) {
+        if (selectedWidget_Deletion != null) {
             setIsDeleteWidgetPopupVisible(true);
         } else {
             setIsDeleteWidgetPopupVisible(false);
         }
-    }, [selectedWidget]);
+    }, [selectedWidget_Deletion]);
 
 
     // ---------- State to store widget details ----------
@@ -244,7 +244,7 @@ function Dashboard() {
         * After deleting the widget, the widgets state should be updated to remove the deleted widget
     */
     const deleteWidget = async (widget_id) => {
-        setSelectedWidget(widgets.find((widget) => widget.id == widget_id));
+        setSelectedWidget_Deletion(widgets.find((widget) => widget.id == widget_id));
     }
 
     return (
@@ -294,13 +294,13 @@ function Dashboard() {
             </div>
 
             {/* This popup series will open when Delete Widget button is clicked */}
-            {selectedWidget != null && (
+            {selectedWidget_Deletion != null && (
                 <DeleteWidgetPopup
-                    widget={selectedWidget}
+                    widget={selectedWidget_Deletion}
                     widgets={widgets}
                     setWidgets={(widgets) => setWidgets(widgets)}
                     isDeleteWidgetPopupVisible={isDeleteWidgetPopupVisible}
-                    setSelectedWidget={(widget) => { setSelectedWidget(widget) }}
+                    setSelectedWidget={(widget) => { setSelectedWidget_Deletion(widget) }}
                     setLoading={setLoading}
                     navigate={navigate}
                 />

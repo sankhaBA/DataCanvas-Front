@@ -65,7 +65,7 @@ const DashboardToggleCard = ({
             );
 
             if (response.status == 200) {
-                toast.success("toggle updated successfully")
+                toast.success("Toggle updated successfully")
             }
         } catch (err) {
             console.log(err);
