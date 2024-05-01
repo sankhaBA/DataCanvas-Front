@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { LuGauge } from "react-icons/lu";
+import { toast } from "react-toastify";
 import GaugeComponent from "react-gauge-component";
 import axios from "axios";
 
 const DashboardGaugeCard = ({
-  onClick = () => {},
+  onClick = () => { },
   widget,
-  deleteWidget = () => {},
+  deleteWidget = () => { },
 }) => {
-  const [widgetValue, setWidgetValue] = useState(100);
+  const [widgetValue, setWidgetValue] = useState(widget.configuration.min_value);
   const [widgetPercentage, setWidgetPercentage] = useState(0);
 
   useEffect(() => {
@@ -31,27 +32,26 @@ const DashboardGaugeCard = ({
   const loadGaugeData = async (gaugeId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/widget/${gaugeId}`
+        `http://localhost:3001/api/data/get/gauge/${gaugeId}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem('auth-token')
+          },
+        }
       );
-      setWidgetValue(response.data.value);
+
+      if (response.status == 200) {
+        setWidgetValue(response.data[widget.configuration.Column.clm_name]);
+      }
+
     } catch (error) {
       switch (error.response.status) {
-        case 400:
-          console.log("Bad Request");
-          break;
-        case 401:
-          console.log("Unauthorized access!");
-          navigate("/login");
-          break;
-        case 403:
-          console.log("Unauthorized access!");
-          navigate("/login");
-          break;
         case 404:
-          console.log("Gauge Not Found");
+          toast.error(`No data available for ${widget.widget_name}`);
+          setWidgetValue(widget.configuration.min_value);
           break;
         default:
-          toast.error("Something went wrong!");
+          toast.error(`Error occured while loading ${widget.widget_name} data`);
           break;
       }
     }
