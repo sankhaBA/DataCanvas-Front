@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import AddWidgetPopup from "./AddWidgetPopup";
 import AddChartWidgetPopup from "./AddChartWidgetPopup";
@@ -14,7 +14,9 @@ const AddWidgetContainer = ({
     setLoading,
     devices,
     projectID,
-    loadWidgets
+    loadWidgets,
+    type = 0, // 0: Add Widget, 1: Edit Widget
+    selectedWidget = {} // Widget details if type is 1
 }) => {
     /*
         * State to manage the visibility of various popups
@@ -29,6 +31,12 @@ const AddWidgetContainer = ({
         if (widgetType == 0 || dataset == 0 || widgetName.trim == '') {
             toast.error('Please fill all the fields');
             return;
+        }
+
+        if (type == 1) {
+            if (widgetType != selectedWidget.widget_type || dataset != selectedWidget.dataset) {
+
+            }
         }
 
         let columnLoadingResult = await loadColumns(dataset);
@@ -143,6 +151,65 @@ const AddWidgetContainer = ({
         }
     }
 
+    /*
+        * API Endpoint: http://localhost:3001/api/widget
+        * Method: PUT
+        * Function to update the widget
+        * @param {Object} configuration - Configuration of the widget
+        * @returns {void}
+    */
+    const updateWidget = async (configuration) => {
+        if (widgetType == 0 || dataset == 0 || widgetName.trim() == '') {
+            toast.error('Please fill all the fields');
+            return;
+        }
+
+        if (Object.keys(configuration).length == 0) {
+            toast.error('Please configure the widget');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('auth-token');
+            let response = await axios.put('http://localhost:3001/api/widget',
+                {
+                    widget_id: selectedWidget.id,
+                    widget_name: widgetName,
+                    widget_type: widgetType,
+                    dataset: dataset,
+                    project_id: projectID,
+                    configuration: configuration
+                },
+                {
+                    headers: {
+                        'authorization': token
+                    }
+                })
+
+            if (response.status == 200) {
+                toast.success('Widget updated successfully');
+                loadWidgets();
+                closePopup();
+            }
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+            switch (err.response.status) {
+                case 401 || 403:
+                    toast.error('Unauthorized access! Please login again');
+                    break;
+                case 404:
+                    toast.error('Widget not found');
+                    break;
+                default:
+                    toast.error('Something Went Wrong');
+                    break;
+            }
+        }
+
+    }
+
     return (
         <>
             {visiblePopup == 1 ? (
@@ -157,6 +224,8 @@ const AddWidgetContainer = ({
                     dataset={dataset}
                     setDataset={setDataset}
                     nextFunction={togglePopup}
+                    type={type}
+                    currentWidget={selectedWidget}
                 />
             ) : (visiblePopup == 2 ? (
                 <AddChartWidgetPopup
@@ -166,7 +235,9 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
-                    submitFunction={addWidget}
+                    submitFunction={(type == 0 ? addWidget : updateWidget)}
+                    type={type}
+                    oldWidget={type == 1 ? selectedWidget : {}}
                 />
             ) : (visiblePopup == 3 ? (
                 <AddParameterTablePopup
@@ -176,7 +247,9 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
-                    submitFunction={addWidget}
+                    submitFunction={(type == 0 ? addWidget : updateWidget)}
+                    type={type}
+                    oldWidget={type == 1 ? selectedWidget : {}}
                 />
             ) : (visiblePopup == 4 ? (
                 <AddToggleWidgetPopup
@@ -186,7 +259,9 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
-                    submitFunction={addWidget}
+                    submitFunction={(type == 0 ? addWidget : updateWidget)}
+                    type={type}
+                    oldWidget={type == 1 ? selectedWidget : {}}
                 />
             ) : (visiblePopup == 5 ? (
                 <AddGaugeWidgetPopup
@@ -196,7 +271,9 @@ const AddWidgetContainer = ({
                     devices={devices}
                     configuration={configuration}
                     setConfiguration={setConfiguration}
-                    submitFunction={addWidget}
+                    submitFunction={(type == 0 ? addWidget : updateWidget)}
+                    type={type}
+                    oldWidget={type == 1 ? selectedWidget : {}}
                 />
             ) : null)))
             )}

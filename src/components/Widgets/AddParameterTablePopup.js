@@ -12,10 +12,28 @@ const AddParameterTablePopup = ({
       devices,
       configuration,
       setConfiguration,
-      submitFunction
+      submitFunction,
+      type = 0, // 0: Add Widget, 1: Edit Widget
+      oldWidget = {} // Widget configuration details if type is 1
 }) => {
       const [selectedFields, setSelectedFields] = useState([]);
       const [selectedDevice, setSelectedDevice] = useState(-1);
+
+      useEffect(() => {
+            if (type == 1 && oldWidget != null && oldWidget.widget_type == 2 && isOpen) {
+                  let fields = [];
+                  oldWidget.configuration.map((column) => {
+                        fields.push(column.clm_id);
+                  });
+                  setSelectedFields(fields);
+                  if (oldWidget.configuration[0].device_id == null) {
+                        setSelectedDevice(0);
+                  } else {
+                        setSelectedDevice(oldWidget.configuration[0].device_id);
+                  }
+            }
+
+      }, [isOpen]);
 
       // ------------- Function to handle field selecting -------------
       const handleFieldSelect = (field) => {

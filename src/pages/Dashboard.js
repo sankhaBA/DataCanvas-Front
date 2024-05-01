@@ -12,6 +12,7 @@ import DashboardChartCard from '../components/cards/DashboardChartCard';
 import DashboardTableCard from '../components/cards/DashboardTableCard';
 import DashboardToggleCard from '../components/cards/DashboardToggleCard';
 import DashboardGaugeCard from '../components/cards/DashboardGaugeCard';
+import DeleteWidgetPopup from '../components/Widgets/DeleteWidgetPopup';
 
 function Dashboard() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
@@ -31,9 +32,34 @@ function Dashboard() {
     // ---------- State to store devices of the selected project ----------
     const [devices, setDevices] = useState([]);
 
-    // ---------- states and functions for Add Widget Popup visibility ----------
+    // ---------- states and functions for Add/Edit Widget Popup visibility ----------
     const [isAddWidgetPopupVisible, setIsAddWidgetPopupVisible] = useState(false);
-    const toggleAddDatatableModal = () => setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+    const toggleAddDatatableModal = () => {
+        setIsAddWidgetPopupVisible(!isAddWidgetPopupVisible);
+        setSelectedWidget(null);
+    }
+    const [selectedWidget, setSelectedWidget] = useState(null);
+    const handleUpdateWidgetClicked = (widget) => {
+        setSelectedWidget(widget);
+    }
+
+    useEffect(() => {
+        if (selectedWidget != null) {
+            setIsAddWidgetPopupVisible(true);
+        }
+    }, [selectedWidget]);
+
+    // ---------- states and functions for Delete Widget Popup visibility ----------    
+    const [isDeleteWidgetPopupVisible, setIsDeleteWidgetPopupVisible] = useState(false);
+    const [selectedWidget_Deletion, setSelectedWidget_Deletion] = useState(null);
+    useEffect(() => {
+        if (selectedWidget_Deletion != null) {
+            setIsDeleteWidgetPopupVisible(true);
+        } else {
+            setIsDeleteWidgetPopupVisible(false);
+        }
+    }, [selectedWidget_Deletion]);
+
 
     // ---------- State to store widget details ----------
     const [widgets, setWidgets] = useState([
@@ -218,7 +244,7 @@ function Dashboard() {
         * After deleting the widget, the widgets state should be updated to remove the deleted widget
     */
     const deleteWidget = async (widget_id) => {
-
+        setSelectedWidget_Deletion(widgets.find((widget) => widget.id == widget_id));
     }
 
     return (
@@ -237,29 +263,49 @@ function Dashboard() {
                 setLoading={setLoading}
                 projectID={projectID}
                 loadWidgets={loadWidgets}
+                type={(selectedWidget == null) ? 0 : 1}
+                selectedWidget={selectedWidget}
             />
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
                 {widgets.map((widget, index) => {
                     return (
                         (widget.widget_type == 1) ? <DashboardChartCard key={index} widget={widget} onClick={() => {
-                            navigate('/chart', { state: { project_id: projectID, widget_id: 1 } })
+                            navigate('/expand', { state: { project_id: projectID, widget: widget } })
                         }}
-                            deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                            deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                            updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                             : (widget.widget_type == 2) ? <DashboardTableCard key={index} widget={widget} onClick={() => {
-                                navigate('/table', { state: { project_id: projectID, widget_id: 2 } })
+                                navigate('/expand', { state: { project_id: projectID, widget: widget } })
                             }}
-                                deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                 : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
                                 }}
-                                    deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                    deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                    updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                     : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
                                     }}
-                                        deleteWidget={(widget_id) => deleteWidget(widget_id)} />
+                                        deleteWidget={(widget_id) => deleteWidget(widget_id)}
+                                        updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
                                         : null
                     )
                 })}
             </div>
+
+            {/* This popup series will open when Delete Widget button is clicked */}
+            {selectedWidget_Deletion != null && (
+                <DeleteWidgetPopup
+                    widget={selectedWidget_Deletion}
+                    widgets={widgets}
+                    setWidgets={(widgets) => setWidgets(widgets)}
+                    isDeleteWidgetPopupVisible={isDeleteWidgetPopupVisible}
+                    setSelectedWidget={(widget) => { setSelectedWidget_Deletion(widget) }}
+                    setLoading={setLoading}
+                    navigate={navigate}
+                />
+
+            )}
 
             {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
@@ -323,19 +369,37 @@ export default Dashboard;
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                     {
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                     {
                         id: 1,
                         widget_id: 2,
                         clm_id: 146,
-                        device_id: 72
+                        device_id: 72,
+                        Column : {
+                            clm_name: 'id'
+                        },
+                        Device : {
+                            device_name: 'IT Department'
+                        }
                     },
                 ]
             }
