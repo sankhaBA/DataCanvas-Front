@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaCheck, FaTrash, FaTools } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import PopupContainer from "../PopupContainer";
@@ -13,7 +13,9 @@ const AddChartWidgetPopup = ({
   devices,
   configuration,
   setConfiguration,
-  submitFunction
+  submitFunction,
+  type = 0, // 0: Add Widget, 1: Edit Widget
+  oldWidget = {} // Widget configuration details if type is 1
 }) => {
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Bubble Chart" },
@@ -34,6 +36,23 @@ const AddChartWidgetPopup = ({
     //   device_id: 1,
     // },
   ])
+
+  useEffect(() => {
+    if (type == 1 && isOpen && oldWidget.widget_type == 1) {
+      setXAxisParameter(oldWidget.configuration.x_axis == null ? 0 : oldWidget.configuration.x_axis);
+      setSelectedChartType(oldWidget.configuration.chart_type);
+
+      let newSeries = [];
+      oldWidget.configuration.ChartSeries.map((series) => {
+        newSeries.push({
+          series_name: series.series_name,
+          clm_id: series.clm_id,
+          device_id: series.device_id,
+        });
+      })
+      setSeries(newSeries);
+    }
+  }, [isOpen]);
 
   // ------------- Function to add series to the series list -------------
   const addSeries = () => {

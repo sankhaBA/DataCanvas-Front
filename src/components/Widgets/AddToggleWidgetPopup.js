@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTools, FaCheck } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import PopupContainer from "../PopupContainer";
@@ -12,11 +12,22 @@ const AddToggleWidgetPopup = ({
   devices,
   configuration,
   setConfiguration,
-  submitFunction
+  submitFunction,
+  type = 0, // 0: Add Widget, 1: Edit Widget
+  oldWidget = {} // Widget configuration details if type is 1
 }) => {
   const [selectedColumn, setSelectedColumn] = useState(0);
   const [selectedDevice, setSelectedDevice] = useState(-1);
   const [writeEnabled, setWriteEnabled] = useState(false);
+
+  useEffect(() => {
+    if (oldWidget != null && type == 1 && oldWidget.widget_type == 3 && isOpen) {
+      setSelectedColumn(oldWidget.configuration.clm_id);
+      setWriteEnabled(oldWidget.configuration.write_enabled);
+      setSelectedDevice(oldWidget.configuration.device_id);
+    }
+  }, [isOpen])
+
   const saveConfiguration = () => {
     if (selectedColumn == 0 || selectedDevice == -1) {
       toast.error("Please fill all the fields");

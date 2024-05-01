@@ -41,7 +41,7 @@ root.render(
       <Route path="/projectsettings" element={<ProjectSettings />} />
       <Route path="/dataset" element={<DatasetViewer />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/chart" element={<ExpandedWidget />} />
+      <Route path="/expand" element={<ExpandedWidget />} />
     </Routes>
   </Router>
 );

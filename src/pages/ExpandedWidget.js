@@ -7,8 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SidebarLayout from "../components/layouts/SidebarLayout";
-import PillButton from '../components/input/PillButton';
 import ExpandedChart from '../components/Widgets/ExpandedChart';
+import ExpandedTable from '../components/Widgets/ExpandedTable';
 import Spinner from "../components/Spinner";
 import axios from "axios";
 
@@ -26,7 +26,6 @@ function ExpandedWidget() {
     const [projectID, setProjectID] = useState(-1);
 
     // ---------- State to store details of the selected widget ----------
-    const [widgetID, setWidgetID] = useState(-1);
     const [widget, setWidget] = useState({
         widget_id: 1,
         widget_name: "Temperature Variation",
@@ -51,39 +50,25 @@ function ExpandedWidget() {
         // ---------- Getting project_id from the location state and uypdating projectID state ----------
         try {
             setProjectID(state.project_id);
-            setWidgetID(state.widget_id);
+            setWidget(state.widget);
         } catch (err) {
             console.log(err);
             navigate('/login');
         }
     }, []);
 
-    useEffect(() => {
-        if (widgetID != -1) {
-            loadWidgetDetails();
-        }
-    }, [widgetID]);
-
-    // ---------- Load widget details from the backend ----------
-    const loadWidgetDetails = async () => {
-
-    }
-
     return (
         <SidebarLayout active={1}
             breadcrumb={`${localStorage.getItem('project')} > Dashboard > ${widget.widget_name}`}>
             <div className='px-2 sm:px-10 mt-8 mb-24'>
-                <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2 mb-8`}>
+                <div className={`flex flex-row justify-between`}>
                     <span className={`text-lg font-semibold`}>{widget.widget_name}</span>
                 </div>
 
                 {/* Expanded chart component */}
-                {widget.widget_type == 1 && <ExpandedChart widget={widget} />}
+                {widget.widget_type == 1 ? <ExpandedChart widget={widget} />
+                    : widget.widget_type == 2 ? <ExpandedTable widget={widget} setLoading={(loading) => setLoading(loading)} navigate={navigate} /> : null}
             </div>
-
-
-            {/* Chart component */}
-
 
             {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />

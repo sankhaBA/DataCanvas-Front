@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaPlus, FaPencilAlt } from "react-icons/fa";
 import PopupContainer from "../PopupContainer";
 import PillButton from "../input/PillButton";
 import TextBox from "../input/TextBox";
@@ -13,7 +13,9 @@ const AddWidgetPopup = ({
     widgetName, setWidgetName,
     widgetType, setWidgetType,
     dataset, setDataset,
-    nextFunction
+    nextFunction,
+    type = 0, // 0: Add Widget, 1: Edit Widget
+    currentWidget = {} // Widget details if type is 1
 }) => {
     const [widgetTypes, setWidgetTypes] = useState([
         { id: 1, name: 'Chart (Any)' },
@@ -22,13 +24,21 @@ const AddWidgetPopup = ({
         { id: 4, name: 'Gauge' }
     ]);
 
+    useEffect(() => {
+        if (currentWidget != null && type == 1) {
+            setWidgetName(currentWidget.widget_name);
+            setWidgetType(currentWidget.widget_type);
+            setDataset(currentWidget.dataset);
+        }
+    }, [isOpen])
+
     return (
         <PopupContainer
             isOpen={isOpen}
             closeFunction={closeFunction}
             onClose={() => { }}
-            title={'Add New Widget'}
-            Icon={FaPlus}
+            title={type == 0 ? 'Add New Widget' : 'Edit Widget' + ' - ' + currentWidget.widget_name}
+            Icon={type == 0 ? FaPlus : FaPencilAlt}
             closeIconVisible={true}>
             <div className="flex flex-col space-y-5 mt-4">
                 <div className="flex flex-col">
@@ -40,17 +50,19 @@ const AddWidgetPopup = ({
                         maxLength={50}
                         textAlign={'left'} />
                 </div>
-                <div className="flex flex-col">
-                    <label className="text-gray2 font-normal text-sm">Widget Type</label>
-                    <SelectBox value={widgetType} onChange={(e) => { setWidgetType(e.target.value) }}>
-                        <option value={0}>Select Widget Type</option>
-                        {widgetTypes.map((widgetType) => {
-                            return (
-                                <option key={widgetType.id} value={widgetType.id}>{widgetType.name}</option>
-                            )
-                        })}
-                    </SelectBox>
-                </div>
+                {(type == 0) ? (
+                    <div className="flex flex-col">
+                        <label className="text-gray2 font-normal text-sm">Widget Type</label>
+                        <SelectBox value={widgetType} onChange={(e) => { setWidgetType(e.target.value) }}>
+                            <option value={0}>Select Widget Type</option>
+                            {widgetTypes.map((widgetType) => {
+                                return (
+                                    <option key={widgetType.id} value={widgetType.id}>{widgetType.name}</option>
+                                )
+                            })}
+                        </SelectBox>
+                    </div>
+                ) : null}
                 <div className="flex flex-col">
                     <label className="text-gray2 font-normal text-sm">Dataset</label>
                     <SelectBox value={dataset} onChange={(e) => { setDataset(e.target.value) }}>
@@ -67,7 +79,7 @@ const AddWidgetPopup = ({
                 <hr className="border-gray2 border-opacity-10" />
 
                 <div className="flex justify-center mt-4">
-                    <PillButton text="Add Widget" onClick={() => { nextFunction() }} icon={FaPlus} />
+                    <PillButton text="Next" onClick={() => { nextFunction() }} icon={FaPlus} />
                 </div>
 
             </div>

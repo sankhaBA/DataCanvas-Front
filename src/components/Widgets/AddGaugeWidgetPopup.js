@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTools, FaCheck } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import PopupContainer from "../PopupContainer";
@@ -13,13 +13,25 @@ const AddGaugeWidgetPopup = ({
   devices,
   configuration,
   setConfiguration,
-  submitFunction
+  submitFunction,
+  type = 0, // 0: Add Widget, 1: Edit Widget
+  oldWidget = {} // Widget configuration details if type is 1
 }) => {
   const [selectedColumn, setSelectedColumn] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(0);
   const [gaugeType, setGaugeType] = useState(0);
   const [selectedDevice, setSelectedDevice] = useState(-1);
+
+  useEffect(() => {
+    if (isOpen && oldWidget != null && type == 1 && oldWidget.widget_type == 4) {
+      setSelectedColumn(oldWidget.configuration.clm_id);
+      setMaxValue(oldWidget.configuration.max_value);
+      setMinValue(oldWidget.configuration.min_value);
+      setGaugeType(oldWidget.configuration.gauge_type);
+      setSelectedDevice(oldWidget.configuration.device_id);
+    }
+  }, [isOpen])
 
   const saveConfiguration = () => {
 
