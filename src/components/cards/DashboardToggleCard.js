@@ -3,6 +3,7 @@ import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
 import Switch from "react-switch";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const DashboardToggleCard = ({
     onClick = () => { },
@@ -23,7 +24,28 @@ const DashboardToggleCard = ({
         * Set the true/false value to the toggleState state
     */
     const loadToggleData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('auth-token')
+                    }
+                });
 
+            if (response.status == 200) {
+                setToggleState(response.data[widget.configuration.Column.clm_name]);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 404:
+                    toast.error(`Data not found for ${widget.widget_name}!`);
+                    setToggleState(false);
+                    break;
+                default:
+                    toast.error('Something went wrong!');
+                    break;
+            }
+        }
     }
 
     /*
@@ -33,8 +55,24 @@ const DashboardToggleCard = ({
         * Use the relevant API and update the toggle status
     */
     const updateToggleState = async (status) => {
+        try {
+            const response = await axios.put(`http://localhost:3001/api/data/feed/update/toggle`,
+                {
+                    widget_id: widget.id,
+                    new_value: status
+                }
+            );
 
+            if (response.status == 200) {
+                toast.success("toggle updated successfully")
+            }
+        } catch (err) {
+            console.log(err);
+            toast.error(`Something went wrong while updating ${widget.widget_name} status!`);
+            return;
+        }
     }
+
 
     const handleToggleChange = async (status) => {
         setToggleState(status);
