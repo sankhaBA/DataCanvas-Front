@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { VscSignOut } from "react-icons/vsc";
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../Spinner';
+import axios from 'axios';
 import { toast } from 'react-toastify';
+import { set } from 'firebase/database';
 
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, breadcrumb }) => {
     // ---------- Navigation ----------
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false);
 
     const [searchBarShown, setSearchBarShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -26,7 +31,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
     */
     const handleSearch = async () => {
         const uid = localStorage.getItem('uid');
-        const searchKeyword = searchKeyword.trim();
+        const keyword = searchKeyword.trim();
         //validate if uid is empty
         if (!uid) {
             toast.error('Something Went Wrong');
@@ -38,24 +43,29 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
             return;
         }
 
+        setLoading(true);
         try {
-            const url = `http://localhost:3001/api/data/get/search?keyword=${searchKeyword}&user_id=${uid}`;    
-            const response = await axios.get(url);
-            const data = await response.data;
+            const url = `http://localhost:3001/api/data/get/search?keyword=${keyword}&user_id=${uid}`;
+            const response = await axios.get(url,
+                {
+                    headers: {
+                        "authorization": localStorage.getItem('auth-token'),
+                    }
+                }
+            );
 
-            if (response.status === 200) {
-                console.log(data);
-            }else if(response.status === 400){
-                toast.error('Bad request. Either keyword or User ID is not given');
-            }else{
-                toast.error('Internal Server Error');
-            
-            } }
-            catch (error) {
-                console.error('Error fetching search data:', error);
-                toast.error('Error fetching search data');
+            if (response.status == 200) {
+                console.log(response.data);
             }
-            
+
+            setLoading(false);
+        }
+        catch (error) {
+            console.log(error);
+            toast.error('Something went wrong while searching');
+            setLoading(false);
+        }
+
 
     }
 
@@ -130,6 +140,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                     </div>
                 </div>
             )}
+            <Spinner isVisible={loading} />
         </>
     );
 }
