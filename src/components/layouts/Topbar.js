@@ -24,7 +24,38 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
         * 400: Bad request. Either keyword or user_id is not given
         * 500: Internal Server Error
     */
-    const handleSearch = () => {
+    const handleSearch = async () => {
+        const uid = localStorage.getItem('uid');
+        const searchKeyword = searchKeyword.trim();
+        //validate if uid is empty
+        if (!uid) {
+            toast.error('Something Went Wrong');
+            return;
+        }
+        //validate if keyword is empty
+        if (searchKeyword === '') {
+            toast.error('Please enter a keyword to search');
+            return;
+        }
+
+        try {
+            const url = `http://localhost:3001/api/data/get/search?keyword=${searchKeyword}&user_id=${uid}`;    
+            const response = await axios.get(url);
+            const data = await response.data;
+
+            if (response.status === 200) {
+                console.log(data);
+            }else if(response.status === 400){
+                toast.error('Bad request. Either keyword or User ID is not given');
+            }else{
+                toast.error('Internal Server Error');
+            
+            } }
+            catch (error) {
+                console.error('Error fetching search data:', error);
+                toast.error('Error fetching search data');
+            }
+            
 
     }
 
