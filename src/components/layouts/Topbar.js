@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch, FaRegQuestionCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { VscSignOut } from "react-icons/vsc";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Spinner from '../Spinner';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { set } from 'firebase/database';
+import SearchResults from '../SearchResults';
 
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, breadcrumb }) => {
     // ---------- Navigation ----------
@@ -13,8 +13,55 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 
     const [loading, setLoading] = useState(false);
 
+    const { state } = useLocation();
+
+    const [projectID, setProjectID] = useState(-1);
+
+    useEffect(() => {
+        try {
+            setProjectID(state.project_id);
+        } catch (err) {
+            console.log("Sidebar-state error", err);
+        }
+    }, [])
+
     const [searchBarShown, setSearchBarShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchResults, setSearchResults] = useState({
+        projects: [
+
+        ],
+        devices: [
+
+        ],
+        datatables: [
+
+        ],
+        widgets: [
+
+        ]
+    })
+    const [searchResultsShown, setSearchResultsShown] = useState(false)
+    const toggleSearchResults = () => {
+        if (searchResultsShown) {
+            setSearchResults({
+                projects: [
+
+                ],
+                devices: [
+
+                ],
+                datatables: [
+
+                ],
+                widgets: [
+
+                ]
+            })
+            setSearchKeyword('')
+        }
+        setSearchResultsShown(!searchResultsShown);
+    }
 
     /*
         * Implement search function
@@ -44,8 +91,9 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
         }
 
         setLoading(true);
+        console.log('searching for', keyword, uid);
         try {
-            const url = `http://localhost:3001/api/data/get/search?keyword=${keyword}&user_id=${uid}`;
+            const url = `http://localhost:3001/api/data/get/search?keyword=${keyword}&project_id=${projectID}`;
             const response = await axios.get(url,
                 {
                     headers: {
@@ -55,7 +103,8 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
             );
 
             if (response.status == 200) {
-                console.log(response.data);
+                setSearchResults(response.data);
+                toggleSearchResults();
             }
 
             setLoading(false);
@@ -65,8 +114,6 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
             toast.error('Something went wrong while searching');
             setLoading(false);
         }
-
-
     }
 
     const handleLogout = () => {
@@ -89,7 +136,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                             type="text"
                             id="input-group-1"
                             className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full pr-4 ps-12 py-1 text-sm"
-                            placeholder="Search"
+                            placeholder="Search Project"
                             value={searchKeyword}
                             onChange={(e) => { setSearchKeyword(e.target.value) }}
                             onKeyDown={(e) => {
@@ -116,7 +163,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                                         type="text"
                                         id="input-group-1"
                                         className="w-full bg-black3 border border-gray2 border-opacity-30 rounded-full pr-4 ps-12 py-1 text-sm"
-                                        placeholder="Search"
+                                        placeholder="Search Project"
                                         value={searchKeyword}
                                         onChange={(e) => { setSearchKeyword(e.target.value) }}
                                         onKeyDown={(e) => {
@@ -140,6 +187,13 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                     </div>
                 </div>
             )}
+            <SearchResults
+                results={searchResults}
+                isOpen={searchResultsShown}
+                closeFunction={() => toggleSearchResults()}
+                keyword={searchKeyword}
+                projectID={projectID}
+            />
             <Spinner isVisible={loading} />
         </>
     );
