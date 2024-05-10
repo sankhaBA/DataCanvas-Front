@@ -4,13 +4,15 @@ import { LuGauge } from "react-icons/lu";
 import { toast } from "react-toastify";
 import GaugeComponent from "react-gauge-component";
 import axios from "axios";
+import { ScaleLoader } from "react-spinners";
 
 const DashboardGaugeCard = ({
-    onClick = () => { },
-    widget,
-    deleteWidget = () => { },
-    updateWidget = () => { }
+  onClick = () => { },
+  widget,
+  deleteWidget = () => { },
+  updateWidget = () => { }
 }) => {
+  const [loading, setLoading] = useState(false);
   const [widgetValue, setWidgetValue] = useState(widget.configuration.min_value);
   const [widgetPercentage, setWidgetPercentage] = useState(0);
 
@@ -31,6 +33,7 @@ const DashboardGaugeCard = ({
    * Do not need to set the widgetPercentage as it is calculated based on the widgetValue by the calculatePercentage function
    */
   const loadGaugeData = async (gaugeId) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:3001/api/data/get/gauge/${gaugeId}`,
@@ -42,6 +45,7 @@ const DashboardGaugeCard = ({
       );
 
       if (response.status == 200) {
+        setLoading(false);
         setWidgetValue(response.data[widget.configuration.Column.clm_name]);
       }
 
@@ -55,6 +59,7 @@ const DashboardGaugeCard = ({
           toast.error(`Error occured while loading ${widget.widget_name} data`);
           break;
       }
+      setLoading(false);
     }
   };
 
@@ -105,68 +110,74 @@ const DashboardGaugeCard = ({
           </div>
         </div>
 
-        <div className="w-full flex flex-col justify-center items-center px-10">
-          {widget.configuration.gauge_type == 1 ? (
-            // Speedometer
-            <>
-              <GaugeComponent value={widgetPercentage} />
-              <span className="text-gray1 text-sm font-normal mt-2">
-                Real Value : {widgetValue}
-              </span>
-              {widgetValue < widget.configuration.min_value && (
-                <span className="text-red text-xs font-normal mt-2">
-                  Value is below minimum
+        {loading ? (
+          <div className={`flex flex-col justify-center items-center mt-5`}>
+            <ScaleLoader color={"#3ECF8E"} loading={true} size={30} />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col justify-center items-center px-10">
+            {widget.configuration.gauge_type == 1 ? (
+              // Speedometer
+              <>
+                <GaugeComponent value={widgetPercentage} />
+                <span className="text-gray1 text-sm font-normal mt-2">
+                  Real Value : {widgetValue}
                 </span>
-              )}
-              {widgetValue > widget.configuration.max_value && (
-                <span className="text-red text-xs font-normal mt-2">
-                  Value is above maximum
-                </span>
-              )}
-            </>
-          ) : (
-            // Progress Bar
-            <>
-              <span className="text-gray2 text-2xl font-semibold mb-2">
-                {widgetPercentage}%
-              </span>
-              <div className="w-full h-6 bg-gray1 rounded-full">
-                <div
-                  className="bg-green h-6 text-xs font-semibold text-black3 text-center p-1.5 leading-none rounded-full"
-                  style={{ width: `${widgetPercentage}%` }}
-                >
-                  {" "}
+                {widgetValue < widget.configuration.min_value && (
+                  <span className="text-red text-xs font-normal mt-2">
+                    Value is below minimum
+                  </span>
+                )}
+                {widgetValue > widget.configuration.max_value && (
+                  <span className="text-red text-xs font-normal mt-2">
+                    Value is above maximum
+                  </span>
+                )}
+              </>
+            ) : (
+              // Progress Bar
+              <>
+                <span className="text-gray2 text-2xl font-semibold mb-2">
                   {widgetPercentage}%
+                </span>
+                <div className="w-full h-6 bg-gray1 rounded-full">
+                  <div
+                    className="bg-green h-6 text-xs font-semibold text-black3 text-center p-1.5 leading-none rounded-full"
+                    style={{ width: `${widgetPercentage}%` }}
+                  >
+                    {" "}
+                    {widgetPercentage}%
+                  </div>
                 </div>
-              </div>
-              <span className="text-gray1 text-sm font-normal mt-2">
-                Real Value : {widgetValue}
-              </span>
-              {widgetValue < widget.configuration.min_value && (
-                <span className="text-red text-xs font-normal mt-2">
-                  Value is below minimum
+                <span className="text-gray1 text-sm font-normal mt-2">
+                  Real Value : {widgetValue}
                 </span>
-              )}
-              {widgetValue > widget.configuration.max_value && (
-                <span className="text-red text-xs font-normal mt-2">
-                  Value is above maximum
-                </span>
-              )}
-            </>
-          )}
+                {widgetValue < widget.configuration.min_value && (
+                  <span className="text-red text-xs font-normal mt-2">
+                    Value is below minimum
+                  </span>
+                )}
+                {widgetValue > widget.configuration.max_value && (
+                  <span className="text-red text-xs font-normal mt-2">
+                    Value is above maximum
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+        )}
+        {/* Bottom bar for edit and delete buttons */}
+        <div className="flex justify-end w-full px-4">
+          <div className="flex">
+            <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300"
+              onClick={() => { updateWidget(widget) }} />
+            <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
+              onClick={() => { deleteWidget(widget.id) }} />
+          </div>
         </div>
-                {/* Bottom bar for edit and delete buttons */}
-                <div className="flex justify-end w-full px-4">
-                    <div className="flex">
-                        <FaPencilAlt className="text-green text-lg hover:text-gray2 transition duration-300"
-                            onClick={() => { updateWidget(widget) }} />
-                        <FaTrash className="text-red text-lg ms-5 hover:text-gray2 transition duration-300"
-                            onClick={() => { deleteWidget(widget.id) }} />
-                    </div>
-                </div>
-            </div >
-        </div >
-    );
+      </div >
+    </div >
+  );
 }
 
 
