@@ -43,6 +43,11 @@ const AddGaugeWidgetPopup = ({
       selectedDevice = null;
     }
 
+    if (minValue >= maxValue) {
+      toast.error("Minimum value should be less than maximum value");
+      return;
+    }
+
     let newConfiguration = {
       clm_id: selectedColumn,
       max_value: maxValue,

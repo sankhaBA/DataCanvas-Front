@@ -46,6 +46,7 @@ const DashboardGaugeCard = ({
 
       if (response.status == 200) {
         setLoading(false);
+        console.log("Gauge Data: ", widget.configuration.min_value, widget.configuration.max_value, response.data[widget.configuration.Column.clm_name]);
         setWidgetValue(response.data[widget.configuration.Column.clm_name]);
       }
 
