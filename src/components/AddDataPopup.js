@@ -210,7 +210,7 @@ const AddDataPopup = ({ isOpen, closeFunction, columns, projectID, tblName, setL
             title="Add Data"
             Icon={FaPlus}
             closeIconVisible={true}>
-            <div className=" h-80 overflow-scroll pe-4 sm:pe-8 ps-0 sm:ps-2 pb-4">
+            <div className=" h-80 overflow-y-scroll overflow-x-hidden pe-4 sm:pe-8 ps-0 sm:ps-2 pb-4">
 
                 <div className="my-3">
                     <span className="text-sm">Device</span>

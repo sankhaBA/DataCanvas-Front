@@ -4,6 +4,7 @@ import { IoIosSwitch } from "react-icons/io";
 import Switch from "react-switch";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { ScaleLoader } from "react-spinners";
 
 const DashboardToggleCard = ({
     onClick = () => { },
@@ -11,6 +12,7 @@ const DashboardToggleCard = ({
     deleteWidget = () => { },
     updateWidget = () => { }
 }) => {
+    const [loading, setLoading] = useState(false);
     const [toggleState, setToggleState] = useState(false);
 
     useEffect(() => {
@@ -25,6 +27,7 @@ const DashboardToggleCard = ({
         * Set the true/false value to the toggleState state
     */
     const loadToggleData = async () => {
+        setLoading(true);
         try {
             const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,
                 {
@@ -34,6 +37,7 @@ const DashboardToggleCard = ({
                 });
 
             if (response.status == 200) {
+                setLoading(false);
                 setToggleState(response.data[widget.configuration.Column.clm_name]);
             }
         } catch (err) {
@@ -46,6 +50,7 @@ const DashboardToggleCard = ({
                     toast.error('Something went wrong!');
                     break;
             }
+            setLoading(false);
         }
     }
 
@@ -56,6 +61,7 @@ const DashboardToggleCard = ({
         * Use the relevant API and update the toggle status
     */
     const updateToggleState = async (status) => {
+        setLoading(true);
         try {
             const response = await axios.put(`http://localhost:3001/api/data/feed/update/toggle`,
                 {
@@ -65,10 +71,12 @@ const DashboardToggleCard = ({
             );
 
             if (response.status == 200) {
+                setLoading(false);
                 toast.success("Toggle updated successfully")
             }
         } catch (err) {
             console.log(err);
+            setLoading(false);
             toast.error(`Something went wrong while updating ${widget.widget_name} status!`);
             return;
         }
@@ -96,15 +104,30 @@ const DashboardToggleCard = ({
                     <div className="text-md text-gray2 font-medium max-w-full truncate ms-2">{widget.widget_name}</div>
                 </div>
 
-                <div className="w-full flex flex-col justify-center items-center">
-                    <Switch onChange={(e) => handleToggleChange(!toggleState)}
-                        checked={toggleState}
-                        width={80}
-                        height={40}
-                        handleDiameter={42}
-                        disabled={(widget.configuration.write_enabled == true) ? false : true} />
-                    {widget.configuration.write_enabled == true ? <span className="text-sm mt-4 text-gray1">This toggle widget works as a 2-way switch</span> : null}
-                </div>
+                {loading ? (
+                    <div className={`flex flex-col justify-center items-center mt-5`}>
+                        <ScaleLoader color={"#3ECF8E"} loading={true} size={30} />
+                    </div>
+                ) : (
+                    <div className="w-full flex flex-col justify-center items-center">
+                        <Switch onChange={(e) => {
+                            if (widget.configuration.write_enabled == true) {
+                                handleToggleChange(e);
+                            } else {
+                                toast.error("This toggle widget is read-only!");
+                            }
+                        }}
+                            checked={toggleState}
+                            width={80}
+                            height={40}
+                            handleDiameter={42}
+                            offColor="#C0392B"
+                        // disabled={(widget.configuration.write_enabled == true) ? false : true} 
+                        />
+                        {widget.configuration.write_enabled == true ? <span className="text-sm mt-4 text-gray1">This toggle widget works as a 2-way switch</span> :
+                            <span className="text-sm mt-4 text-gray1">This toggle widget works as a 1-way switch</span>}
+                    </div>
+                )}
 
                 {/* Bottom bar for edit and delete buttons */}
                 <div className="flex justify-end w-full px-4">
