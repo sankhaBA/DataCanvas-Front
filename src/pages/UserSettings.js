@@ -40,6 +40,8 @@ function UserSettings() {
     //user state details
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [userID, setUserID] = useState(-1);
+    const [profilePicture, setProfilePicture] = useState(`${process.env.PUBLIC_URL}/img/sample_user.png`);
 
     useEffect(() => {
         loadUserDetails();
@@ -81,6 +83,7 @@ function UserSettings() {
                 if (response.status === 200) {
                     setName(response.data.user_name); // Assuming user_name is the correct field name
                     setEmail(response.data.email);
+                    setUserID(response.data.user_id);
                 }
             })
             .catch(error => {
@@ -154,7 +157,7 @@ function UserSettings() {
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
                     <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
-                        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
+                        style={{ backgroundImage: `url(${profilePicture})` }}></div></div>
                     <h1 className="text-center my-2 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
 

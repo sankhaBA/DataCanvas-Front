@@ -183,7 +183,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                         {!isSidebarOpen && sideBarButtonDisplayed ? (
                             <FaBars className="text-2xl text-green mr-4 cursor-pointer visible lg:hidden" onClick={toggleSidebar} />
                         ) : null}
-                        <img src={process.env.PUBLIC_URL + '/img/sample_user.jpg'} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" onClick={() => navigate('/usersettings')} />
+                        <img src={process.env.PUBLIC_URL + '/img/sample_user.png'} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" onClick={() => navigate('/usersettings')} />
                     </div>
                 </div>
             )}
