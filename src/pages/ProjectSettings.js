@@ -49,8 +49,7 @@ function ProjectSettings() {
             }
             else if (actionType == 4) {
                 toast.success('Login successful, Deleting project');
-                //handleProjectDelete(projectID);  -> TODO: THis function is not implemented yet
-                navigate('/projects');
+                handleProjectDelete(projectID);
             }
         }
     }, [authenticationResult]);
@@ -294,6 +293,46 @@ function ProjectSettings() {
             }
         }
         finally {
+            setLoading(false);
+        }
+    }
+
+    const handleProjectDelete = async (project_id) => {
+        setLoading(true);
+        // delete request to localhost:3001/api/project
+        try {
+            const response = await axios.delete(`http://localhost:3001/api/project`, {
+                headers: {
+                    authorization: localStorage.getItem("auth-token"),
+                },
+                data: { project_id },
+            });
+
+            if (response.status == 200) {
+                toast.success("Project successfully deleted!");
+                navigate('/projects');
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    navigate("/login");
+                    break;
+                case 403:
+                    toast.error("Token not provided!");
+                    navigate("/login");
+                    break;
+                case 404:
+                    toast.warning("Project not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+        } finally {
             setLoading(false);
         }
     }
