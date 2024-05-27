@@ -150,7 +150,7 @@ const AddChartWidgetPopup = ({
               <option value={0}>Record Timestamp</option>
               {columns.map((column) => {
                 return (
-                  column.clm_name != 'id' ? (
+                  column.clm_name != 'id' && column.clm_name != 'device' ? (
                     <option key={column.clm_id} value={column.clm_id}>
                       {column.clm_name}
                     </option>
