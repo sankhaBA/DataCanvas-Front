@@ -11,6 +11,7 @@ import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
+import storageService from "../services/storageService";
 
 function UserSettings() {
     // navigation hooks
@@ -156,8 +157,14 @@ function UserSettings() {
         <NonSidebarLayout breadcrumb={`${name} > User Settings`}>
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
-                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
-                        style={{ backgroundImage: `url(${profilePicture})` }}></div></div>
+                    <div className="flex justify-center items-center">
+                        <div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
+                            style={{ backgroundImage: `url(${profilePicture})` }}>
+                        </div> 
+                    </div>
+                    <div className="flex justify-center items-center mt-5">
+                        <PillButton text="Change Profile picture" onClick={handleSubmit} isPopup={true} icon={FaUpload} />
+                    </div>
                     <h1 className="text-center my-2 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
 
