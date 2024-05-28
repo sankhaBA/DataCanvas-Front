@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,8 @@ import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
 import storageService from "../services/storageService";
+import { firebaseImageUpload } from "../services/storageService";
+import { set } from "firebase/database";
 
 function UserSettings() {
     // navigation hooks
@@ -19,11 +21,15 @@ function UserSettings() {
 
     const [loading, setLoading] = useState(false);
 
+   
+    const fileInputRef = useRef();
+
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState('');
     const [authenticationResult, setAuthenticationResult] = useState(false);
 
+   
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
@@ -68,6 +74,33 @@ function UserSettings() {
                 toast.error('Error sending password reset email:', errorCode, errorMessage);
             });
     }
+
+    const handleButtonClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleProfilePictureChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            toast.error('No file selected.');
+            return;
+        }
+        const fileType= file.type;
+        if(fileType !== 'image/jpeg' || fileType !== 'image/png'){
+            try{
+                const url = await firebaseImageUpload(file, 'profile_pictures', userID);
+                setProfilePicture(url);
+                toast.success('Profile picture updated successfully!');
+            }catch(error){
+                console.error('Error uploading image: ', error);
+                toast.error('Error uploading image');
+            }
+        }
+        else{
+            toast.error('Invalid file type. Please upload a jpg file');
+        }
+    }
+
 
     // Load user details
     const loadUserDetails = () => {
@@ -163,7 +196,14 @@ function UserSettings() {
                         </div> 
                     </div>
                     <div className="flex justify-center items-center mt-5">
-                        <PillButton text="Change Profile picture" onClick={handleSubmit} isPopup={true} icon={FaUpload} />
+                        <PillButton text="Change Profile picture" onClick={handleButtonClick} isPopup={true} icon={FaUpload} />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }} 
+                            accept="image/jpg"
+                            onChange={(e) => handleProfilePictureChange(e)}
+                        />
                     </div>
                     <h1 className="text-center my-2 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
