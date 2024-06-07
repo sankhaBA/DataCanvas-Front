@@ -165,14 +165,6 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
                 color = `rgba(${Math.floor(Math.random() * 100 + 100)}, ${Math.floor(Math.random() * 100 + 100)}, ${Math.floor(Math.random() * 100 + 100)}, 1)`;
             }
 
-            // let dataArray = [];
-            // for (let data of series.data) {
-            //     dataArray.push({
-            //         x: new Date(data.x),
-            //         y: data.y
-            //     });
-            // }
-
             let dataset = {
                 label: series.name,
                 data: series.data,
