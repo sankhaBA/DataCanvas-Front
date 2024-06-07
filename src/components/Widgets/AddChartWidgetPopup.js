@@ -20,7 +20,7 @@ const AddChartWidgetPopup = ({
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Bubble Chart" },
     { id: 2, name: "Bar Chart" },
-    { id: 3, name: "Pie Chart" },
+    // { id: 3, name: "Pie Chart" },
     { id: 4, name: "Line Chart" },
   ]);
 

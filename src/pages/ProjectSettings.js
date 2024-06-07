@@ -26,6 +26,7 @@ function ProjectSettings() {
     const [projectID, setProjectID] = useState(-1);
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const [realTimeEnabled, setRealTimeEnabled] = useState(false);
 
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
@@ -83,8 +84,10 @@ function ProjectSettings() {
             });
 
             if (response.status === 200) {
+                console.log(response.data);
                 setProjectName(response.data.project_name);
                 setProjectDescription(response.data.description);
+                setRealTimeEnabled(response.data.real_time_enabled);
                 setLoading(false);
             }
 
@@ -128,7 +131,8 @@ function ProjectSettings() {
                 {
                     project_id: project_id,
                     project_name: projectName,
-                    description: projectDescription
+                    description: projectDescription,
+                    real_time_enabled: realTimeEnabled
                 },
                 {
                     headers: {
@@ -361,6 +365,17 @@ function ProjectSettings() {
                     <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Project ID</div>
                 </div>
                 <TextBox value={projectID} onChange={(e) => { }} type="text" placeholder="256" maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" disabled={true} />
+            </div>
+            <div className='flex flex-row ml-8 mt-4 items-center'>
+                <div className='flex flex-col w-1/4 md:w-1/6'>
+                    <div className="text-sm md:text-md text-gray1 font-semibold mt-2">Real Time Enabled</div>
+                </div>
+                <input
+                    type="checkbox"
+                    className="form-checkbox h-5 w-5 text-green ml-2"
+                    checked={realTimeEnabled}
+                    onChange={() => setRealTimeEnabled(!realTimeEnabled)}
+                />
             </div>
             <div className='flex w-full sm:w-3/5 items-center justify-center mt-4 '>
                 <PillButton

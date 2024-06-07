@@ -54,3 +54,23 @@ export const firebaseImageDelete = (imageUrl, folderName) => {
     });
 };
 
+// Firebase storage get file url when folder name ('profile_pictures') and file name (function parameter) is known
+export const firebaseGetFileURL = (folderName, fileName) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const storage = getStorage(app);
+
+            const storageRef = ref(storage, `/${folderName}/` + fileName);
+
+            getDownloadURL(storageRef).then((url) => {
+                resolve(url);
+            }).catch((error) => {
+                console.error('Error getting file URL: ', error);
+                reject(error);
+            });
+        } catch (error) {
+            console.error('Error getting file URL: ', error);
+            reject(error);
+        }
+    });
+}

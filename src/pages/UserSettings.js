@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,8 +12,7 @@ import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
 import storageService from "../services/storageService";
-import { firebaseImageUpload } from "../services/storageService";
-import { set } from "firebase/database";
+import { firebaseImageUpload, firebaseGetFileURL } from "../services/storageService";
 
 function UserSettings() {
     // navigation hooks
@@ -21,7 +20,7 @@ function UserSettings() {
 
     const [loading, setLoading] = useState(false);
 
-   
+
     const fileInputRef = useRef();
 
     // ---------- Login for proceed with critical actions
@@ -29,7 +28,7 @@ function UserSettings() {
     const [actionType, setActionType] = useState('');
     const [authenticationResult, setAuthenticationResult] = useState(false);
 
-   
+
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
@@ -85,18 +84,18 @@ function UserSettings() {
             toast.error('No file selected.');
             return;
         }
-        const fileType= file.type;
-        if(fileType !== 'image/jpeg' || fileType !== 'image/png'){
-            try{
+        const fileType = file.type;
+        if (fileType !== 'image/jpeg' || fileType !== 'image/png') {
+            try {
                 const url = await firebaseImageUpload(file, 'profile_pictures', userID);
                 setProfilePicture(url);
                 toast.success('Profile picture updated successfully!');
-            }catch(error){
+            } catch (error) {
                 console.error('Error uploading image: ', error);
                 toast.error('Error uploading image');
             }
         }
-        else{
+        else {
             toast.error('Invalid file type. Please upload a jpg file');
         }
     }
@@ -118,6 +117,13 @@ function UserSettings() {
                     setName(response.data.user_name); // Assuming user_name is the correct field name
                     setEmail(response.data.email);
                     setUserID(response.data.user_id);
+                    firebaseGetFileURL('profile_pictures', `${response.data.user_id}.jpg`)
+                        .then((url) => {
+                            setProfilePicture(url);
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching profile picture:', error);
+                        });
                 }
             })
             .catch(error => {
@@ -193,19 +199,19 @@ function UserSettings() {
                     <div className="flex justify-center items-center">
                         <div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
                             style={{ backgroundImage: `url(${profilePicture})` }}>
-                        </div> 
+                        </div>
                     </div>
                     <div className="flex justify-center items-center mt-5">
                         <PillButton text="Change Profile picture" onClick={handleButtonClick} isPopup={true} icon={FaUpload} />
                         <input
                             type="file"
                             ref={fileInputRef}
-                            style={{ display: 'none' }} 
+                            style={{ display: 'none' }}
                             accept="image/jpg"
                             onChange={(e) => handleProfilePictureChange(e)}
                         />
                     </div>
-                    <h1 className="text-center my-2 text-xl">{name}</h1>
+                    <h1 className="text-center mb-2 mt-4 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
 
                     <div className="text-m text-gray2 font-semibold mt-8">General Settings</div>

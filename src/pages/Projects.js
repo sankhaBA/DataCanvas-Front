@@ -37,6 +37,7 @@ function Projects() {
   const [projects, setProjects] = useState([]); // This fills by the projects from the server
   const [newProjectName, setNewProjectName] = useState(""); // This is for the textbox of Add Project
   const [newProjectDescription, setNewProjectDescription] = useState(""); // This is for the textbox of Add Project
+  const [newProjectRealTimeEnabled, setNewProjectRealTimeEnabled] = useState(false); // This is for the checkbox of Add Project
   const [newProjectID, setNewProjectID] = useState(""); // This is for the textbox of Project Adding Done and fills when project successfully added
 
   const handleProjectNameChange = (e) => {
@@ -122,6 +123,7 @@ function Projects() {
           project_name: newProjectName,
           description: newProjectDescription,
           user_id: userID,
+          real_time_enabled: newProjectRealTimeEnabled,
         },
         {
           headers: {
@@ -254,6 +256,15 @@ function Projects() {
             onChange={handleProjectDescriptionChange}
             value={newProjectDescription}
           />
+        </div>
+
+        <div className="flex w-full justify-center items-center mt-8 mb-8">
+          <input
+            type="checkbox"
+            className="form-checkbox h-5 w-5 text-green ml-2"
+            onChange={() => setNewProjectRealTimeEnabled(!newProjectRealTimeEnabled)}
+          />
+          <label className="ms-2 text-white text-sm">Real-Time Enabled</label>
         </div>
 
         <div className="flex flex-col items-center justify-center mt-4">
