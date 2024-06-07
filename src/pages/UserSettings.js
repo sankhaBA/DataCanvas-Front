@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,9 @@ import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
+import storageService from "../services/storageService";
+import { firebaseImageUpload } from "../services/storageService";
+import { set } from "firebase/database";
 
 function UserSettings() {
     // navigation hooks
@@ -18,11 +21,15 @@ function UserSettings() {
 
     const [loading, setLoading] = useState(false);
 
+   
+    const fileInputRef = useRef();
+
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState('');
     const [authenticationResult, setAuthenticationResult] = useState(false);
 
+   
     useEffect(() => {
         if (authenticationResult) {
             setIsLoginPopupVisible(false);
@@ -67,6 +74,33 @@ function UserSettings() {
                 toast.error('Error sending password reset email:', errorCode, errorMessage);
             });
     }
+
+    const handleButtonClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleProfilePictureChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            toast.error('No file selected.');
+            return;
+        }
+        const fileType= file.type;
+        if(fileType !== 'image/jpeg' || fileType !== 'image/png'){
+            try{
+                const url = await firebaseImageUpload(file, 'profile_pictures', userID);
+                setProfilePicture(url);
+                toast.success('Profile picture updated successfully!');
+            }catch(error){
+                console.error('Error uploading image: ', error);
+                toast.error('Error uploading image');
+            }
+        }
+        else{
+            toast.error('Invalid file type. Please upload a jpg file');
+        }
+    }
+
 
     // Load user details
     const loadUserDetails = () => {
@@ -156,8 +190,21 @@ function UserSettings() {
         <NonSidebarLayout breadcrumb={`${name} > User Settings`}>
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
-                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
-                        style={{ backgroundImage: `url(${profilePicture})` }}></div></div>
+                    <div className="flex justify-center items-center">
+                        <div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
+                            style={{ backgroundImage: `url(${profilePicture})` }}>
+                        </div> 
+                    </div>
+                    <div className="flex justify-center items-center mt-5">
+                        <PillButton text="Change Profile picture" onClick={handleButtonClick} isPopup={true} icon={FaUpload} />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }} 
+                            accept="image/jpg"
+                            onChange={(e) => handleProfilePictureChange(e)}
+                        />
+                    </div>
                     <h1 className="text-center my-2 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
 

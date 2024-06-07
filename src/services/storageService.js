@@ -7,7 +7,7 @@ export const firebaseImageUpload = (file, folderName, fileName, setUploadPercent
             const storage = getStorage(app);
 
             const storageRef = ref(storage, `/${folderName}/` + fileName + '.jpg');
-            const uploadTask = uploadBytesResumable(storageRef, imageFile);
+            const uploadTask = uploadBytesResumable(storageRef, file);
 
             uploadTask.on(
                 'state_changed',
