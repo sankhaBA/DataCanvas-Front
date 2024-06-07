@@ -9,6 +9,8 @@
     "@testing-library/user-event": "13.5.0",
     "axios": "1.6.2",
     "chart.js": "4.4.2",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^3.6.0",
     "firebase": "10.7.1",
     "moment": "2.29.4",
     "react": "18.2.0",

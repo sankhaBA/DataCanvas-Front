@@ -27,23 +27,6 @@ function ExpandedWidget() {
 
     // ---------- State to store details of the selected widget ----------
     const [widget, setWidget] = useState({
-        widget_id: 1,
-        widget_name: "Temperature Variation",
-        dataset: 59,
-        widget_type: 1,
-        configuration: {
-            chart_id: 1,
-            x_axis: 0,
-            chart_type: 1,
-            series: [
-                {
-                    series_id: 1,
-                    series_name: "Temperature",
-                    clm_id: 146,
-                    device_id: 72
-                }
-            ]
-        }
     });
 
     useEffect(() => {
@@ -53,20 +36,20 @@ function ExpandedWidget() {
             setWidget(state.widget);
         } catch (err) {
             console.log(err);
-            navigate('/login');
+            navigate('/dashboard');
         }
     }, []);
 
     return (
         <SidebarLayout active={1}
             breadcrumb={`${localStorage.getItem('project')} > Dashboard > ${widget.widget_name}`}>
-            <div className='px-2 sm:px-10 mt-8 mb-24'>
+            <div className='px-2 sm:px-10 mt-8 mb-24 h-screen pb-60'>
                 <div className={`flex flex-row justify-between`}>
                     <span className={`text-lg font-semibold`}>{widget.widget_name}</span>
                 </div>
 
                 {/* Expanded chart component */}
-                {widget.widget_type == 1 ? <ExpandedChart widget={widget} />
+                {widget.widget_type == 1 ? <ExpandedChart widget={widget} setLoading={(loading) => setLoading(loading)} navigate={navigate} />
                     : widget.widget_type == 2 ? <ExpandedTable widget={widget} setLoading={(loading) => setLoading(loading)} navigate={navigate} /> : null}
             </div>
 
