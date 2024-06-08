@@ -9,6 +9,7 @@ import PillButton from "./input/PillButton";
 import TextBox from "./input/TextBox";
 import SelectBox from "./input/SelectBox";
 import OpenAI from "openai";
+import { OPENAI_API_KEY } from "../config"
 
 const AskAssistantPopup = ({
     isOpen = false,
@@ -38,7 +39,7 @@ const AskAssistantPopup = ({
     }
 
     const sendPrompt = async (prompt) => {
-        console.log(tables, columns)
+        console.log(tables, columns, analyticTypes)
 
         let tablesString = '', columnsString = '', devicesString = '', analyticTypesString = '';
         for (let tableItem of tables) {
@@ -51,14 +52,14 @@ const AskAssistantPopup = ({
             devicesString += `{device_id:${deviceItem.device_id}, device_name:'${deviceItem.device_name}'},`;
         }
         for (let analyticType of analyticTypes) {
-            analyticTypesString += `{id:${analyticType.id}, value:'${analyticType.value}'},`;
+            analyticTypesString += `{id:${analyticType.id}, name:'${analyticType.value}'},`;
         }
 
         let systemPrompt = `tables: [${tablesString}] columns: [${columnsString}] devices: [${devicesString}] analyticTypes: [${analyticTypesString}]`;
-        let assistantPrompt = 'Refer system content. Give JSON object for {caption (suitable one from user prompt), dataset (tbl_id, refers from tables by tbl_name), parameter(refers from columns by clm_name), device(device_id, refers from devices by device_name), analyticType, refers from analyticTypes by name} for the user prompt. Only return the JSON object. Not any word else.'
+        let assistantPrompt = 'Refer system content. Give JSON object for {caption (suitable small caption from user prompt), dataset (select from tables referring to user prompt by tbl_name), parameter(select from columns referring to user prompt by clm_name), device(select from devices referring to devices bydevice_name), analyticType (select from analyticTypes)} for the user prompt. Only return the JSON object. Not any word else.'
         setResult(3);
         try {
-            const openai = new OpenAI({ dangerouslyAllowBrowser: true });
+            const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
             const completion = await openai.chat.completions.create({
                 messages: [{ role: "system", content: systemPrompt },
@@ -109,7 +110,7 @@ const AskAssistantPopup = ({
         setValue(Math.floor(Math.random() * 100) + 1);
         setTimestamp(new Date().toISOString());
         setResult(1);
-        setPrompt('');
+        //setPrompt('');
     }
 
     const clearValues = () => {

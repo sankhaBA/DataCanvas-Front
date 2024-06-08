@@ -32,11 +32,11 @@ export default function Analytics() {
     const [analyticTypes, setAnalyticTypes] = useState([
         { id: 1, name: 'Average' },
         { id: 2, name: 'Variance' },
-        { id: 8, name: 'Standard Deviation' },
-        { id: 3, name: 'Range' },
-        { id: 4, name: 'Count' },
-        { id: 5, name: 'Maximum' },
-        { id: 6, name: 'Minimum' },
+        { id: 3, name: 'Standard Deviation' },
+        { id: 4, name: 'Range' },
+        { id: 5, name: 'Count' },
+        { id: 6, name: 'Maximum' },
+        { id: 7, name: 'Minimum' },
     ]);
 
     // ---------- States for project ID and data tables ----------
