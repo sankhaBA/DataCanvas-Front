@@ -19,6 +19,7 @@ import DataTableHandler from './pages/DataTableHandler';
 import ProjectSettings from './pages/ProjectSettings';
 import DatasetViewer from './pages/DatasetViewer';
 import Dashboard from './pages/Dashboard';
+import Analytics from './pages/Analytics';
 import ExpandedWidget from './pages/ExpandedWidget';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -41,6 +42,7 @@ root.render(
       <Route path="/projectsettings" element={<ProjectSettings />} />
       <Route path="/dataset" element={<DatasetViewer />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/analytics" element={<Analytics />} />
       <Route path="/expand" element={<ExpandedWidget />} />
     </Routes>
   </Router>

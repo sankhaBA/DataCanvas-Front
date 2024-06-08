@@ -249,7 +249,7 @@ function Dashboard() {
 
     return (
         <SidebarLayout active={1}
-            breadcrumb={`${localStorage.getItem('project')} > Dashboard`}>
+            breadcrumb={`${localStorage.getItem('project')} > Visualizations`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
                 <span className={`text-lg font-semibold`}>{projectName}</span>
                 <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
