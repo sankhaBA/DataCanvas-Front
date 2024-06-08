@@ -43,16 +43,16 @@ const AskAssistantPopup = ({
 
         let tablesString = '', columnsString = '', devicesString = '', analyticTypesString = '';
         for (let tableItem of tables) {
-            tablesString += `{tbl_id:${tableItem.tbl_id}, tbl_name:'${tableItem.tbl_name}'},`;
+            tablesString += `'${tableItem.tbl_name}',`;
         }
         for (let columnItem of columns) {
-            columnsString += `{clm_id:${columnItem.clm_id}, clm_name:'${columnItem.clm_name}', tbl_id:${columnItem.tbl_id}},`;
+            columnsString += `'${columnItem.clm_name}',`;
         }
         for (let deviceItem of devices) {
-            devicesString += `{device_id:${deviceItem.device_id}, device_name:'${deviceItem.device_name}'},`;
+            devicesString += `'${deviceItem.device_name}',`;
         }
         for (let analyticType of analyticTypes) {
-            analyticTypesString += `{id:${analyticType.id}, name:'${analyticType.value}'},`;
+            analyticTypesString += `'${analyticType.name}',`;
         }
 
         let systemPrompt = `tables: [${tablesString}] columns: [${columnsString}] devices: [${devicesString}] analyticTypes: [${analyticTypesString}]`;
@@ -90,9 +90,20 @@ const AskAssistantPopup = ({
                 return;
             }
             setCaption(responseJSON.caption);
-            setDataset(responseJSON.dataset);
-            setDevice(responseJSON.device);
-            setAnalyticType(responseJSON.analyticType);
+            let datasetID = tables.find(item => item.tbl_name == responseJSON.dataset).tbl_id;
+            let parameterID = columns.find(item => item.clm_name == responseJSON.parameter).clm_id;
+            let deviceID = devices.find(item => item.device_name == responseJSON.device).device_id;
+            let analyticTypeID = analyticTypes.find(item => item.name == responseJSON.analyticType).id;
+            if (datasetID == undefined || parameterID == undefined || deviceID == undefined || analyticTypeID == undefined) {
+                setResult(2);
+                clearValues();
+                setPrompt('');
+                return;
+            }
+            setDataset(datasetID);
+            setParameter(responseJSON.parameter); // Parameter name is directly needed for table queries
+            setDevice(deviceID);
+            setAnalyticType(analyticTypeID);
 
             processAnalytics(responseJSON);
         } catch (err) {
