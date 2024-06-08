@@ -86,7 +86,7 @@ export default function ExpandedTable({ widget, setLoading, navigate }) {
 
     return (
         <div className={``}>
-            <div className="overflow-x-scroll overflow-y-scroll max-h-[500px] px-7 sm:px-10 mt-5 sm:mt-6">
+            <div className="overflow-x-scroll overflow-y-scroll max-h-[610px] px-7 sm:px-10 mt-5 sm:mt-6">
                 <table className="table-fixed w-full mb-4">
                     <thead>
                         <tr className={`bg-black3 `}>
