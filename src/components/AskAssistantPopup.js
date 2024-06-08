@@ -135,10 +135,16 @@ const AskAssistantPopup = ({
         setTimestamp('');
     }
 
+    const handleClose = () => {
+        clearValues();
+        setResult(0);
+        closeFunction();
+    }
+
     return (
         <PopupContainer
             isOpen={isOpen}
-            closeFunction={closeFunction}
+            closeFunction={() => handleClose()}
             onClose={() => { }}
             title={'DataCanvas Assistant'}
             Icon={SiGoogleassistant}
