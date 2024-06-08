@@ -35,6 +35,17 @@ const DashboardAnalyticsCard = ({
 
     const loadValue = async () => {
         setRefreshing(true);
+        let object = {
+            widget_id: widget.id,
+            dataset: widget.dataset,
+            parameter: widget.parameter,
+            device: widget.device,
+            analyticType: widget.widget_type,
+            filterMethod: Number(filterType),
+            filterValue: Number(filterValue)
+        }
+
+        console.log(object);
         //Timeout for 3 s
         setTimeout(() => {
             setRefreshing(false);
@@ -61,7 +72,7 @@ const DashboardAnalyticsCard = ({
     return (
         <div
             className={
-                `w-full sm:w-[400px] h-[300px] bg-black3 rounded-2xl mx-3 my-1 sm:my-5
+                `w-full sm:w-[340px] h-[250px] bg-black3 rounded-2xl mx-3 my-1 sm:my-5
         border border-gray1 border-opacity-60 relative overflow-hidden
         transition duration-300 hover:border-green cursor-pointer`
             }

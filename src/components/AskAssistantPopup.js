@@ -28,6 +28,9 @@ const AskAssistantPopup = ({
     const [analyticType, setAnalyticType] = useState('Average');
     const [value, setValue] = useState('25.45');
     const [timestamp, setTimestamp] = useState('2021-01-01 00:00:00');
+    const [timeDurations, setTimeDurations] = useState(['Last Hour', 'Last Day', 'Last Week', 'Last Month', 'Last 6 Months']);
+    const [filterMethod, setFilterMethod] = useState(0);
+    const [filterValue, setFilterValue] = useState(1000);
 
     const handleSubmit = () => {
         if (prompt == '') {
@@ -54,9 +57,9 @@ const AskAssistantPopup = ({
         for (let analyticType of analyticTypes) {
             analyticTypesString += `'${analyticType.name}',`;
         }
-
-        let systemPrompt = `tables: [${tablesString}] columns: [${columnsString}] devices: [${devicesString}] analyticTypes: [${analyticTypesString}]`;
-        let assistantPrompt = 'Refer system content. Give JSON object for {caption (suitable small caption from user prompt), dataset (select from tables referring to user prompt by tbl_name), parameter(select from columns referring to user prompt by clm_name), device(select from devices referring to devices bydevice_name), analyticType (select from analyticTypes)} for the user prompt. Only return the JSON object. Not any word else.'
+        let timeDurations = ['last hour', 'last day', 'last week', 'last month', 'last 6 months'];
+        let systemPrompt = `tables: [${tablesString}] columns: [${columnsString}] devices: [${devicesString}] analyticTypes: [${analyticTypesString}] timeDurations: [${timeDurations}]`;
+        let assistantPrompt = 'Refer system content. Give JSON object for {caption (suitable camel case caption of 4 words from user prompt without filtering details), dataset (select from tables referring to user prompt by tbl_name), parameter(select from columns referring to user prompt by clm_name), device(select from devices referring to devices bydevice_name), analyticType (select from analyticTypes), filterMethod(If user mention about a time duration in timeDurations, filterMethod is 1. If not, it is 0), filterValue(If filter method is a time duration, filterValue is that time duration. If not, filterValue is the number of records that should be refferred.)} for the user prompt.  If user has not mentioned about time or number of records, filterMethod = 0 and filterValue=1000. Only return the JSON object. Not any word else.'
         setResult(3);
         try {
             const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
@@ -105,7 +108,41 @@ const AskAssistantPopup = ({
             setDevice(deviceID);
             setAnalyticType(analyticTypeID);
 
-            processAnalytics(responseJSON);
+            let identifiedFilterMethod = 0;
+            let identifiedFilterValue = 1000;
+            if (Number(responseJSON.filterMethod) == 1 || Number(responseJSON.filterMethod) == 0) {
+                identifiedFilterMethod = Number(responseJSON.filterMethod);
+                if (identifiedFilterMethod == 1) {
+                    let timeDuration = responseJSON.filterValue;
+                    let timeDurationID = timeDurations.indexOf(timeDuration);
+                    if (timeDurationID == -1) {
+                        identifiedFilterValue = 3
+                    } else {
+                        identifiedFilterValue = timeDurationID;
+                    }
+                } else {
+                    if (!NaN(responseJSON.filterValue) && Number(responseJSON.filterValue) > 0 && Number(responseJSON.filterValue) < 1000) {
+                        identifiedFilterValue = Number(responseJSON.filterValue);
+                    } else {
+                        identifiedFilterValue = 1000;
+                    }
+                }
+            }
+
+            setFilterMethod(identifiedFilterMethod);
+            setFilterValue(identifiedFilterValue);
+
+            let finalObject = {
+                dataset: datasetID,
+                parameter: responseJSON.parameter,
+                device: deviceID,
+                analyticType: analyticTypeID,
+                filterMethod: identifiedFilterMethod,
+                filterValue: identifiedFilterValue
+            }
+
+            console.log('Final Object : ', finalObject);
+            processAnalytics(finalObject);
         } catch (err) {
             setResult(2);
             clearValues();
@@ -160,7 +197,7 @@ const AskAssistantPopup = ({
                     </div>
                 ) : (result == 1) ? (
                     <div className="w-full py-4 flex flex-col justify-center items-center">
-                        <div className="text-white text-lg font-semibold">{caption}</div>
+                        <div className="text-white text-lg font-semibold text-center">{caption}</div>
                         <div className="flex flex-wrap w-full mt-2 justify-center items-center">
                             <div className="border border-green rounded-full px-4 py-1 text-xs text-green mx-2 my-1">
                                 {tables.find(item => item.tbl_id == dataset)?.tbl_name || ''}
@@ -174,6 +211,10 @@ const AskAssistantPopup = ({
                             <div className="border border-green rounded-full px-4 py-1 text-xs text-green mx-2 my-1">
                                 {analyticTypes.find(item => item.id == analyticType)?.name || ''}
                             </div>
+                            <div className="border border-green rounded-full px-4 py-1 text-xs text-green mx-2 my-1">
+                                {filterMethod == 1 ? timeDurations[filterValue] : `Last ${filterValue} Records`}
+                            </div>
+
                         </div>
                         <div className="w-full border border-gray1 border-opacity-20 mt-3" />
                         <div className="w-full text-center text-gray1 text-xs mt-4">

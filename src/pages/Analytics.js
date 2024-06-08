@@ -33,10 +33,9 @@ export default function Analytics() {
         { id: 1, name: 'Average' },
         { id: 2, name: 'Variance' },
         { id: 3, name: 'Standard Deviation' },
-        { id: 4, name: 'Range' },
-        { id: 5, name: 'Count' },
-        { id: 6, name: 'Maximum' },
-        { id: 7, name: 'Minimum' },
+        { id: 4, name: 'Count' },
+        { id: 5, name: 'Maximum' },
+        { id: 6, name: 'Minimum' },
     ]);
 
     // ---------- States for project ID and data tables ----------
