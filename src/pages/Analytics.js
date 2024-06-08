@@ -241,7 +241,7 @@ export default function Analytics() {
 
             if (response.status == 200) {
                 toast.success("Widget added successfully!");
-                setIsAddWidgetPopupVisible(false);
+
                 loadWidgets();
                 setLoading(false);
             }

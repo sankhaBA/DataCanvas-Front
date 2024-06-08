@@ -76,6 +76,14 @@ const AddAnalyticsWidgetPopup = ({
         if (type == 0) {
             // Add widget
             submitFunction(object);
+            // Clear fields
+            setWidgetName('');
+            setWidgetType(0);
+            setDataset(0);
+            setParameter(0);
+            setDevice(0);
+
+            closeFunction();
         } else {
             // Edit widget
             object.widget_id = currentWidget.widget_id;
