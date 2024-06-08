@@ -13,20 +13,11 @@ const AddAnalyticsWidgetPopup = ({
     tables = [],
     columns = [],
     devices = [],
+    analyticTypes = [],
     submitFunction = () => { },
     type = 0, // 0: Add Widget, 1: Edit Widget
     currentWidget = {} // Widget details if type is 1
 }) => {
-    const [analyticTypes, setAnalyticTypes] = useState([
-        { id: 1, name: 'Mean' },
-        { id: 2, name: 'Variance' },
-        { id: 8, name: 'Standard Deviation' },
-        { id: 3, name: 'Range' },
-        { id: 4, name: 'Count' },
-        { id: 5, name: 'Maximum' },
-        { id: 6, name: 'Minimum' },
-    ]);
-
     const [widgetName, setWidgetName] = useState('');
     const [widgetType, setWidgetType] = useState(0);
     const [dataset, setDataset] = useState(0);

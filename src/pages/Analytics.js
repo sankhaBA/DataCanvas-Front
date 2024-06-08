@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlusCircle } from "react-icons/fa";
+import { SiGoogleassistant } from "react-icons/si";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -8,7 +9,10 @@ import PillButton from '../components/input/PillButton';
 import Spinner from "../components/Spinner";
 import AddAnalyticsWidgetPopup from "../components/Widgets/AddAnalyticsWidgetPopup";
 import DashboardAnalyticsCard from "../components/cards/DashboardAnalyticsCard";
+import AskAssistantPopup from "../components/AskAssistantPopup";
 import axios from "axios";
+
+import OpenAI from "openai";
 
 export default function Analytics() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
@@ -19,6 +23,21 @@ export default function Analytics() {
 
     // ---------- Loading state for spinner ----------
     const [loading, setLoading] = useState(false);
+
+    const [assistantPopupVisible, setAssistantPopupVisible] = useState(false);
+    const toggleAssistantPopup = () => {
+        setAssistantPopupVisible(!assistantPopupVisible);
+    }
+
+    const [analyticTypes, setAnalyticTypes] = useState([
+        { id: 1, name: 'Average' },
+        { id: 2, name: 'Variance' },
+        { id: 8, name: 'Standard Deviation' },
+        { id: 3, name: 'Range' },
+        { id: 4, name: 'Count' },
+        { id: 5, name: 'Maximum' },
+        { id: 6, name: 'Minimum' },
+    ]);
 
     // ---------- States for project ID and data tables ----------
     const [projectID, setProjectID] = useState(-1);
@@ -273,7 +292,10 @@ export default function Analytics() {
         <SidebarLayout active={5} breadcrumb={`${localStorage.getItem('project')} > Analytics`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
                 <span className={`text-lg font-semibold`}>{projectName}</span>
-                <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
+                <div className='flex justify-center items-center space-x-4'>
+                    <PillButton text="Ask Assistant" icon={SiGoogleassistant} onClick={() => { setAssistantPopupVisible(true) }} />
+                    <PillButton text="Add Widget" icon={FaPlusCircle} onClick={() => { setIsAddWidgetPopupVisible(true) }} />
+                </div>
             </div>
 
             <div className={`flex-wrap flex ${widgets.length < 3 ? 'justify-start' : 'justify-center'} sm:px-8 px-2 mb-28 mt-6`}>
@@ -296,10 +318,18 @@ export default function Analytics() {
                 tables={dataTables}
                 devices={devices}
                 columns={columns}
+                analyticTypes={analyticTypes}
                 submitFunction={(widget) => { saveWidget(widget) }}
                 type={(selectedWidget == null) ? 0 : 1}
                 selectedWidget={selectedWidget}
             />
+
+            <AskAssistantPopup isOpen={assistantPopupVisible}
+                closeFunction={toggleAssistantPopup}
+                tables={dataTables}
+                columns={columns}
+                devices={devices}
+                analyticTypes={analyticTypes} />
 
             {/* Spinner component will be visible when loading state is true */}
             <Spinner isVisible={loading} />
