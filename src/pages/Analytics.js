@@ -283,8 +283,8 @@ export default function Analytics() {
                             <DashboardAnalyticsCard
                                 key={index}
                                 widget={widget}
-                                deleteWidget={() => { }}
-                                updateWidget={() => { }}
+                                deleteWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
+                                updateWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
                             />
                         );
                     })
