@@ -9,6 +9,7 @@ import PillButton from "./input/PillButton";
 import TextBox from "./input/TextBox";
 import SelectBox from "./input/SelectBox";
 import OpenAI from "openai";
+import axios from "axios";
 import { OPENAI_API_KEY } from "../config"
 
 const AskAssistantPopup = ({
@@ -121,7 +122,7 @@ const AskAssistantPopup = ({
                         identifiedFilterValue = timeDurationID;
                     }
                 } else {
-                    if (!NaN(responseJSON.filterValue) && Number(responseJSON.filterValue) > 0 && Number(responseJSON.filterValue) < 1000) {
+                    if (!isNaN(responseJSON.filterValue) && Number(responseJSON.filterValue) > 0 && Number(responseJSON.filterValue) < 1000) {
                         identifiedFilterValue = Number(responseJSON.filterValue);
                     } else {
                         identifiedFilterValue = 1000;
@@ -151,14 +152,29 @@ const AskAssistantPopup = ({
         }
     }
 
-    const processAnalytics = (data) => {
+    const processAnalytics = async (data) => {
         //get the data from the database
         //set the value and timestamp
         //for now, set some random values
-        setValue(Math.floor(Math.random() * 100) + 1);
-        setTimestamp(new Date().toISOString());
-        setResult(1);
+        // setValue(Math.floor(Math.random() * 100) + 1);
+        // setTimestamp(new Date().toISOString());
         //setPrompt('');
+
+        try {
+            let response = await axios.post(`https://datacanvas-analytics.vercel.app/data/`, data)
+
+            console.log(response);
+            if (response.status == 200) {
+                console.log(response.data);
+                setResult(1);
+                setValue(response.data.result);
+                setTimestamp(new Date().toISOString());
+                //updateLatestValue(response.data.result);
+            }
+        } catch (err) {
+            console.log(err);
+            // setRefreshing(false);
+        }
     }
 
     const clearValues = () => {

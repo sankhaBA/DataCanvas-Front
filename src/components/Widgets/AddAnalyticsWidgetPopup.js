@@ -51,7 +51,7 @@ const AddAnalyticsWidgetPopup = ({
             toast.error('Please select device');
             return;
         }
-        if (widgetType == 0) {
+        if (widgetType == -1) {
             toast.error('Please select analytic type');
             return;
         }
@@ -142,7 +142,7 @@ const AddAnalyticsWidgetPopup = ({
                 <div className="flex flex-col">
                     <label className="text-gray2 font-normal text-sm">Analytic Type</label>
                     <SelectBox value={widgetType} onChange={(e) => { setWidgetType(e.target.value) }}>
-                        <option value={0}>Select Analytic Type</option>
+                        <option value={-1}>Select Analytic Type</option>
                         {analyticTypes.map((analyticType) => {
                             return (
                                 <option key={analyticType.id} value={analyticType.id}>{analyticType.name}</option>

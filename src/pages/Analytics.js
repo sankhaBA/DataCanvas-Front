@@ -36,6 +36,14 @@ export default function Analytics() {
         { id: 3, name: 'Count' },
         { id: 4, name: 'Maximum' },
         { id: 5, name: 'Minimum' },
+        { id: 6, name: 'Median' },
+        { id: 7, name: 'Mode' },
+        { id: 8, name: '1st Quartile' },
+        { id: 9, name: '3rd Quartile' },
+        { id: 10, name: 'Skewness' },
+        { id: 11, name: 'Kurtosis' },
+        { id: 12, name: 'Mean Absolute Deviation' },
+        { id: 13, name: 'Sum' },
     ]);
 
     // ---------- States for project ID and data tables ----------

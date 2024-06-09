@@ -56,14 +56,15 @@ const DashboardAnalyticsCard = ({
         // }, 3000);
 
         try {
-            let response = axios.post(`https://datacanvas-analytics.vercel.app/data/`, object);
+            let response = await axios.post(`https://datacanvas-analytics.vercel.app/data/`, object)
 
+            console.log(response);
             if (response.status == 200) {
                 setRefreshing(false);
                 console.log(response.data);
                 setValue(response.data.result);
                 setTimestamp(new Date().toISOString());
-                updateLatestValue(response.data.result);
+                //updateLatestValue(response.data.result);
             }
         } catch (err) {
             console.log(err);
