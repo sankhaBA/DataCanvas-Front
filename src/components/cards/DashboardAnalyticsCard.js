@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaTrash, FaPencilAlt, FaExpand } from "react-icons/fa";
+import { FaTrash, FaPencilAlt, FaExpand, FaColumns } from "react-icons/fa";
 import { DiGoogleAnalytics } from "react-icons/di";
 import { MdOutlineFilterAltOff, MdOutlineFilterAlt } from "react-icons/md";
 import { IoMdRefreshCircle } from "react-icons/io";
@@ -10,6 +10,7 @@ import axios from "axios";
 
 const DashboardAnalyticsCard = ({
     widget,
+    columns = [],
     deleteWidget = () => { },
     updateWidget = () => { },
 }) => {
@@ -36,9 +37,8 @@ const DashboardAnalyticsCard = ({
     const loadValue = async () => {
         setRefreshing(true);
         let object = {
-            widget_id: widget.id,
             dataset: widget.dataset,
-            parameter: widget.parameter,
+            parameter: columns.find((col) => col.clm_id == widget.parameter).clm_name,
             device: widget.device,
             analyticType: widget.widget_type,
             filterMethod: Number(filterType),
@@ -46,14 +46,29 @@ const DashboardAnalyticsCard = ({
         }
 
         console.log(object);
-        //Timeout for 3 s
-        setTimeout(() => {
+        // //Timeout for 3 s
+        // setTimeout(() => {
+        //     setRefreshing(false);
+        //     let val = Math.floor(Math.random() * 1000);
+        //     setValue(val);
+        //     setTimestamp(new Date().toISOString());
+        //     updateLatestValue(val);
+        // }, 3000);
+
+        try {
+            let response = axios.post(`https://datacanvas-analytics.vercel.app/data/`, object);
+
+            if (response.status == 200) {
+                setRefreshing(false);
+                console.log(response.data);
+                setValue(response.data.result);
+                setTimestamp(new Date().toISOString());
+                updateLatestValue(response.data.result);
+            }
+        } catch (err) {
+            console.log(err);
             setRefreshing(false);
-            let val = Math.floor(Math.random() * 1000);
-            setValue(val);
-            setTimestamp(new Date().toISOString());
-            updateLatestValue(val);
-        }, 3000);
+        }
     }
 
     const updateLatestValue = (value) => {

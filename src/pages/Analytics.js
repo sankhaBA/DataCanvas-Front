@@ -30,12 +30,12 @@ export default function Analytics() {
     }
 
     const [analyticTypes, setAnalyticTypes] = useState([
-        { id: 1, name: 'Average' },
-        { id: 2, name: 'Variance' },
-        { id: 3, name: 'Standard Deviation' },
-        { id: 4, name: 'Count' },
-        { id: 5, name: 'Maximum' },
-        { id: 6, name: 'Minimum' },
+        { id: 0, name: 'Average' },
+        { id: 1, name: 'Variance' },
+        { id: 2, name: 'Standard Deviation' },
+        { id: 3, name: 'Count' },
+        { id: 4, name: 'Maximum' },
+        { id: 5, name: 'Minimum' },
     ]);
 
     // ---------- States for project ID and data tables ----------
@@ -304,6 +304,7 @@ export default function Analytics() {
                             <DashboardAnalyticsCard
                                 key={index}
                                 widget={widget}
+                                columns={columns}
                                 deleteWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
                                 updateWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
                             />
