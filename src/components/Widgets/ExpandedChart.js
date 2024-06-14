@@ -104,9 +104,9 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
                     locale: enUS
                 }
             }
-            x.time = {
-                unit: 'hour'
-            }
+            // x.time = {
+            //     unit: 'hour'
+            // }
         }
 
         setChartOptions({
