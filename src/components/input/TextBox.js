@@ -17,7 +17,7 @@ const TextBox = ({ text, onChange, icon, type, placeholder, maxLength, textAlign
 TextBox.defaultProps = {
     type: "text",
     placeholder: "",
-    maxLength: 50,
+    maxLength: 500,
     textAlign: "center",
     width: "w-full",
     mt: "mt-2",

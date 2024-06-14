@@ -20,7 +20,7 @@ const AddChartWidgetPopup = ({
   const [chartTypes, setChartTypes] = useState([
     { id: 1, name: "Bubble Chart" },
     { id: 2, name: "Bar Chart" },
-    { id: 3, name: "Pie Chart" },
+    // { id: 3, name: "Pie Chart" },
     { id: 4, name: "Line Chart" },
   ]);
 
@@ -150,7 +150,7 @@ const AddChartWidgetPopup = ({
               <option value={0}>Record Timestamp</option>
               {columns.map((column) => {
                 return (
-                  column.clm_name != 'id' ? (
+                  column.clm_name != 'id' && column.clm_name != 'device' ? (
                     <option key={column.clm_id} value={column.clm_id}>
                       {column.clm_name}
                     </option>

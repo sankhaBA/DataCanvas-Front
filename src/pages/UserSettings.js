@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,8 @@ import NonSidebarLayout from "../components/layouts/NonSidebarLayout";
 import CriticalAction from "../components/CriticalAction";
 import PillButton from "../components/input/PillButton";
 import LoginPopup from "../components/LoginPopup";
+import storageService from "../services/storageService";
+import { firebaseImageUpload, firebaseGetFileURL } from "../services/storageService";
 
 function UserSettings() {
     // navigation hooks
@@ -18,10 +20,14 @@ function UserSettings() {
 
     const [loading, setLoading] = useState(false);
 
+
+    const fileInputRef = useRef();
+
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
     const [actionType, setActionType] = useState('');
     const [authenticationResult, setAuthenticationResult] = useState(false);
+
 
     useEffect(() => {
         if (authenticationResult) {
@@ -40,6 +46,8 @@ function UserSettings() {
     //user state details
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [userID, setUserID] = useState(-1);
+    const [profilePicture, setProfilePicture] = useState(`${process.env.PUBLIC_URL}/img/sample_user.png`);
 
     useEffect(() => {
         loadUserDetails();
@@ -66,6 +74,33 @@ function UserSettings() {
             });
     }
 
+    const handleButtonClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleProfilePictureChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            toast.error('No file selected.');
+            return;
+        }
+        const fileType = file.type;
+        if (fileType !== 'image/jpeg' || fileType !== 'image/png') {
+            try {
+                const url = await firebaseImageUpload(file, 'profile_pictures', userID);
+                setProfilePicture(url);
+                toast.success('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error uploading image: ', error);
+                toast.error('Error uploading image');
+            }
+        }
+        else {
+            toast.error('Invalid file type. Please upload a jpg file');
+        }
+    }
+
+
     // Load user details
     const loadUserDetails = () => {
         setLoading(true);
@@ -81,6 +116,14 @@ function UserSettings() {
                 if (response.status === 200) {
                     setName(response.data.user_name); // Assuming user_name is the correct field name
                     setEmail(response.data.email);
+                    setUserID(response.data.user_id);
+                    firebaseGetFileURL('profile_pictures', `${response.data.user_id}.jpg`)
+                        .then((url) => {
+                            setProfilePicture(url);
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching profile picture:', error);
+                        });
                 }
             })
             .catch(error => {
@@ -153,9 +196,22 @@ function UserSettings() {
         <NonSidebarLayout breadcrumb={`${name} > User Settings`}>
             <div className=" text-white mb-20 px-0 sm:px-12 lg:px-12 xl:px-32">
                 <div className="flex flex-col justify-center mx-1 sm:mx-4 lg:mx-40 my-4 bg-black3 px-4 md:px-20 rounded-xl">
-                    <div className="flex justify-center items-center"><div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
-                        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/sample_user.jpg)` }}></div></div>
-                    <h1 className="text-center my-2 text-xl">{name}</h1>
+                    <div className="flex justify-center items-center">
+                        <div className="w-40 h-40 bg-cover rounded-full cursor-pointer flex justify-center items-center mt-12"
+                            style={{ backgroundImage: `url(${profilePicture})` }}>
+                        </div>
+                    </div>
+                    <div className="flex justify-center items-center mt-5">
+                        <PillButton text="Change Profile picture" onClick={handleButtonClick} isPopup={true} icon={FaUpload} />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            accept="image/jpg"
+                            onChange={(e) => handleProfilePictureChange(e)}
+                        />
+                    </div>
+                    <h1 className="text-center mb-2 mt-4 text-xl">{name}</h1>
                     <div className="text-green text-center my-1">{email}</div>
 
                     <div className="text-m text-gray2 font-semibold mt-8">General Settings</div>

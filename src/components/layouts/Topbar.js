@@ -6,6 +6,7 @@ import Spinner from '../Spinner';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import SearchResults from '../SearchResults';
+import { firebaseGetFileURL } from '../../services/storageService';
 
 const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, toggleSidebar, breadcrumb }) => {
     // ---------- Navigation ----------
@@ -17,13 +18,28 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 
     const [projectID, setProjectID] = useState(-1);
 
+    const [profilePicture, setProfilePicture] = useState(process.env.PUBLIC_URL + '/img/sample_user.png');
+
     useEffect(() => {
         try {
             setProjectID(state.project_id);
+            loadProfilePicture();
         } catch (err) {
             console.log("Sidebar-state error", err);
         }
     }, [])
+
+    const loadProfilePicture = async () => {
+        if ((profilePicture == '' || profilePicture == process.env.PUBLIC_URL + '/img/sample_user.png') && localStorage.getItem('uid')) {
+            try {
+                const url = await firebaseGetFileURL('profile_pictures', `${localStorage.getItem('uid')}.jpg`);
+                setProfilePicture(url);
+            } catch (error) {
+                console.log('Error loading profile picture', error);
+                setProfilePicture(process.env.PUBLIC_URL + '/img/sample_user.png');
+            }
+        }
+    }
 
     const [searchBarShown, setSearchBarShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -183,7 +199,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
                         {!isSidebarOpen && sideBarButtonDisplayed ? (
                             <FaBars className="text-2xl text-green mr-4 cursor-pointer visible lg:hidden" onClick={toggleSidebar} />
                         ) : null}
-                        <img src={process.env.PUBLIC_URL + '/img/sample_user.jpg'} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" onClick={() => navigate('/usersettings')} />
+                        <img src={profilePicture} alt="Logo" className="w-10 h-10 object-cover rounded-full cursor-pointer" onClick={() => navigate('/usersettings')} />
                     </div>
                 </div>
             )}

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { FaMicrochip, FaDatabase, FaCogs, FaWindowClose, FaBackspace } from 'react-icons/fa';
 import { MdBarChart, MdDashboard } from 'react-icons/md';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoAnalyticsSharp } from "react-icons/io5";
+import { TbReportAnalytics } from "react-icons/tb";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -46,8 +48,11 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
         <SidebarButton text="Overview" icon={MdDashboard} active={(active == 0) ? true : false} onClick={() => {
           navigate('/overview', { state: { project_id: projectID } });
         }} />
-        <SidebarButton text="Dashboard" icon={MdBarChart} active={(active == 1) ? true : false} onClick={() => {
+        <SidebarButton text="Visualizations" icon={TbReportAnalytics} active={(active == 1) ? true : false} onClick={() => {
           navigate('/dashboard', { state: { project_id: projectID } });
+        }} />
+        <SidebarButton text="Analytics" icon={IoAnalyticsSharp} active={(active == 5) ? true : false} onClick={() => {
+          navigate('/analytics', { state: { project_id: projectID } });
         }} />
         <SidebarButton text="Devices" icon={FaMicrochip} active={(active == 2) ? true : false} onClick={() => {
           navigate('/devices', { state: { project_id: projectID } });
