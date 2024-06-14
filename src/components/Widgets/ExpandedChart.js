@@ -5,6 +5,9 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { Line, Bar, Pie, Bubble, Radar } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import ButtonRectangle from '../input/ButtonRectangle';
+import TextBox from '../input/TextBox';
+import SelectBox from '../input/SelectBox';
 // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, RadarController, RadialLinearScale, Title, Tooltip);
 ChartJS.register(...registerables);
 
@@ -46,6 +49,8 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
     });
 
     const [chartOptions, setChartOptions] = useState({});
+
+    const [recordLimit, setRecordLimit] = useState(1000)
 
     useEffect(() => {
         configureChartOptions();
@@ -99,9 +104,9 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
                     locale: enUS
                 }
             }
-            // x.time = {
-            //     unit: 'minute'
-            // }
+            x.time = {
+                unit: 'hour'
+            }
         }
 
         setChartOptions({
@@ -124,7 +129,7 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
         setLoading(true);
 
         try {
-            const response = await axios.get(`http://localhost:3001/api/data/get/chart/${widget.id}`, {
+            const response = await axios.get(`http://localhost:3001/api/data/get/chart/${widget.id}?recordLimit=${recordLimit}`, {
                 headers: {
                     'authorization': localStorage.getItem('auth-token')
                 }
@@ -185,11 +190,26 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
 
     return (
         chartConfig.datasets.length > 0 &&
-        < div className={`mt-8 w-full h-full`
+        < div className={`mt-2 w-full h-full`
         }>
+            <div className='w-full flex flex-wrap justify-center items-center mb-4  space-x-4'>
+                <div className='text-white text-sm mt-2'>
+                    Limit Data Records
+                </div>
+                <div>
+                    <TextBox placeholder='Enter number of records'
+                        value={recordLimit}
+                        onChange={(e) => setRecordLimit(e.target.value)} />
+                </div>
+                <div className='mt-2'>
+                    <ButtonRectangle
+                        text='Filter'
+                        onClick={() => { loadChartData() }} />
+                </div>
+
+            </div>
             {(widget.configuration.chart_type == 1) && <Bubble data={chartConfig} options={chartOptions} />}
             {widget.configuration.chart_type == 2 && <Bar data={chartConfig} options={chartOptions} />}
-            {widget.configuration.chart_type == 3 && (<Pie data={chartConfig} options={chartOptions} />)}
             {(widget.configuration.chart_type == 4) && <Line data={chartConfig} options={chartOptions} />}
         </div >
     );
