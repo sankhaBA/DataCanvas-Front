@@ -36,7 +36,7 @@ const DashboardGaugeCard = ({
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/data/get/gauge/${gaugeId}`,
+        `${process.env.REACT_APP_API_URL}/data/get/gauge/${gaugeId}`,
         {
           headers: {
             Authorization: localStorage.getItem('auth-token')

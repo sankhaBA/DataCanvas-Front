@@ -64,7 +64,7 @@ function Projects() {
     try {
       // Send an get API request with authorization headers
       const result = await axios.get(
-        "http://localhost:3001/api/project?user_id=" + userID,
+        `${process.env.REACT_APP_API_URL}/project?user_id=` + userID,
         {
           headers: {
             authorization: token,
@@ -118,7 +118,7 @@ function Projects() {
     try {
       // Send an post API request with authorization headers
       const result = await axios.post(
-        "http://localhost:3001/api/project/",
+        `${process.env.REACT_APP_API_URL}/project/`,
         {
           project_name: newProjectName,
           description: newProjectDescription,

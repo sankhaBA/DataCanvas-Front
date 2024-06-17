@@ -9,8 +9,7 @@ import PillButton from "./input/PillButton";
 import TextBox from "./input/TextBox";
 import SelectBox from "./input/SelectBox";
 import OpenAI from "openai";
-import axios from "axios";
-import { OPENAI_API_KEY } from "../config"
+import axios from "axios"
 
 const AskAssistantPopup = ({
     isOpen = false,
@@ -63,7 +62,7 @@ const AskAssistantPopup = ({
         let assistantPrompt = 'Refer system content. Give JSON object for {caption (suitable camel case caption of 4 words from user prompt without filtering details), dataset (select from tables referring to user prompt by tbl_name), parameter(select from columns referring to user prompt by clm_name), device(select from devices referring to devices bydevice_name), analyticType (select from analyticTypes), filterMethod(If user mention about a time duration in timeDurations, filterMethod is 1. If not, it is 0), filterValue(If filter method is a time duration, filterValue is that time duration. If not, filterValue is the number of records that should be refferred.)} for the user prompt.  If user has not mentioned about time or number of records, filterMethod = 0 and filterValue=1000. Only return the JSON object. Not any word else.'
         setResult(3);
         try {
-            const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+            const openai = new OpenAI({ apiKey: process.env.REACT_APP_OPENAPI_KEY, dangerouslyAllowBrowser: true });
 
             const completion = await openai.chat.completions.create({
                 messages: [{ role: "system", content: systemPrompt },
@@ -161,7 +160,7 @@ const AskAssistantPopup = ({
         //setPrompt('');
 
         try {
-            let response = await axios.post(`https://datacanvas-analytics.vercel.app/data/`, data)
+            let response = await axios.post(`${process.env.REACT_APP_ANALYTICS_API_URL}/data/`, data)
 
             console.log(response);
             if (response.status == 200) {

@@ -131,7 +131,7 @@ function Login() {
         }
 
         try {
-            const result = await axios.post("http://localhost:3001/api/auth/login", {
+            const result = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
                 email: email,
                 api_key: 'abcd1234'
             });

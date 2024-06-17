@@ -56,7 +56,7 @@ const DashboardAnalyticsCard = ({
         // }, 3000);
 
         try {
-            let response = await axios.post(`https://datacanvas-analytics.vercel.app/data/`, object)
+            let response = await axios.post(`${process.env.REACT_APP_ANALYTICS_API_URL}/data/`, object)
 
             console.log(response);
             if (response.status == 200) {
@@ -74,7 +74,7 @@ const DashboardAnalyticsCard = ({
 
     const updateLatestValue = (value) => {
         try {
-            axios.put(`http://localhost:3001/api/analytic_widget/value/`, {
+            axios.put(`${process.env.REACT_APP_API_URL}/analytic_widget/value/`, {
                 latest_value: value,
                 widget_id: widget.id
             }).then((response) => {

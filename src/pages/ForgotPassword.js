@@ -36,8 +36,8 @@ function ForgotPassword() {
       }
 
       setLoading(true);
-      // const response = await axios.get(`http://localhost:3001/api/user?email=${email}`);
-      const response = await axios.get('http://localhost:3001/api/user?email=' + email);
+      // const response = await axios.get(`${process.env.REACT_APP_API_URL}/user?email=${email}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/user?email=` + email);
 
       if (response.status === 200) {
         authEmail(email);

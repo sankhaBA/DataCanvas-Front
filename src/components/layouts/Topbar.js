@@ -22,8 +22,10 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 
     useEffect(() => {
         try {
-            setProjectID(state.project_id);
-            loadProfilePicture();
+            if (state.project_id) {
+                setProjectID(state.project_id);
+                loadProfilePicture();
+            }
         } catch (err) {
             console.log("Sidebar-state error", err);
         }
@@ -82,7 +84,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
     /*
         * Implement search function
         * Validate if the search keyword is empty
-        * API Endpoint : http://localhost:3001/api/data/get/search?keyword={searchKeyword}&user_id={uid}
+        * API Endpoint : ${process.env.REACT_APP_API_URL}/data/get/search?keyword={searchKeyword}&user_id={uid}
         * Method : GET
         * Get uid from localStorage
         * If uid is empty or it is null, do not search and show a toast as Something Went Wrong
@@ -109,7 +111,7 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
         setLoading(true);
         console.log('searching for', keyword, uid);
         try {
-            const url = `http://localhost:3001/api/data/get/search?keyword=${keyword}&project_id=${projectID}`;
+            const url = `${process.env.REACT_APP_API_URL}/data/get/search?keyword=${keyword}&project_id=${projectID}`;
             const response = await axios.get(url,
                 {
                     headers: {

@@ -74,7 +74,7 @@ const AddWidgetContainer = ({
         return new Promise((resolve, reject) => {
             setLoading(true);
             const token = localStorage.getItem('auth-token');
-            axios.get(`http://localhost:3001/api/data/clm?tbl_id=` + tbl_id, {
+            axios.get(`${process.env.REACT_APP_API_URL}/data/clm?tbl_id=` + tbl_id, {
                 headers: {
                     'authorization': token
                 }
@@ -116,7 +116,7 @@ const AddWidgetContainer = ({
         setLoading(true);
         try {
             const token = localStorage.getItem('auth-token');
-            let response = await axios.post('http://localhost:3001/api/widget',
+            let response = await axios.post(`${process.env.REACT_APP_API_URL}/widget`,
                 {
                     widget_name: widgetName,
                     widget_type: widgetType,
@@ -152,7 +152,7 @@ const AddWidgetContainer = ({
     }
 
     /*
-        * API Endpoint: http://localhost:3001/api/widget
+        * API Endpoint: ${process.env.REACT_APP_API_URL}/widget
         * Method: PUT
         * Function to update the widget
         * @param {Object} configuration - Configuration of the widget
@@ -172,7 +172,7 @@ const AddWidgetContainer = ({
         setLoading(true);
         try {
             const token = localStorage.getItem('auth-token');
-            let response = await axios.put('http://localhost:3001/api/widget',
+            let response = await axios.put(`${process.env.REACT_APP_API_URL}/widget`,
                 {
                     widget_id: selectedWidget.id,
                     widget_name: widgetName,

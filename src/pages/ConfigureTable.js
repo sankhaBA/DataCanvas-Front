@@ -160,7 +160,7 @@ function ConfigureTable() {
     const getDataTypes = async (token) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/config/type/`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/data/config/type/`, {
                 headers: {
                     'authorization': token
                 }
@@ -187,7 +187,7 @@ function ConfigureTable() {
     const getConstraints = async (token) => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:3001/api/data/config/constraint/`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/data/config/constraint/`, {
                 headers: {
                     'authorization': token
                 }
@@ -216,7 +216,7 @@ function ConfigureTable() {
             setLoading(true);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
-            const res = await axios.get(`http://localhost:3001/api/data/tbl/` + tblID, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/data/tbl/` + tblID, {
                 headers: {
                     'authorization': token
                 }
@@ -245,7 +245,7 @@ function ConfigureTable() {
             setLoading(true);
             // ---------- Get auth-token from local storage ----------
             const token = localStorage.getItem('auth-token');
-            const res = await axios.get(`http://localhost:3001/api/data/clm?tbl_id=` + tblID, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/data/clm?tbl_id=` + tblID, {
                 headers: {
                     'authorization': token
                 }
@@ -407,7 +407,7 @@ function ConfigureTable() {
                 }
 
                 try {
-                    const res = await axios.post(`http://localhost:3001/api/data/clm/`, requestBody, {
+                    const res = await axios.post(`${process.env.REACT_APP_API_URL}/data/clm/`, requestBody, {
                         headers: {
                             'authorization': token
                         }
@@ -485,7 +485,7 @@ function ConfigureTable() {
                 }
 
                 try {
-                    const res = await axios.put(`http://localhost:3001/api/data/clm/`, requestBody, {
+                    const res = await axios.put(`${process.env.REACT_APP_API_URL}/data/clm/`, requestBody, {
                         headers: {
                             'authorization': token
                         }
@@ -636,7 +636,7 @@ function ConfigureTable() {
             }
 
             try {
-                const res = await axios.delete(`http://localhost:3001/api/data/clm/`, {
+                const res = await axios.delete(`${process.env.REACT_APP_API_URL}/data/clm/`, {
                     headers: {
                         'authorization': token
                     },
@@ -697,7 +697,7 @@ function ConfigureTable() {
         const token = localStorage.getItem('auth-token');
 
         try {
-            const res = await axios.post(`http://localhost:3001/api/data/tbl/truncate/${tblID}`, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/data/tbl/truncate/${tblID}`, {
                 tbl_id: tblID
             },
                 {
@@ -735,7 +735,7 @@ function ConfigureTable() {
         const token = localStorage.getItem('auth-token');
 
         try {
-            const res = await axios.delete(`http://localhost:3001/api/data/tbl/`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/data/tbl/`, {
                 headers: {
                     'authorization': token
                 },
@@ -835,7 +835,7 @@ function ConfigureTable() {
             }
 
             try {
-                const res = await axios.put(`http://localhost:3001/api/data/tbl/`, requestBody, {
+                const res = await axios.put(`${process.env.REACT_APP_API_URL}/data/tbl/`, requestBody, {
                     headers: {
                         'authorization': token
                     }

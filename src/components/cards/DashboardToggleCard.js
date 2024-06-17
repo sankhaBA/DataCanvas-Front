@@ -29,7 +29,7 @@ const DashboardToggleCard = ({
     const loadToggleData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3001/api/data/get/toggle/${widget.id}`,
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/data/get/toggle/${widget.id}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem('auth-token')
@@ -63,7 +63,7 @@ const DashboardToggleCard = ({
     const updateToggleState = async (status) => {
         setLoading(true);
         try {
-            const response = await axios.put(`http://localhost:3001/api/data/feed/update/toggle`,
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/data/feed/update/toggle`,
                 {
                     widget_id: widget.id,
                     new_value: status

@@ -18,7 +18,7 @@ const DeleteWidgetPopup = ({
         setLoading(true);
         try {
             const response = await axios.delete(
-                `http://localhost:3001/api/widget`,
+                `${process.env.REACT_APP_API_URL}/widget`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),

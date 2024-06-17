@@ -49,7 +49,7 @@ export default function ExpandedTable({ widget, setLoading, navigate }) {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:3001/api/data/get/table?widget_id=${widget.id}&offset=${page}&limit=${limit}`,
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/data/get/table?widget_id=${widget.id}&offset=${page}&limit=${limit}`,
                 {
                     headers: {
                         "authorization": localStorage.getItem("auth-token")

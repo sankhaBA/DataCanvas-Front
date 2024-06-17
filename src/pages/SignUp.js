@@ -19,7 +19,7 @@ function SignUp() {
 
     const auth = getAuth();
 
-    const API_URL = "http://localhost:3001/api/user"
+    const API_URL = `${process.env.REACT_APP_API_URL}/user`
 
     const handleSignup = (e) => {
         e.preventDefault();

@@ -121,7 +121,7 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
 
     /*
         * This function loads chart data from the server.
-        * ENDPOINT: http://localhost:3001/api/data/get/chart/<widget.id>.
+        * ENDPOINT: ${process.env.REACT_APP_API_URL}/data/get/chart/<widget.id>.
         * METHOD: GET,
         * Headers: localStorage.getItem(auth-token)
     */
@@ -129,7 +129,7 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
         setLoading(true);
 
         try {
-            const response = await axios.get(`http://localhost:3001/api/data/get/chart/${widget.id}?recordLimit=${recordLimit}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/data/get/chart/${widget.id}?recordLimit=${recordLimit}`, {
                 headers: {
                     'authorization': localStorage.getItem('auth-token')
                 }

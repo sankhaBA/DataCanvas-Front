@@ -104,7 +104,7 @@ const DataTableHandler = () => {
 
         // Post request to localhost:3001/api/data/tbl?project_id=<project_id> to post new data table
         try {
-            const response = await axios.post('http://localhost:3001/api/data/tbl', {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/data/tbl`, {
                 project_id: projectID,
                 tbl_name: newTableName
             },
@@ -155,7 +155,7 @@ const DataTableHandler = () => {
         setLoading(true);
         // Get request to localhost:3001/api/data/tbl?project_id=<project_id> to get data tables
         try {
-            const response = await axios.get(`http://localhost:3001/api/data/tbl?project_id=${projectID}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/data/tbl?project_id=${projectID}`, {
                 headers: {
                     'authorization': localStorage.getItem('auth-token')
                 }

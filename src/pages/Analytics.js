@@ -96,7 +96,7 @@ export default function Analytics() {
         // get request to localhost:3001/api/data/clm?project_id=<projectID>
         try {
             const response = await axios.get(
-                `http://localhost:3001/api/data/clm/project/${projectID}`,
+                `${process.env.REACT_APP_API_URL}/data/clm/project/${projectID}`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),
@@ -161,7 +161,7 @@ export default function Analytics() {
         // get request to localhost:3001/api/device?project_id=<projectID>
         try {
             const response = await axios.get(
-                `http://localhost:3001/api/device?project_id=${projectID}`,
+                `${process.env.REACT_APP_API_URL}/device?project_id=${projectID}`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),
@@ -212,7 +212,7 @@ export default function Analytics() {
         // get request to localhost:3001/api/widget?project_id=<projectID>
         try {
             const response = await axios.get(
-                `http://localhost:3001/api/analytic_widget?project=${projectID}`,
+                `${process.env.REACT_APP_API_URL}/analytic_widget?project=${projectID}`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),
@@ -256,7 +256,7 @@ export default function Analytics() {
         // post request to localhost:3001/api/analytic_widget with body widget, add headers
         try {
             const response = await axios.post(
-                `http://localhost:3001/api/analytic_widget`,
+                `${process.env.REACT_APP_API_URL}/analytic_widget`,
                 widget,
                 {
                     headers: {

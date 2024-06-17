@@ -109,7 +109,7 @@ const Device = () => {
     // post request to localhost:3001/api/device
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/device",
+        `${process.env.REACT_APP_API_URL}/device`,
         {
           device_name: newDeviceName,
           description: newDeviceDescription,
@@ -160,7 +160,7 @@ const Device = () => {
     setLoading(true);
     // delete request to localhost:3001/api/device
     try {
-      const response = await axios.delete(`http://localhost:3001/api/device`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/device`, {
         headers: {
           authorization: localStorage.getItem("auth-token"),
         },
@@ -208,7 +208,7 @@ const Device = () => {
     // put request to localhost:3001/api/device
     try {
       const response = await axios.put(
-        `http://localhost:3001/api/device`,
+        `${process.env.REACT_APP_API_URL}/device`,
         {
           device_id: device_id,
           device_name: newDeviceName,
@@ -258,7 +258,7 @@ const Device = () => {
     // get request to localhost:3001/api/device?project_id=<projectID>
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/device?project_id=${projectID}`,
+        `${process.env.REACT_APP_API_URL}/device?project_id=${projectID}`,
         {
           headers: {
             authorization: localStorage.getItem("auth-token"),

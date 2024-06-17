@@ -94,7 +94,7 @@ function Dashboard() {
         setLoading(true);
         // Get request to localhost:3001/api/data/tbl?project_id=<project_id> to get data tables
         try {
-            const response = await axios.get(`http://localhost:3001/api/data/tbl?project_id=${projectID}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/data/tbl?project_id=${projectID}`, {
                 headers: {
                     'authorization': localStorage.getItem('auth-token')
                 }
@@ -145,7 +145,7 @@ function Dashboard() {
         // get request to localhost:3001/api/device?project_id=<projectID>
         try {
             const response = await axios.get(
-                `http://localhost:3001/api/device?project_id=${projectID}`,
+                `${process.env.REACT_APP_API_URL}/device?project_id=${projectID}`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),
@@ -194,7 +194,7 @@ function Dashboard() {
         // get request to localhost:3001/api/widget?project_id=<projectID>
         try {
             const response = await axios.get(
-                `http://localhost:3001/api/widget?project_id=${projectID}`,
+                `${process.env.REACT_APP_API_URL}/widget?project_id=${projectID}`,
                 {
                     headers: {
                         authorization: localStorage.getItem("auth-token"),
@@ -231,7 +231,7 @@ function Dashboard() {
 
     /*
         * Delete widget function
-        * API Endpoint : http://localhost:3001/api/widget
+        * API Endpoint : ${process.env.REACT_APP_API_URL}/widget
         * Method : DELETE
         * Request Body : {
         *   widget_id: <widget_id>

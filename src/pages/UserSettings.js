@@ -107,7 +107,7 @@ function UserSettings() {
 
         // Construct the URL with the email parameter
         const email = localStorage.getItem('email');
-        const url = `http://localhost:3001/api/user/?email=${email}`;
+        const url = `${process.env.REACT_APP_API_URL}/user/?email=${email}`;
 
         // Make the GET request to retrieve the user details
         axios.get(url)
@@ -162,7 +162,7 @@ function UserSettings() {
             user_name: name,
         }
 
-        axios.put('http://localhost:3001/api/user', requestBody)
+        axios.put(`${process.env.REACT_APP_API_URL}/user`, requestBody)
             .then(response => {
                 toast.success('User details updated successfully');
             })
