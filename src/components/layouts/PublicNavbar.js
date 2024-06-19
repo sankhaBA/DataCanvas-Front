@@ -12,7 +12,7 @@ function PublicNavbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 bg-black py-5 px-2 sm:px-28 md:px-32 lg:px-40 xl:px-60">
+    <div className="fixed inset-x-0 top-0 z-50 bg-black py-5 px-2 sm:px-20 md:px-30 lg:px-40 xl:px-50">
       <nav className="flex items-center justify-between px-6 lg:px-8">
         <div className="flex items-center">
           <img className="w-12 h-12" src="/img/logo.png" alt="" />
