@@ -111,7 +111,7 @@ function PublicPortal() {
                 })}
               />
             </div>
-            <div className="flex flex-col justify-center items-center sm:items-start ml-4">
+            <div className="flex flex-col justify-center items-center ml-4">
               <div className="text-white font-semibold text-2xl mt-2 text-center">
                 Air Quality Index
               </div>
