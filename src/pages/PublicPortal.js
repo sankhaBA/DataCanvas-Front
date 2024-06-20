@@ -1,9 +1,11 @@
 import PublicNavbar from "../components/layouts/PublicNavbar";
-import { Doughnut } from "react-chartjs-2";
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import { HiMiniBuildingOffice2 } from "react-icons/hi2";
+import { GiCheckMark } from "react-icons/gi";
 import { Bar } from "react-chartjs-2";
 import PillButton from "../components/input/PillButton";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 
 function PublicPortal() {
   const getBorderClass = (property) => {
@@ -52,152 +54,104 @@ function PublicPortal() {
     datasets: [
       {
         label: "Air Quality",
-        data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10], // Replace with your actual data
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
+        data: [8.5, 8.3, 8.7, 8, 8.2, 8.5, 8.6, 8.6, 8.4, 8.5], // Replace with your actual data
+        backgroundColor: "#3ECF8E",
+        borderColor: "#3ECF8E",
         borderWidth: 1,
       },
     ],
   };
 
+  const Card = ({ data }) => {
+    return (
+      <div className={`w-full border-t border-r border-b ${getBorderClass(data.property)} border-l-8 h-20 rounded-lg flex flex-col justify-evenly items-start py-2`}>
+        <div className="text-gray2 text-sm ml-4 ">{data.title}</div>
+        <div className='w-full flex justify-between items-center '>
+          <div className="text-white font-semibold text-2xl ml-4">{data.value}</div>
+          <div className="text-gray-400 font-semibold text-2xl mr-4">{data.detail}</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900">
       <PublicNavbar />
 
       <div
-        className="relative h-[400px] isolate overflow-hidden bg-cover bg-fixed bg-center flex justify-center items-center pt-28"
+        className="relative bg-cover bg-fixed bg-center bg-no-repeat mt-16"
         style={{
-          backgroundImage: `url('/img/hospital.jpg')`,
+          backgroundImage: `url('/img/hotel.jpg')`,
         }}
       >
-        <div className="absolute inset-0 bg-black opacity-70"></div>
-        <div className="relative flex justify-center items-center mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 ">
-          {/* Content section */}
-          <div className="text-center flex flex-col items-center space-y-3 md:flex-row md:space-y-0 md:justify-between w-full md:w-screen">
-            <div className="flex flex-col items-center ">
-              <HiMiniBuildingOffice2 className="text-green text-8xl " />
-              <h1 className="text-white text-2xl font-bold">
-                Durdans Hospitals
-              </h1>
-              <p className="text-gray-300">Colombo, Sri Lanka</p>
-              <div className="mt-2 px-4 py-1 bg-green text-white rounded-full text-sm">
-                &#x2713; Clean Air Assured
-              </div>
+        <div className="absolute inset-0 bg-black opacity-70" />
+        <div className="relative w-full grid grid-cols-1 md:grid-cols-2 py-8 px-4 sm:px-28 md:px-32 lg:px-40 xl:px-60">
+          {/* Location Details */}
+          <div className="flex flex-col justify-center items-center my-4 md:my-0">
+            <HiMiniBuildingOffice2 className="text-green text-7xl" />
+            <div className="text-white font-semibold text-2xl mt-2 text-center">
+              Cinnamon Grand Hotel
             </div>
-            <div className="flex flex-col items-center">
-              <div style={{ width: "100px", height: "100px" }}>
-                <Doughnut
-                  data={{
-                    datasets: [
-                      {
-                        data: [85, 15],
-                        backgroundColor: ["#10B981", "#ddd"],
-                        hoverBackgroundColor: ["green", "#ddd"],
-                        borderWidth: 0,
-                      },
-                    ],
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        display: false,
-                      },
-                      tooltip: {
-                        enabled: false,
-                      },
-                    },
-                    elements: {
-                      arc: {
-                        // Adjust these values to make the doughnut thinner
-                        weight: 2,
-                      },
-                    },
-                  }}
-                />
+            <div className="text-gray-400 text-center">Colombo, Sri Lanka</div>
+            <div className="bg-green2 rounded-full py-1 px-4 text-white flex justify-center items-center mt-2 space-x-2">
+              <GiCheckMark className="text-xs" />
+              <span className="text-xs">Clean Air Assured</span>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex justify-center items-center my-8 md:my-0">
+            <div className="w-32 h-32">
+              <CircularProgressbar
+                value={85}
+                text={`8.5`}
+                styles={buildStyles({
+                  textSize: '24px',
+                  pathColor: `#3ECF8E`,
+                  textColor: '#3ECF8E',
+                  trailColor: '#d6d6d6',
+                })}
+              />
+            </div>
+            <div className="flex flex-col justify-center items-center sm:items-start ml-4">
+              <div className="text-white font-semibold text-2xl mt-2 text-center">
+                Air Quality Index
               </div>
-              <p className="text-white">Air Quality Index</p>
-              <p className="text-green text-xl font-bold">8.5/10</p>
+              <div className="text-green text-4xl font-semibold text-center">8.5/10</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col bg-black items-center px-4 md:px-0  md:flex-row   md:justify-between md:space-x-4 md:space-y-20 bg-black sm:px-20 md:px-30 lg:px-40 xl:px-50 gap-6">
-        {/* Cards section */}
-        <div className="bg-black  ">
-          <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
-            {cardData.map((card, index) => (
-              <div
-                key={index}
-                className={`relative bg-black p-4 rounded-lg border ${getBorderClass(
-                  card.property
-                )}`}
-                style={{
-                  borderLeftWidth: "4px",
-                  borderLeftColor: getBorderClass(card.property),
-                }}
-              >
-                <div
-                  className={`absolute top-0 left-0 h-full w-1.5 ${getBorderClass(
-                    card.property
-                  )}`}
-                  style={{ backgroundColor: getBorderClass(card.property) }}
-                ></div>
-                <p className="text-gray-400 text-lg">{card.title}</p>
-
-                <div className="flex justify-between items-center">
-                  <p className="text-white ">{card.value}</p>
-                  {card.detail && (
-                    <p className="text-gray-400 text-xs">{card.detail}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="relative w-full grid grid-cols-1 md:grid-cols-2 py-8 px-4 sm:px-28 md:px-32 lg:px-40 xl:px-60">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+          {cardData.map((data, index) => <Card data={data} key={index} />)}
         </div>
-        {/* Graph section */}
-        <div className="flex flex-col items-center self-start">
-          <div style={{ width: "400px", height: "400px" }}>
-            <h2 className="text-white text-center">
-              Air Quality Index for the last 10 days
-            </h2>
-            <Bar
-              data={airQualityData}
-              options={{
-                responsive: true,
-                scales: {
-                  x: {
-                    display: false, // Hide x-axis labels
-                  },
-                  y: {
-                    display: false, // Hide y-axis labels
-                  },
+        <div className="w-full h-80 px-2 sm:px-12 mt-6 sm:mt-0">
+          <Bar
+            data={airQualityData}
+            options={{
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 10,
+
                 },
-              }}
-            />
-          </div>
+              },
+            }}
+          />
         </div>
       </div>
-      <div className="bg-black inset-x-0 top-0 z-50 bg-black px-2 sm:px-28 md:px-32 lg:px-40 xl:px-80">
-        <h3 className="text-center text-gray-400">
-          These insights are measured using 6 AirSense Pro devices and outcomes
-          are verified according to WHO and US EPA standards
-        </h3>
-      </div>
-     <div className="bg-black flex md:flex-row  md:justify-between sm:px-28 md:px-32 lg:px-40 xl:px-80 ">
-        <div className="bg-black flex flex-col items-center mt-10 mb-10">
-          
-          <PillButton text="Advance Insights" icon={FaPlusCircle} />
-        </div>
-        <div className="bg-black flex flex-col items-center mt-10 mb-10">
-        <PillButton text="Assured Standards" icon={FaPlusCircle} />
-          
-        </div>
 
-     </div>
-    </div>
+      <div className="relative text-gray1 text-center text-sm w-full py-8 px-4 sm:px-28 md:px-32 lg:px-40 xl:px-60">
+        These insights are measured using 6 AirSense Pro devices and outcomes are verified according to WHO and US EPA standards
+      </div>
+
+      <div className="relative w-full px-4 sm:px-28 md:px-32 lg:px-40 xl:px-60 flex flex-wrap justify-center items-center space-x-4 pb-12">
+        <PillButton text="Advance Insights" icon={FaChevronRight} />
+        <PillButton text="Assured Standards" icon={FaChevronRight} />
+      </div>
+    </div >
   );
 }
 

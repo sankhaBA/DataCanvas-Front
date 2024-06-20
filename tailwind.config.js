@@ -15,6 +15,7 @@ module.exports = {
         gray3: '#141713',
         green: '#3ECF8E',
         red: '#C0392B',
+        green2: '#10ac84',
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'], // 'Inter' as the primary font with fallback to sans-serif
