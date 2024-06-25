@@ -248,9 +248,6 @@ export default function Analytics() {
         }
     }
 
-    useEffect(() => {
-        console.log('Widgets changed');
-    }, [widgets]);
     const saveWidget = async (widget) => {
         widget.project = projectID;
         setLoading(true);
@@ -315,6 +312,48 @@ export default function Analytics() {
         }
     }
 
+    const deleteWidget = async (widget) => {
+        setLoading(true);
+
+        try {
+            const response = await axios.delete(
+                `${process.env.REACT_APP_API_URL}/analytic_widget/${widget.id}`,
+                {
+                    headers: {
+                        authorization: localStorage.getItem("auth-token"),
+                    },
+                }
+            );
+
+            if (response.status == 200) {
+                toast.success("Widget deleted successfully!");
+                setLoading(false);
+                widgets.splice(widgets.indexOf(widget), 1);
+            }
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error("Bad request!");
+                    break;
+                case 401:
+                    toast.error("Unauthorized access!");
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error("Unauthorized access!");
+                    navigate('/login');
+                    break;
+                case 404:
+                    toast.error("Project not found!");
+                    break;
+                default:
+                    toast.error("Something went wrong!");
+                    break;
+            }
+            setLoading(false);
+        }
+    }
+
     return (
         <SidebarLayout active={5} breadcrumb={`${localStorage.getItem('project')} > Analytics`}>
             <div className={`flex flex-row justify-between px-7 sm:px-10 mt-6 sm:mt-2`}>
@@ -333,7 +372,7 @@ export default function Analytics() {
                                 key={index}
                                 widget={widget}
                                 columns={columns}
-                                deleteWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
+                                deleteWidget={() => { deleteWidget(widget) }}
                                 updateWidget={() => {
                                     setSelectedWidget(widget);
                                     setIsAddWidgetPopupVisible(true);

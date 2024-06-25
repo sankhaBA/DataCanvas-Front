@@ -31,7 +31,6 @@ const DashboardAnalyticsCard = ({
     ]);
 
     useEffect(() => {
-        console.log('Widget mounted');
         loadValue();
     }, [widget]);
 
