@@ -152,13 +152,6 @@ const AskAssistantPopup = ({
     }
 
     const processAnalytics = async (data) => {
-        //get the data from the database
-        //set the value and timestamp
-        //for now, set some random values
-        // setValue(Math.floor(Math.random() * 100) + 1);
-        // setTimestamp(new Date().toISOString());
-        //setPrompt('');
-
         try {
             let response = await axios.post(`${process.env.REACT_APP_ANALYTICS_API_URL}/data/`, data)
 
@@ -168,11 +161,11 @@ const AskAssistantPopup = ({
                 setResult(1);
                 setValue(response.data.result);
                 setTimestamp(new Date().toISOString());
-                //updateLatestValue(response.data.result);
             }
         } catch (err) {
             console.log(err);
-            // setRefreshing(false);
+            setResult(2);
+            setRefreshing(false);
         }
     }
 

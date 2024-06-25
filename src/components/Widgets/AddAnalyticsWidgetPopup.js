@@ -16,7 +16,7 @@ const AddAnalyticsWidgetPopup = ({
     analyticTypes = [],
     submitFunction = () => { },
     type = 0, // 0: Add Widget, 1: Edit Widget
-    currentWidget = {} // Widget details if type is 1
+    currentWidget = null // Widget details if type is 1
 }) => {
     const [widgetName, setWidgetName] = useState('');
     const [widgetType, setWidgetType] = useState(0);
@@ -30,6 +30,7 @@ const AddAnalyticsWidgetPopup = ({
             setWidgetType(currentWidget.widget_type);
             setDataset(currentWidget.dataset);
             setParameter(currentWidget.parameter);
+            setDevice(currentWidget.device);
         }
     }, [isOpen])
 
@@ -61,7 +62,7 @@ const AddAnalyticsWidgetPopup = ({
             widget_type: widgetType,
             dataset: dataset,
             parameter: parameter,
-            device: device
+            device: device,
         }
 
         if (type == 0) {
@@ -77,8 +78,9 @@ const AddAnalyticsWidgetPopup = ({
             closeFunction();
         } else {
             // Edit widget
-            object.widget_id = currentWidget.widget_id;
+            object.widget_id = currentWidget.id;
             submitFunction(object);
+            console.log(object);
         }
     }
 

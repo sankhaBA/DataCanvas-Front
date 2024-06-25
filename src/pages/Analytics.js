@@ -12,8 +12,6 @@ import DashboardAnalyticsCard from "../components/cards/DashboardAnalyticsCard";
 import AskAssistantPopup from "../components/AskAssistantPopup";
 import axios from "axios";
 
-import OpenAI from "openai";
-
 export default function Analytics() {
     // ---------- Get states from navigation location for retrieval of project_id ----------
     const { state } = useLocation();
@@ -250,26 +248,48 @@ export default function Analytics() {
         }
     }
 
+    useEffect(() => {
+        console.log('Widgets changed');
+    }, [widgets]);
     const saveWidget = async (widget) => {
         widget.project = projectID;
         setLoading(true);
-        // post request to localhost:3001/api/analytic_widget with body widget, add headers
+
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/analytic_widget`,
-                widget,
-                {
-                    headers: {
-                        authorization: localStorage.getItem("auth-token"),
-                    },
-                }
-            );
+            let response;
+            if (widget.widget_id == null) {
+                response = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/analytic_widget`,
+                    widget,
+                    {
+                        headers: {
+                            authorization: localStorage.getItem("auth-token"),
+                        },
+                    }
+                );
+            } else {
+                response = await axios.put(
+                    `${process.env.REACT_APP_API_URL}/analytic_widget`,
+                    widget,
+                    {
+                        headers: {
+                            authorization: localStorage.getItem("auth-token"),
+                        },
+                    }
+                );
+            }
+
 
             if (response.status == 200) {
-                toast.success("Widget added successfully!");
+                if (widget.widget_id != null) {
+                    toast.success("Widget updated successfully!");
+                } else {
+                    toast.success("Widget added successfully!");
+                }
 
-                loadWidgets();
                 setLoading(false);
+                loadWidgets();
+                toggleAddWidgetPopup();
             }
         } catch (err) {
             switch (err.response.status) {
@@ -314,7 +334,10 @@ export default function Analytics() {
                                 widget={widget}
                                 columns={columns}
                                 deleteWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
-                                updateWidget={() => { toast.info('Sorry, this feature is not available yet!') }}
+                                updateWidget={() => {
+                                    setSelectedWidget(widget);
+                                    setIsAddWidgetPopupVisible(true);
+                                }}
                             />
                         );
                     })
@@ -329,7 +352,7 @@ export default function Analytics() {
                 analyticTypes={analyticTypes}
                 submitFunction={(widget) => { saveWidget(widget) }}
                 type={(selectedWidget == null) ? 0 : 1}
-                selectedWidget={selectedWidget}
+                currentWidget={selectedWidget}
             />
 
             <AskAssistantPopup isOpen={assistantPopupVisible}

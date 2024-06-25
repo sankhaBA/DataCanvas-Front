@@ -31,8 +31,9 @@ const DashboardAnalyticsCard = ({
     ]);
 
     useEffect(() => {
+        console.log('Widget mounted');
         loadValue();
-    }, []);
+    }, [widget]);
 
     const loadValue = async () => {
         setRefreshing(true);
@@ -45,26 +46,16 @@ const DashboardAnalyticsCard = ({
             filterValue: Number(filterValue)
         }
 
-        console.log(object);
-        // //Timeout for 3 s
-        // setTimeout(() => {
-        //     setRefreshing(false);
-        //     let val = Math.floor(Math.random() * 1000);
-        //     setValue(val);
-        //     setTimestamp(new Date().toISOString());
-        //     updateLatestValue(val);
-        // }, 3000);
-
         try {
             let response = await axios.post(`${process.env.REACT_APP_ANALYTICS_API_URL}/data/`, object)
 
-            console.log(response);
+            console.log(filterValue);
             if (response.status == 200) {
                 setRefreshing(false);
                 console.log(response.data);
                 setValue(response.data.result);
                 setTimestamp(new Date().toISOString());
-                //updateLatestValue(response.data.result);
+                updateLatestValue(response.data.result);
             }
         } catch (err) {
             console.log(err);
