@@ -111,6 +111,7 @@ function Dashboard() {
 
     const listenMQTT = () => {
         client.on('message', async (topic, message) => {
+            //console.log(topic, message.toString());
             setMqttPayload(JSON.parse(message.toString()));
         });
     }

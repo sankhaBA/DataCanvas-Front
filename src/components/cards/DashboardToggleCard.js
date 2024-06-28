@@ -20,6 +20,22 @@ const DashboardToggleCard = ({
         loadToggleData();
     }, []);
 
+    useEffect(() => {
+        if (mqttPayload != null) {
+            console.log("MQTT Payload: ", mqttPayload);
+            console.log(mqttPayload.tbl_id, widget.dataset, widget.configuration.device_id, mqttPayload.device_id, mqttPayload[widget.configuration.Column.clm_name]);
+            if (
+                mqttPayload.tbl_id = widget.dataset &&
+                (widget.configuration.device_id == null || widget.configuration.device_id == mqttPayload.device_id) &&
+                mqttPayload.data[widget.configuration.Column.clm_name] != null
+            ) {
+                setToggleState(mqttPayload.data[widget.configuration.Column.clm_name]);
+            } else {
+                //console.log("MQTT Payload is not releant");
+            }
+        }
+    }, [mqttPayload]);
+
     /*
         * Function to load the data for the toggle widget
         * @param {void}
