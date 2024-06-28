@@ -14,8 +14,6 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 
     const [loading, setLoading] = useState(false);
 
-    const { state } = useLocation();
-
     const [projectID, setProjectID] = useState(-1);
 
     const [profilePicture, setProfilePicture] = useState(process.env.PUBLIC_URL + '/img/sample_user.png');
@@ -219,3 +217,4 @@ const Topbar = ({ searchBarDisplayed, sideBarButtonDisplayed, isSidebarOpen, tog
 }
 
 export default Topbar;
+

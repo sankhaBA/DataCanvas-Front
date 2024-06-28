@@ -10,7 +10,8 @@ const DashboardGaugeCard = ({
   onClick = () => { },
   widget,
   deleteWidget = () => { },
-  updateWidget = () => { }
+  updateWidget = () => { },
+  mqttPayload = null
 }) => {
   const [loading, setLoading] = useState(false);
   const [widgetValue, setWidgetValue] = useState(widget.configuration.min_value);
@@ -21,8 +22,15 @@ const DashboardGaugeCard = ({
   }, [widgetValue]);
 
   useEffect(() => {
+    console.log("Gauge Widget: ", widget);
     loadGaugeData(widget.id);
   }, []);
+
+  useEffect(() => {
+    if (mqttPayload != null) {
+
+    }
+  }, [mqttPayload]);
 
   /*
    * Function to load the data for the gauge widget

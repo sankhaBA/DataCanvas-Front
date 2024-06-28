@@ -10,7 +10,8 @@ const DashboardToggleCard = ({
     onClick = () => { },
     widget,
     deleteWidget = () => { },
-    updateWidget = () => { }
+    updateWidget = () => { },
+    mqttPayload = null
 }) => {
     const [loading, setLoading] = useState(false);
     const [toggleState, setToggleState] = useState(false);
