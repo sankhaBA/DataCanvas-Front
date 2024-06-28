@@ -11,13 +11,14 @@ function Sidebar({ isSidebarOpen, active, toggleSidebar }) {
   // ---------- Navigation ----------
   const navigate = useNavigate();
 
-  const { state } = useLocation();
+  // const { state } = useLocation();
 
   const [projectID, setProjectID] = useState(-1);
 
   useEffect(() => {
+    let project_id = localStorage.getItem('project_id');
     try {
-      setProjectID(state.project_id);
+      setProjectID(project_id);
     } catch (err) {
       console.log("Sidebar-state error", err);
     }

@@ -60,6 +60,8 @@ const Device = () => {
     setSelectedDeviceId(device.device_id);
     setNewDeviceName(device.device_name);
     setNewDeviceDescription(device.description);
+    setFingerprint(device.fingerprint);
+    console.log(device);
   };
 
   const handleDeviceNameChange = (name) => {
@@ -289,6 +291,7 @@ const Device = () => {
             device_id: device.device_id,
             device_name: device.device_name,
             description: device.description,
+            fingerprint: device.fingerprint,
             footer: formattedDate,
           };
           devicesArray.push(deviceDetails);
@@ -315,6 +318,8 @@ const Device = () => {
           break;
         default:
           toast.error("Something went wrong!");
+          console.log(err);
+          navigate("/projects");
           break;
       }
       setDevices([]);
@@ -488,6 +493,19 @@ const Device = () => {
             textAlign={"left"}
             onChange={handleDeviceDescriptionChange}
             value={newDeviceDescription}
+          />
+        </div>
+        <div className="flex flex-col justify-center mt-4">
+          <label className="text-gray1 text-sm">Device Fingerprint</label>
+          <TextBox
+            text=""
+            type="text"
+            placeholder="Device Fingerprint"
+            maxLength={100}
+            textAlign={"left"}
+            onChange={() => { }}
+            value={fingerprint}
+            disabled={true}
           />
         </div>
         <div className="flex justify-center mt-8">

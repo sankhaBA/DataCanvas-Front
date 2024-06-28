@@ -27,6 +27,7 @@ function ProjectSettings() {
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [realTimeEnabled, setRealTimeEnabled] = useState(false);
+    const [mqttKey, setMqttKey] = useState("");
 
     // ---------- Login for proceed with critical actions
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
@@ -88,6 +89,7 @@ function ProjectSettings() {
                 setProjectName(response.data.project_name);
                 setProjectDescription(response.data.description);
                 setRealTimeEnabled(response.data.real_time_enabled);
+                setMqttKey(response.data.mqtt_key);
                 setLoading(false);
             }
 
@@ -377,6 +379,14 @@ function ProjectSettings() {
                     onChange={() => setRealTimeEnabled(!realTimeEnabled)}
                 />
             </div>
+            {realTimeEnabled && (
+                <div className='flex flex-row ml-8 mt-2'>
+                    <div className='flex flex-col w-1/4 md:w-1/6'>
+                        <div className="text-sm md:text-md text-gray1 font-semibold mt-2">MQTT Key</div>
+                    </div>
+                    <TextBox value={mqttKey} onChange={(e) => { }} type="text" placeholder="256" maxLength={50} textAlign="left" width="w-2/3 md:w-1/4" disabled={true} />
+                </div>
+            )}
             <div className='flex w-full sm:w-3/5 items-center justify-center mt-4 '>
                 <PillButton
                     text="Update Project"
