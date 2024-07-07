@@ -39,8 +39,15 @@ const AddGaugeWidgetPopup = ({
       toast.error("Please fill all the fields");
       return;
     }
-    if (selectedDevice == 0) {
-      selectedDevice = null;
+
+    let selectedDeviceID = null
+    if (selectedDevice == -1) {
+      toast.error("Please select a device");
+      return;
+    } else if (selectedDevice == 0) {
+      selectedDeviceID = null;
+    } else {
+      selectedDeviceID = selectedDevice;
     }
 
     if (minValue >= maxValue) {
@@ -53,7 +60,7 @@ const AddGaugeWidgetPopup = ({
       max_value: maxValue,
       min_value: minValue,
       gauge_type: gaugeType,
-      device_id: selectedDevice
+      device_id: selectedDeviceID
     }
     setConfiguration(newConfiguration)
 

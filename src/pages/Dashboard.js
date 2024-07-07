@@ -7,6 +7,7 @@ import SidebarLayout from "../components/layouts/SidebarLayout";
 import PillButton from '../components/input/PillButton';
 import Spinner from "../components/Spinner";
 import axios from "axios";
+import { client, subscribe } from '../mqttClient';
 import AddWidgetContainer from '../components/Widgets/AddWidgetContainer';
 import DashboardChartCard from '../components/cards/DashboardChartCard';
 import DashboardTableCard from '../components/cards/DashboardTableCard';
@@ -27,6 +28,8 @@ function Dashboard() {
     // ---------- States for project ID and data tables ----------
     const [projectID, setProjectID] = useState(-1);
     const [projectName, setProjectName] = useState(localStorage.getItem('project'));
+    const [realTimeEnabled, setRealTimeEnabled] = useState(false);
+
     const [dataTables, setDataTables] = useState([]);
 
     // ---------- State to store devices of the selected project ----------
@@ -78,6 +81,7 @@ function Dashboard() {
 
     useEffect(() => {
         if (projectID != -1) {
+            loadProjectDetails();
             loadDataTables();
             loadDevices();
         }
@@ -88,6 +92,71 @@ function Dashboard() {
             loadWidgets();
         }
     }, [dataTables, devices]);
+
+    // MQTT
+    const [mqttPayload, setMqttPayload] = useState(null);
+    useEffect(() => {
+        if (realTimeEnabled) {
+            subscribe(`projectSuccess/${projectID}/data/`)
+                .then((message) => {
+                    console.log(message); // Handle success
+                    listenMQTT();
+                })
+                .catch((error) => {
+                    console.error(error); // Handle error
+                    setMqttPayload(null);
+                });
+        }
+    }, [realTimeEnabled]);
+
+    const listenMQTT = () => {
+        client.on('message', async (topic, message) => {
+            //console.log(topic, message.toString());
+            setMqttPayload(JSON.parse(message.toString()));
+        });
+    }
+
+    const loadProjectDetails = async () => {
+        setLoading(true);
+
+        // Get request to localhost:3001/api/project/<project_id> to get project details
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/project/${projectID}`, {
+                headers: {
+                    'authorization': localStorage.getItem('auth-token')
+                }
+            });
+
+            if (response.status === 200) {
+                setRealTimeEnabled(response.data.real_time_enabled);
+                setLoading(false);
+            }
+
+        } catch (err) {
+            switch (err.response.status) {
+                case 400:
+                    toast.error('Bad request!');
+                    navigate('/login');
+                    break;
+                case 401:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 403:
+                    toast.error('Unauthorized access!');
+                    navigate('/login');
+                    break;
+                case 404:
+                    toast.error('Project not found!');
+                    navigate('/projects');
+                    break;
+                default:
+                    toast.error('Something went wrong!');
+                    break;
+            }
+            setLoading(false);
+        }
+    }
 
     // ---------- Load data tables from the backend ----------
     const loadDataTables = async () => {
@@ -283,11 +352,13 @@ function Dashboard() {
                                 : (widget.widget_type == 3) ? <DashboardToggleCard key={index} widget={widget} onClick={() => {
                                 }}
                                     deleteWidget={(widget_id) => deleteWidget(widget_id)}
-                                    updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
+                                    updateWidget={(widget) => handleUpdateWidgetClicked(widget)}
+                                    mqttPayload={mqttPayload} />
                                     : (widget.widget_type == 4) ? <DashboardGaugeCard key={index} widget={widget} onClick={() => {
                                     }}
                                         deleteWidget={(widget_id) => deleteWidget(widget_id)}
-                                        updateWidget={(widget) => handleUpdateWidgetClicked(widget)} />
+                                        updateWidget={(widget) => handleUpdateWidgetClicked(widget)}
+                                        mqttPayload={mqttPayload} />
                                         : null
                     )
                 })}

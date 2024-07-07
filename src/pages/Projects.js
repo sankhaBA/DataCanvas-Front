@@ -204,6 +204,7 @@ function Projects() {
               mx="mx-2"
               onClick={() => {
                 localStorage.setItem("project", project.project_name);
+                localStorage.setItem("project_id", project.project_id);
                 navigate("/overview", {
                   state: { project_id: project.project_id },
                 });
@@ -295,7 +296,7 @@ function Projects() {
             readOnly
           />
           <span className="text-gray2 text-xs text-center mt-2">
-            This project ID should be included in data send requests
+            This project ID should be included in data send requests. Check project settings for MQTT key.
           </span>
         </div>
 
