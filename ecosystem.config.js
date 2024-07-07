@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
       {
-        name: "react-app",
+        name: "Datacanvas-FrontEnd",
         script: "npx",
         args: "serve -s build",
         env: {
