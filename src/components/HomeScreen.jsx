@@ -277,21 +277,21 @@ export default function HomeScreen() {
           </h2>
           <div className="w-full mt-10 flex justify-center items-center">
             <img
-              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/1.png"}
               alt="Hypercube"
               width={158}
               height={48}
             />
             <img
-              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/2.png"}
               alt="University of Moratuwa"
               width={158}
               height={48}
             />
             <img
-              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/3.png"}
               alt="IES Labs"
               width={158}
