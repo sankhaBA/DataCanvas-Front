@@ -94,10 +94,10 @@ const secondaryFeatures = [
   },
 ];
 const stats = [
-  { id: 1, name: "Developers on the platform", value: "200+" },
+  { id: 1, name: "Developers on the platform", value: "10+" },
   { id: 2, name: "Daily requests", value: "2000+" },
   { id: 3, name: "Uptime guarantee", value: "99.9%" },
-  { id: 4, name: "Projects deployed", value: "75+" },
+  { id: 4, name: "Projects deployed", value: "3+" },
 ];
 const footerNavigation = {
   solutions: [
@@ -233,8 +233,9 @@ export default function Example() {
                 </a>
               </div>
               <h1 className="mt-10 text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                Your IoT Companion
+                DataCanvas
               </h1>
+              <h3 className="mt-3 text-4xl font-bold tracking-tight text-white">Your IoT Companion</h3>
               <p className="mt-6 text-lg leading-8 text-gray-300">
                 Manage your IoT data seamlessly with powerful device and dataset
                 management tools. Integrate your devices and start monitoring in
@@ -242,16 +243,16 @@ export default function Example() {
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <a
-                  href="/login"
+                  href="/signup"
                   className="rounded-md bg-green px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
                 >
                   Get started
                 </a>
                 <a
-                  href="/signup"
-                  className="text-sm font-semibold leading-6 text-white"
+                  href="/login"
+                  className="text-sm font-semibold leading-6 text-green"
                 >
-                  Register <span aria-hidden="true">→</span>
+                  Login <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>
@@ -271,26 +272,26 @@ export default function Example() {
 
         {/* Logo cloud */}
         <div className="mx-auto mt-8 max-w-7xl px-6 sm:mt-16 lg:px-8">
-          <h2 className="text-center text-lg font-semibold leading-8 text-white">
-            Our trusted partners
+          <h2 className="text-center text-lg font-semibold leading-8 text-green">
+            Our Ecosystem
           </h2>
           <div className="w-full mt-10 flex justify-center items-center">
             <img
-              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/1.png"}
               alt="Hypercube"
               width={158}
               height={48}
             />
             <img
-              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/2.png"}
               alt="University of Moratuwa"
               width={158}
               height={48}
             />
             <img
-              className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
+              className="col-span-2 max-h-20 w-full object-contain lg:col-span-1"
               src={process.env.PUBLIC_URL + "/img/home/brands/3.png"}
               alt="IES Labs"
               width={158}
@@ -468,25 +469,25 @@ export default function Example() {
           </div>
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Boost your productivity.
+              Build the next
               <br />
-              Start using our app today.
+              Groundbreaking IoT Product with DataCanvas
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
-              Start free! No credit card required. Get started with DataCanvas
+              Start free! No credit card required. Get started with DataCanvas Today.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
-                href="/login"
-                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                href="/signup"
+                className="rounded-md bg-green px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Get started
               </a>
               <a
-                href="/signup"
-                className="text-sm font-semibold leading-6 text-white"
+                href="/login"
+                className="text-sm font-semibold leading-6 text-green"
               >
-                Register <span aria-hidden="true">→</span>
+                Login <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -508,7 +509,7 @@ export default function Example() {
                   className="text-gray-500 hover:text-gray-400"
                 >
                   <span className="sr-only">{item.name}</span>
-                  <item.icon className="h-6 w-6" aria-hidden="true" />
+                  <item.icon className="h-6 w-6 text-green" aria-hidden="true" />
                 </a>
               ))}
             </div>
