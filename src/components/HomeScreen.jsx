@@ -159,7 +159,7 @@ const footerNavigation = {
   ],
 };
 
-export default function Example() {
+export default function HomeScreen() {
   return (
     <div className="bg-black">
       <main>
