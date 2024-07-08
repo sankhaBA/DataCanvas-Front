@@ -96,6 +96,7 @@ function Dashboard() {
     // MQTT
     const [mqttPayload, setMqttPayload] = useState(null);
     useEffect(() => {
+	console.log("Mqtt run");
         if (realTimeEnabled) {
             subscribe(`projectSuccess/${projectID}/data/`)
                 .then((message) => {
@@ -111,7 +112,7 @@ function Dashboard() {
 
     const listenMQTT = () => {
         client.on('message', async (topic, message) => {
-            //console.log(topic, message.toString());
+            console.log(topic, message.toString());
             setMqttPayload(JSON.parse(message.toString()));
         });
     }

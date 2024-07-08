@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 
-const client = mqtt.connect('ws://broker.emqx.io:8083/mqtt', {
+const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
   clientId: 'mqttx_790fvffdfd0c455',
   username: 'emqx'
 });

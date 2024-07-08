@@ -165,7 +165,6 @@ const AskAssistantPopup = ({
         } catch (err) {
             console.log(err);
             setResult(2);
-            setRefreshing(false);
         }
     }
 
