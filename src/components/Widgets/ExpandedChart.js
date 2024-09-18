@@ -50,7 +50,7 @@ export default function ExpandedChart({ widget, setLoading = () => { }, navigate
 
     const [chartOptions, setChartOptions] = useState({});
 
-    const [recordLimit, setRecordLimit] = useState(1000)
+    const [recordLimit, setRecordLimit] = useState(100)
 
     useEffect(() => {
         configureChartOptions();
